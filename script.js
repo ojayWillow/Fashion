@@ -133,7 +133,7 @@ function latLngToRotation(lat, lng) {
     return { x: targetX, y: targetY };
 }
 
-// Spin globe to a specific partner
+// Spin globe to a specific partner AND scroll globe to center of viewport
 function focusPartner(index) {
     if (index < 0 || index >= PARTNERS.length) return;
     const p = PARTNERS[index];
@@ -149,12 +149,22 @@ function focusPartner(index) {
         card.classList.toggle('partner-active', i === index);
     });
 
-    // Re-enable auto-rotate after 4 seconds
+    // Scroll the globe into the dead center of the viewport
+    const globeEl = document.querySelector('.globe-container');
+    if (globeEl) {
+        const rect = globeEl.getBoundingClientRect();
+        const globeCenterY = rect.top + window.scrollY + rect.height / 2;
+        const viewportCenterY = window.innerHeight / 2;
+        const scrollTarget = globeCenterY - viewportCenterY;
+        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    }
+
+    // Re-enable auto-rotate after 5 seconds
     clearTimeout(window._globeAutoTimer);
     window._globeAutoTimer = setTimeout(() => {
         autoRotate = true;
         isAnimatingToTarget = false;
-    }, 4000);
+    }, 5000);
 }
 
 function initGlobe() {
@@ -381,13 +391,10 @@ function initGlobe() {
     });
 }
 
-// Partner card click → spin globe
+// Partner card click → spin globe AND scroll globe to center
 document.querySelectorAll('.partner-card').forEach((card, idx) => {
     card.addEventListener('click', () => {
         focusPartner(idx);
-        // Scroll globe into view if needed
-        const globeEl = document.querySelector('.globe-wrapper');
-        if (globeEl) globeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 });
 
