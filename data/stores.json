@@ -1,0 +1,192 @@
+{
+  "lastUpdated": "2026-02-09",
+  "weekLabel": "Week of Feb 9, 2026",
+  "categories": [
+    {
+      "name": "Major Marketplaces",
+      "icon": "🔵",
+      "stores": [
+        {
+          "name": "Zalando",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.zalando.com",
+          "saleUrl": "https://www.zalando.com/campaigns/winter-sale/",
+          "description": "Europe's largest online fashion platform with 51M+ active customers across 23 markets.",
+          "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands"
+        },
+        {
+          "name": "ASOS",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.asos.com",
+          "saleUrl": "https://www.asos.com/women/sale/",
+          "description": "850+ brands for trend-focused shoppers. Ships to 200+ countries.",
+          "currentDeal": "Up to 70% off — extra discounts via the app"
+        },
+        {
+          "name": "About You",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.aboutyou.com",
+          "saleUrl": "https://www.aboutyou.com/your-sale",
+          "description": "Personalized shopping platform with €2B+ annual revenue.",
+          "currentDeal": "Up to 70% off winter styles"
+        },
+        {
+          "name": "Veepee",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.veepee.com",
+          "saleUrl": "https://www.veepee.com",
+          "description": "Leading flash-sales platform with limited-time events on premium brands.",
+          "currentDeal": "Daily flash sales — up to 70% off major brands"
+        },
+        {
+          "name": "Boozt",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.boozt.com",
+          "saleUrl": "https://www.boozt.com/eu/en/sale",
+          "description": "Premium Scandinavian and international fashion brands.",
+          "currentDeal": "Mid-season sale — up to 60% off"
+        }
+      ]
+    },
+    {
+      "name": "Fast Fashion & High Street",
+      "icon": "👗",
+      "stores": [
+        {
+          "name": "Zara",
+          "country": "Spain",
+          "flag": "🇪🇸",
+          "url": "https://www.zara.com",
+          "saleUrl": "https://www.zara.com/ww/en/woman-sale-l1314.html",
+          "description": "Global fast fashion leader with runway-inspired collections.",
+          "currentDeal": "Seasonal sale — up to 60% off"
+        },
+        {
+          "name": "H&M",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.hm.com",
+          "saleUrl": "https://www2.hm.com/en_gb/sale.html",
+          "description": "Affordable style, designer collabs, and sustainable fashion.",
+          "currentDeal": "End of season — up to 60% off + member deals"
+        },
+        {
+          "name": "Mango",
+          "country": "Spain",
+          "flag": "🇪🇸",
+          "url": "https://www.mango.com",
+          "saleUrl": "https://shop.mango.com/gb/women/sale",
+          "description": "Mediterranean-inspired modern fashion for women and men.",
+          "currentDeal": "Up to 50% off selected styles"
+        },
+        {
+          "name": "COS",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.cos.com",
+          "saleUrl": "https://www.cos.com/en/women/sale.html",
+          "description": "Minimalist, high-quality wardrobe essentials.",
+          "currentDeal": "Sale — up to 50% off timeless pieces"
+        },
+        {
+          "name": "Massimo Dutti",
+          "country": "Spain",
+          "flag": "🇪🇸",
+          "url": "https://www.massimodutti.com",
+          "saleUrl": "https://www.massimodutti.com/gb/sale-woman-702",
+          "description": "Elevated casual and smart fashion from the Inditex group.",
+          "currentDeal": "Winter sale — up to 40% off"
+        }
+      ]
+    },
+    {
+      "name": "Premium & Designer",
+      "icon": "💎",
+      "stores": [
+        {
+          "name": "THE OUTNET",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.theoutnet.com",
+          "saleUrl": "https://www.theoutnet.com/en-gb/shop/clothing",
+          "description": "350+ luxury brands at up to 70% off retail.",
+          "currentDeal": "Up to 80% off designer fashion"
+        },
+        {
+          "name": "Net-a-Porter",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.net-a-porter.com",
+          "saleUrl": "https://www.net-a-porter.com/en-gb/shop/sale",
+          "description": "The world's premier luxury fashion destination.",
+          "currentDeal": "Seasonal sale — up to 50% off luxury"
+        },
+        {
+          "name": "Farfetch",
+          "country": "Portugal",
+          "flag": "🇵🇹",
+          "url": "https://www.farfetch.com",
+          "saleUrl": "https://www.farfetch.com/shopping/women/sale/items.aspx",
+          "description": "Global luxury marketplace connecting boutiques worldwide.",
+          "currentDeal": "Sale — up to 60% off luxury pieces"
+        },
+        {
+          "name": "BrandAlley",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.brandalley.co.uk",
+          "saleUrl": "https://www.brandalley.co.uk",
+          "description": "Daily designer sales with up to 80% off.",
+          "currentDeal": "Daily rotating designer sales"
+        },
+        {
+          "name": "Yoox",
+          "country": "Italy",
+          "flag": "🇮🇹",
+          "url": "https://www.yoox.com",
+          "saleUrl": "https://www.yoox.com/gb/women/shoponline",
+          "description": "Italian platform for discounted designer fashion.",
+          "currentDeal": "Extra 20% off sale items"
+        }
+      ]
+    },
+    {
+      "name": "Department Stores",
+      "icon": "🏬",
+      "stores": [
+        {
+          "name": "Galeries Lafayette",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.galerieslafayette.com",
+          "saleUrl": "https://www.galerieslafayette.com/c/soldes",
+          "description": "Iconic Parisian department store since 1894.",
+          "currentDeal": "Soldes — French seasonal sales event"
+        },
+        {
+          "name": "Selfridges",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.selfridges.com",
+          "saleUrl": "https://www.selfridges.com/GB/en/cat/sale/",
+          "description": "London's premier luxury department store.",
+          "currentDeal": "Sale — up to 50% off across departments"
+        },
+        {
+          "name": "El Corte Inglés",
+          "country": "Spain",
+          "flag": "🇪🇸",
+          "url": "https://www.elcorteingles.es",
+          "saleUrl": "https://www.elcorteingles.es/rebajas/",
+          "description": "Spain's biggest department store chain.",
+          "currentDeal": "Rebajas — major seasonal markdowns"
+        }
+      ]
+    }
+  ]
+}

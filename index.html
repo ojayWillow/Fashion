@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover the best fashion sales and deals from top European stores. Weekly curated promotions from Zalando, Zara, ASOS, H&M, and more.">
+    <title>Fashion — European Sales & Deals Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Fashion<span class="accent">.</span></a>
+            <ul class="nav-links">
+                <li><a href="#featured">This Week</a></li>
+                <li><a href="#stores">Stores</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <p class="hero-label">✨ Your Weekly Fashion Guide</p>
+            <h1>Discover Europe's<br><span class="accent">Best Fashion Sales</span></h1>
+            <p class="hero-subtitle">Curated deals from the most iconic European stores — updated weekly.</p>
+            <a href="#featured" class="btn btn-primary">See This Week's Deals →</a>
+        </div>
+    </header>
+
+    <!-- Featured This Week -->
+    <section id="featured" class="section">
+        <div class="container">
+            <h2 class="section-title">🔥 Featured This Week</h2>
+            <p class="section-subtitle">Handpicked sales running right now</p>
+            <div class="deals-grid" id="deals-grid">
+                <!-- Deals will be loaded dynamically from stores.json -->
+                <div class="deal-card">
+                    <div class="deal-badge">Up to 50% Off</div>
+                    <h3>Zalando</h3>
+                    <p class="deal-country">🇩🇪 Germany</p>
+                    <p>Winter sale across 2,000+ brands. Free shipping & free returns.</p>
+                    <a href="https://www.zalando.com/campaigns/winter-sale/" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+                <div class="deal-card">
+                    <div class="deal-badge">Up to 70% Off</div>
+                    <h3>ASOS</h3>
+                    <p class="deal-country">🇬🇧 United Kingdom</p>
+                    <p>Massive markdowns on 850+ brands. Extra discounts on app orders.</p>
+                    <a href="https://www.asos.com/women/sale/" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+                <div class="deal-card">
+                    <div class="deal-badge">Up to 60% Off</div>
+                    <h3>Zara</h3>
+                    <p class="deal-country">🇪🇸 Spain</p>
+                    <p>Seasonal sale on women's, men's, and kids' collections.</p>
+                    <a href="https://www.zara.com/ww/en/woman-sale-l1314.html" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+                <div class="deal-card">
+                    <div class="deal-badge">Up to 60% Off</div>
+                    <h3>H&M</h3>
+                    <p class="deal-country">🇸🇪 Sweden</p>
+                    <p>End of season sale plus member-exclusive early access deals.</p>
+                    <a href="https://www2.hm.com/en_gb/sale.html" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+                <div class="deal-card">
+                    <div class="deal-badge">Up to 80% Off</div>
+                    <h3>THE OUTNET</h3>
+                    <p class="deal-country">🇬🇧 United Kingdom</p>
+                    <p>Luxury designer pieces at a fraction of the price. 350+ brands.</p>
+                    <a href="https://www.theoutnet.com/en-gb/shop/clothing" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+                <div class="deal-card">
+                    <div class="deal-badge">Flash Sales Daily</div>
+                    <h3>Veepee</h3>
+                    <p class="deal-country">🇫🇷 France</p>
+                    <p>Limited-time flash sales on premium brands. Members-only access.</p>
+                    <a href="https://www.veepee.com" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Directory -->
+    <section id="stores" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">🏪 Store Directory</h2>
+            <p class="section-subtitle">Europe's top fashion destinations</p>
+            <div class="store-categories">
+                <div class="store-category">
+                    <h3>🔵 Major Marketplaces</h3>
+                    <ul class="store-list">
+                        <li><a href="https://www.zalando.com" target="_blank">Zalando</a> <span>🇩🇪</span></li>
+                        <li><a href="https://www.asos.com" target="_blank">ASOS</a> <span>🇬🇧</span></li>
+                        <li><a href="https://www.aboutyou.com" target="_blank">About You</a> <span>🇩🇪</span></li>
+                        <li><a href="https://www.veepee.com" target="_blank">Veepee</a> <span>🇫🇷</span></li>
+                        <li><a href="https://www.boozt.com" target="_blank">Boozt</a> <span>🇸🇪</span></li>
+                    </ul>
+                </div>
+                <div class="store-category">
+                    <h3>👗 Fast Fashion</h3>
+                    <ul class="store-list">
+                        <li><a href="https://www.zara.com" target="_blank">Zara</a> <span>🇪🇸</span></li>
+                        <li><a href="https://www.hm.com" target="_blank">H&M</a> <span>🇸🇪</span></li>
+                        <li><a href="https://www.mango.com" target="_blank">Mango</a> <span>🇪🇸</span></li>
+                        <li><a href="https://www.cos.com" target="_blank">COS</a> <span>🇸🇪</span></li>
+                        <li><a href="https://www.massimodutti.com" target="_blank">Massimo Dutti</a> <span>🇪🇸</span></li>
+                    </ul>
+                </div>
+                <div class="store-category">
+                    <h3>💎 Premium & Designer</h3>
+                    <ul class="store-list">
+                        <li><a href="https://www.theoutnet.com" target="_blank">THE OUTNET</a> <span>🇬🇧</span></li>
+                        <li><a href="https://www.net-a-porter.com" target="_blank">Net-a-Porter</a> <span>🇬🇧</span></li>
+                        <li><a href="https://www.farfetch.com" target="_blank">Farfetch</a> <span>🇵🇹</span></li>
+                        <li><a href="https://www.brandalley.co.uk" target="_blank">BrandAlley</a> <span>🇬🇧</span></li>
+                        <li><a href="https://www.yoox.com" target="_blank">Yoox</a> <span>🇮🇹</span></li>
+                    </ul>
+                </div>
+                <div class="store-category">
+                    <h3>🏬 Department Stores</h3>
+                    <ul class="store-list">
+                        <li><a href="https://www.galerieslafayette.com" target="_blank">Galeries Lafayette</a> <span>🇫🇷</span></li>
+                        <li><a href="https://www.selfridges.com" target="_blank">Selfridges</a> <span>🇬🇧</span></li>
+                        <li><a href="https://www.breuninger.com" target="_blank">Breuninger</a> <span>🇩🇪</span></li>
+                        <li><a href="https://www.elcorteingles.es" target="_blank">El Corte Inglés</a> <span>🇪🇸</span></li>
+                        <li><a href="https://www.limango.de" target="_blank">Limango</a> <span>🇩🇪</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Fashion.</h2>
+            <p class="about-text">We curate the best fashion sales from across Europe so you don't have to hunt for deals. Every week, we handpick promotions from trusted retailers — from flash sales on luxury designers to seasonal markdowns at your favorite high street stores. Bookmark this page and never miss a deal.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="logo">Fashion<span class="accent">.</span></p>
+            <p>Curating Europe's best fashion deals — updated weekly.</p>
+            <p class="copyright">&copy; 2026 Fashion. Built with ❤️ for fashion lovers.</p>
+        </div>
+    </footer>
+</body>
+</html>
