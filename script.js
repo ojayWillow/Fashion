@@ -23,7 +23,7 @@ function animateRing() {
 animateRing();
 
 // Cursor hover effects on interactive elements
-const hoverables = document.querySelectorAll('a, .btn, .ad-banner, .card-3d, .dock-item, .partner-item');
+const hoverables = document.querySelectorAll('a, .btn, .ad-banner, .card-3d, .dock-item, .dock-logo, .partner-item');
 hoverables.forEach(el => {
     el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
@@ -50,7 +50,6 @@ const dockItems = document.querySelectorAll('.dock-item');
 
 dockItems.forEach((item, index) => {
     item.addEventListener('mouseenter', () => {
-        // Add neighbor class to adjacent items
         if (dockItems[index - 1]) dockItems[index - 1].classList.add('neighbor');
         if (dockItems[index + 1]) dockItems[index + 1].classList.add('neighbor');
     });
@@ -92,7 +91,6 @@ tiltCards.forEach(card => {
 
         inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-        // Shine follows cursor
         const shineX = (x / rect.width) * 100;
         const shineY = (y / rect.height) * 100;
         shine.style.setProperty('--shine-x', shineX + '%');
@@ -122,7 +120,6 @@ function initGlobe() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
 
-    // Globe sphere
     const globeGeo = new THREE.SphereGeometry(1, 48, 48);
     const globeMat = new THREE.MeshPhongMaterial({
         color: 0x13131d,
@@ -135,7 +132,6 @@ function initGlobe() {
     const globe = new THREE.Mesh(globeGeo, globeMat);
     scene.add(globe);
 
-    // Wireframe overlay
     const wireGeo = new THREE.SphereGeometry(1.002, 36, 36);
     const wireMat = new THREE.MeshBasicMaterial({
         color: 0x7c3aed,
@@ -146,7 +142,6 @@ function initGlobe() {
     const wireframe = new THREE.Mesh(wireGeo, wireMat);
     scene.add(wireframe);
 
-    // Atmosphere glow
     const atmosGeo = new THREE.SphereGeometry(1.15, 48, 48);
     const atmosMat = new THREE.MeshBasicMaterial({
         color: 0xa855f7,
@@ -157,20 +152,19 @@ function initGlobe() {
     const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
     scene.add(atmosphere);
 
-    // Partner location points
     const partners = [
-        { lat: 45.52, lng: -122.68, name: 'Nike' },           // Portland
-        { lat: 54.97, lng: -1.61, name: 'END.' },             // Newcastle
-        { lat: 45.50, lng: -73.57, name: 'SSENSE' },          // Montreal
-        { lat: 41.15, lng: -8.61, name: 'Farfetch' },         // Porto
-        { lat: 52.52, lng: 13.40, name: 'Zalando' },          // Berlin
-        { lat: 42.33, lng: -83.05, name: 'StockX' },          // Detroit
-        { lat: 45.46, lng: 9.19, name: 'Slam Jam' },          // Milan
-        { lat: 51.51, lng: -0.13, name: 'ASOS' },             // London
-        { lat: 52.52, lng: 13.40, name: 'Solebox' },          // Berlin
-        { lat: 34.05, lng: -118.24, name: 'GOAT' },           // LA
-        { lat: 35.68, lng: 139.69, name: 'Atmos' },           // Tokyo
-        { lat: 48.14, lng: 11.58, name: 'Mytheresa' },        // Munich
+        { lat: 45.52, lng: -122.68, name: 'Nike' },
+        { lat: 54.97, lng: -1.61, name: 'END.' },
+        { lat: 45.50, lng: -73.57, name: 'SSENSE' },
+        { lat: 41.15, lng: -8.61, name: 'Farfetch' },
+        { lat: 52.52, lng: 13.40, name: 'Zalando' },
+        { lat: 42.33, lng: -83.05, name: 'StockX' },
+        { lat: 45.46, lng: 9.19, name: 'Slam Jam' },
+        { lat: 51.51, lng: -0.13, name: 'ASOS' },
+        { lat: 52.52, lng: 13.40, name: 'Solebox' },
+        { lat: 34.05, lng: -118.24, name: 'GOAT' },
+        { lat: 35.68, lng: 139.69, name: 'Atmos' },
+        { lat: 48.14, lng: 11.58, name: 'Mytheresa' },
     ];
 
     function latLngToVector3(lat, lng, radius) {
@@ -183,7 +177,6 @@ function initGlobe() {
         );
     }
 
-    // Add glowing points
     partners.forEach(p => {
         const pos = latLngToVector3(p.lat, p.lng, 1.02);
         const dotGeo = new THREE.SphereGeometry(0.02, 12, 12);
@@ -192,7 +185,6 @@ function initGlobe() {
         dot.position.copy(pos);
         scene.add(dot);
 
-        // Glow ring
         const ringGeo = new THREE.RingGeometry(0.03, 0.05, 24);
         const ringMat = new THREE.MeshBasicMaterial({
             color: 0xc084fc,
@@ -206,7 +198,6 @@ function initGlobe() {
         scene.add(ring);
     });
 
-    // Add arcs between random partners
     const arcPairs = [
         [0, 5], [1, 7], [2, 0], [3, 6], [4, 8],
         [9, 10], [6, 11], [7, 3], [10, 2], [5, 9]
@@ -228,7 +219,6 @@ function initGlobe() {
         scene.add(arc);
     });
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
     scene.add(ambientLight);
 
@@ -240,7 +230,6 @@ function initGlobe() {
     pointLight.position.set(-5, -3, 2);
     scene.add(pointLight);
 
-    // Mouse interaction
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
     let rotationVelocity = { x: 0, y: 0 };
@@ -262,7 +251,6 @@ function initGlobe() {
     canvas.addEventListener('mouseup', () => isDragging = false);
     canvas.addEventListener('mouseleave', () => isDragging = false);
 
-    // Animation loop
     function animate() {
         requestAnimationFrame(animate);
 
@@ -284,7 +272,6 @@ function initGlobe() {
 
     animate();
 
-    // Handle resize
     window.addEventListener('resize', () => {
         const w = container.offsetWidth;
         const h = container.offsetHeight || w;
@@ -294,7 +281,6 @@ function initGlobe() {
     });
 }
 
-// Initialize globe when section is visible
 const globeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -311,7 +297,6 @@ if (globeSection) globeObserver.observe(globeSection);
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-            // Stagger the animation for sibling elements
             setTimeout(() => {
                 entry.target.classList.add('visible');
             }, i * 80);
@@ -326,20 +311,20 @@ document.querySelectorAll('.ad-banner, .card-3d, .brand-category, .partner-item'
     observer.observe(el);
 });
 
-// ===== Smooth Navbar/Dock on Scroll =====
+// ===== Dock auto-hide on scroll down, show on scroll up =====
 const dock = document.getElementById('floatingDock');
 let lastScroll = 0;
 
 window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
-    if (currentScroll > lastScroll && currentScroll > 300) {
-        dock.style.transform = 'translateX(-50%) translateY(100px)';
+    if (currentScroll > lastScroll && currentScroll > 200) {
+        // Scrolling down — hide dock upwards
+        dock.style.transform = 'translateX(-50%) translateY(-100px)';
         dock.style.opacity = '0';
     } else {
+        // Scrolling up — show dock
         dock.style.transform = 'translateX(-50%) translateY(0)';
         dock.style.opacity = '1';
     }
     lastScroll = currentScroll;
 });
-
-dock.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
