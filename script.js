@@ -23,10 +23,41 @@ function animateRing() {
 animateRing();
 
 // Cursor hover effects on interactive elements
-const hoverables = document.querySelectorAll('a, .btn, .ad-banner, .drop-card');
+const hoverables = document.querySelectorAll('a, .btn, .ad-banner, .card-3d, .dock-item, .partner-item');
 hoverables.forEach(el => {
     el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
     el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+});
+
+// ===== Text Flip Animation =====
+const textFlipWrapper = document.getElementById('textFlipWrapper');
+const flipWords = textFlipWrapper.querySelectorAll('.text-flip-word');
+let currentFlipIndex = 0;
+
+function flipText() {
+    flipWords[currentFlipIndex].classList.remove('active');
+    currentFlipIndex = (currentFlipIndex + 1) % flipWords.length;
+    flipWords[currentFlipIndex].classList.add('active');
+
+    const wordHeight = flipWords[0].offsetHeight;
+    textFlipWrapper.style.transform = `translateY(-${currentFlipIndex * wordHeight}px)`;
+}
+
+setInterval(flipText, 2500);
+
+// ===== Floating Dock — macOS-style magnification =====
+const dockItems = document.querySelectorAll('.dock-item');
+
+dockItems.forEach((item, index) => {
+    item.addEventListener('mouseenter', () => {
+        // Add neighbor class to adjacent items
+        if (dockItems[index - 1]) dockItems[index - 1].classList.add('neighbor');
+        if (dockItems[index + 1]) dockItems[index + 1].classList.add('neighbor');
+    });
+
+    item.addEventListener('mouseleave', () => {
+        dockItems.forEach(i => i.classList.remove('neighbor'));
+    });
 });
 
 // ===== Banner Pointer Trail Effect =====
@@ -42,11 +73,248 @@ banners.forEach(banner => {
     });
 });
 
-// ===== Scroll Reveal Animations =====
-const observer = new IntersectionObserver((entries) => {
+// ===== 3D Card Tilt Effect =====
+const tiltCards = document.querySelectorAll('.card-3d');
+
+tiltCards.forEach(card => {
+    const inner = card.querySelector('.card-3d-inner');
+    const shine = card.querySelector('.card-3d-shine');
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
+
+        inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        // Shine follows cursor
+        const shineX = (x / rect.width) * 100;
+        const shineY = (y / rect.height) * 100;
+        shine.style.setProperty('--shine-x', shineX + '%');
+        shine.style.setProperty('--shine-y', shineY + '%');
+    });
+
+    card.addEventListener('mouseleave', () => {
+        inner.style.transform = 'rotateX(0) rotateY(0)';
+    });
+});
+
+// ===== Interactive Globe (Three.js) =====
+function initGlobe() {
+    const canvas = document.getElementById('globeCanvas');
+    if (!canvas) return;
+
+    const container = canvas.parentElement;
+    const width = container.offsetWidth;
+    const height = container.offsetHeight || width;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    camera.position.z = 2.5;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+
+    // Globe sphere
+    const globeGeo = new THREE.SphereGeometry(1, 48, 48);
+    const globeMat = new THREE.MeshPhongMaterial({
+        color: 0x13131d,
+        emissive: 0x1a0a2e,
+        emissiveIntensity: 0.3,
+        shininess: 20,
+        transparent: true,
+        opacity: 0.9,
+    });
+    const globe = new THREE.Mesh(globeGeo, globeMat);
+    scene.add(globe);
+
+    // Wireframe overlay
+    const wireGeo = new THREE.SphereGeometry(1.002, 36, 36);
+    const wireMat = new THREE.MeshBasicMaterial({
+        color: 0x7c3aed,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.08,
+    });
+    const wireframe = new THREE.Mesh(wireGeo, wireMat);
+    scene.add(wireframe);
+
+    // Atmosphere glow
+    const atmosGeo = new THREE.SphereGeometry(1.15, 48, 48);
+    const atmosMat = new THREE.MeshBasicMaterial({
+        color: 0xa855f7,
+        transparent: true,
+        opacity: 0.04,
+        side: THREE.BackSide,
+    });
+    const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
+    scene.add(atmosphere);
+
+    // Partner location points
+    const partners = [
+        { lat: 45.52, lng: -122.68, name: 'Nike' },           // Portland
+        { lat: 54.97, lng: -1.61, name: 'END.' },             // Newcastle
+        { lat: 45.50, lng: -73.57, name: 'SSENSE' },          // Montreal
+        { lat: 41.15, lng: -8.61, name: 'Farfetch' },         // Porto
+        { lat: 52.52, lng: 13.40, name: 'Zalando' },          // Berlin
+        { lat: 42.33, lng: -83.05, name: 'StockX' },          // Detroit
+        { lat: 45.46, lng: 9.19, name: 'Slam Jam' },          // Milan
+        { lat: 51.51, lng: -0.13, name: 'ASOS' },             // London
+        { lat: 52.52, lng: 13.40, name: 'Solebox' },          // Berlin
+        { lat: 34.05, lng: -118.24, name: 'GOAT' },           // LA
+        { lat: 35.68, lng: 139.69, name: 'Atmos' },           // Tokyo
+        { lat: 48.14, lng: 11.58, name: 'Mytheresa' },        // Munich
+    ];
+
+    function latLngToVector3(lat, lng, radius) {
+        const phi = (90 - lat) * (Math.PI / 180);
+        const theta = (lng + 180) * (Math.PI / 180);
+        return new THREE.Vector3(
+            -radius * Math.sin(phi) * Math.cos(theta),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.sin(theta)
+        );
+    }
+
+    // Add glowing points
+    partners.forEach(p => {
+        const pos = latLngToVector3(p.lat, p.lng, 1.02);
+        const dotGeo = new THREE.SphereGeometry(0.02, 12, 12);
+        const dotMat = new THREE.MeshBasicMaterial({ color: 0xa855f7 });
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.position.copy(pos);
+        scene.add(dot);
+
+        // Glow ring
+        const ringGeo = new THREE.RingGeometry(0.03, 0.05, 24);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: 0xc084fc,
+            transparent: true,
+            opacity: 0.4,
+            side: THREE.DoubleSide,
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.copy(pos);
+        ring.lookAt(0, 0, 0);
+        scene.add(ring);
+    });
+
+    // Add arcs between random partners
+    const arcPairs = [
+        [0, 5], [1, 7], [2, 0], [3, 6], [4, 8],
+        [9, 10], [6, 11], [7, 3], [10, 2], [5, 9]
+    ];
+
+    arcPairs.forEach(([i, j]) => {
+        const start = latLngToVector3(partners[i].lat, partners[i].lng, 1.02);
+        const end = latLngToVector3(partners[j].lat, partners[j].lng, 1.02);
+        const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(1.3);
+
+        const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+        const arcGeo = new THREE.TubeGeometry(curve, 32, 0.004, 8, false);
+        const arcMat = new THREE.MeshBasicMaterial({
+            color: 0xa855f7,
+            transparent: true,
+            opacity: 0.25,
+        });
+        const arc = new THREE.Mesh(arcGeo, arcMat);
+        scene.add(arc);
+    });
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xa855f7, 0.4);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
+
+    const pointLight = new THREE.PointLight(0x7c3aed, 0.6, 100);
+    pointLight.position.set(-5, -3, 2);
+    scene.add(pointLight);
+
+    // Mouse interaction
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let rotationVelocity = { x: 0, y: 0 };
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - previousMousePosition.x;
+        const deltaY = e.clientY - previousMousePosition.y;
+        rotationVelocity.x = deltaY * 0.005;
+        rotationVelocity.y = deltaX * 0.005;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    canvas.addEventListener('mouseup', () => isDragging = false);
+    canvas.addEventListener('mouseleave', () => isDragging = false);
+
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+
+        if (!isDragging) {
+            globe.rotation.y += 0.003;
+            wireframe.rotation.y += 0.003;
+        }
+
+        globe.rotation.x += rotationVelocity.x;
+        globe.rotation.y += rotationVelocity.y;
+        wireframe.rotation.x = globe.rotation.x;
+        wireframe.rotation.y = globe.rotation.y;
+
+        rotationVelocity.x *= 0.95;
+        rotationVelocity.y *= 0.95;
+
+        renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+        const w = container.offsetWidth;
+        const h = container.offsetHeight || w;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    });
+}
+
+// Initialize globe when section is visible
+const globeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            initGlobe();
+            globeObserver.disconnect();
+        }
+    });
+}, { threshold: 0.1 });
+
+const globeSection = document.getElementById('partners');
+if (globeSection) globeObserver.observe(globeSection);
+
+// ===== Scroll Reveal Animations =====
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            // Stagger the animation for sibling elements
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+            }, i * 80);
         }
     });
 }, {
@@ -54,16 +322,24 @@ const observer = new IntersectionObserver((entries) => {
     rootMargin: '0px 0px -50px 0px'
 });
 
-document.querySelectorAll('.ad-banner, .drop-card, .brand-category').forEach(el => {
+document.querySelectorAll('.ad-banner, .card-3d, .brand-category, .partner-item').forEach(el => {
     observer.observe(el);
 });
 
-// ===== Smooth Navbar Background on Scroll =====
-const navbar = document.querySelector('.navbar');
+// ===== Smooth Navbar/Dock on Scroll =====
+const dock = document.getElementById('floatingDock');
+let lastScroll = 0;
+
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(10, 10, 15, 0.95)';
+    const currentScroll = window.scrollY;
+    if (currentScroll > lastScroll && currentScroll > 300) {
+        dock.style.transform = 'translateX(-50%) translateY(100px)';
+        dock.style.opacity = '0';
     } else {
-        navbar.style.background = 'rgba(10, 10, 15, 0.85)';
+        dock.style.transform = 'translateX(-50%) translateY(0)';
+        dock.style.opacity = '1';
     }
+    lastScroll = currentScroll;
 });
+
+dock.style.transition = 'transform 0.4s ease, opacity 0.4s ease';

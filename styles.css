@@ -90,59 +90,89 @@ a {
     background: rgba(168, 85, 247, 0.05);
 }
 
-/* ===== Navbar ===== */
-.navbar {
+/* ===== Floating Dock Navigation ===== */
+.floating-dock {
     position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(10, 10, 15, 0.85);
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.dock-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    background: rgba(15, 15, 24, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-border-subtle);
-    z-index: 100;
-    padding: 16px 0;
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 8px 12px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(168, 85, 247, 0.1);
 }
 
-.navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-
-.accent {
-    color: var(--color-accent);
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 36px;
-}
-
-.nav-links a {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--color-text-muted);
-    transition: var(--transition);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.nav-links a:hover {
-    color: var(--color-accent-light);
-}
-
-.nav-actions {
+.dock-item {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(168, 85, 247, 0.06);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: none;
+}
+
+.dock-item:hover {
+    width: 64px;
+    height: 64px;
+    background: rgba(168, 85, 247, 0.15);
+    margin: 0 4px;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
+}
+
+.dock-item .dock-icon {
+    font-size: 1.3rem;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dock-item:hover .dock-icon {
+    transform: scale(1.2);
+}
+
+/* Dock neighbors scale up slightly */
+.dock-item.neighbor {
+    width: 56px;
+    height: 56px;
+}
+
+/* Dock tooltip */
+.dock-item::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: rgba(15, 15, 24, 0.95);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+.dock-item:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* ===== Gradient Text ===== */
@@ -208,10 +238,10 @@ a {
     box-shadow: var(--shadow-glow);
 }
 
-/* ===== Hero ===== */
+/* ===== Hero with Text Flip ===== */
 .hero {
     position: relative;
-    padding: 180px 0 120px;
+    padding: 160px 0 120px;
     text-align: center;
     overflow: hidden;
 }
@@ -219,7 +249,7 @@ a {
 .hero-bg-grid {
     position: absolute;
     inset: 0;
-    background-image: 
+    background-image:
         linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
@@ -270,7 +300,7 @@ a {
     background: rgba(168, 85, 247, 0.05);
 }
 
-.hero h1 {
+.hero-title {
     font-family: var(--font-heading);
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 900;
@@ -278,6 +308,40 @@ a {
     margin-bottom: 24px;
     letter-spacing: -2px;
     text-transform: uppercase;
+}
+
+.title-static {
+    display: block;
+    color: var(--color-text);
+}
+
+/* Text Flip Animation */
+.text-flip-container {
+    display: block;
+    height: clamp(3.2rem, 8.5vw, 6.4rem);
+    overflow: hidden;
+    position: relative;
+}
+
+.text-flip-wrapper {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.text-flip-word {
+    display: block;
+    height: clamp(3.2rem, 8.5vw, 6.4rem);
+    line-height: clamp(3.2rem, 8.5vw, 6.4rem);
+    flex-shrink: 0;
+    opacity: 0.2;
+    filter: blur(4px);
+    transition: opacity 0.7s ease, filter 0.7s ease;
+}
+
+.text-flip-word.active {
+    opacity: 1;
+    filter: blur(0);
 }
 
 .hero-subtitle {
@@ -494,7 +558,6 @@ a {
     box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
 }
 
-/* Banner Pointer Trail Effect */
 .banner-pointer-trail {
     position: absolute;
     width: 200px;
@@ -516,45 +579,67 @@ a {
     50% { transform: translateY(-10px); }
 }
 
-/* ===== Drops Grid ===== */
+/* ===== 3D Card Effect ===== */
 .drops-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 24px;
 }
 
-.drop-card {
+.card-3d {
+    perspective: 1000px;
+    cursor: none;
+}
+
+.card-3d-inner {
     background: var(--color-bg-card);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius);
     padding: 32px;
-    transition: var(--transition);
     position: relative;
     overflow: hidden;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.03, 0.98, 0.52, 0.99), border-color 0.35s ease, box-shadow 0.35s ease;
+    will-change: transform;
 }
 
-.drop-card::after {
-    content: '';
+.card-3d:hover .card-3d-inner {
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-glow), 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.card-3d-shine {
     position: absolute;
     inset: 0;
-    background: var(--gradient-glow);
+    background: radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(168, 85, 247, 0.12) 0%, transparent 60%);
+    pointer-events: none;
     opacity: 0;
-    transition: var(--transition);
+    transition: opacity 0.3s ease;
 }
 
-.drop-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--color-border);
-    box-shadow: var(--shadow-glow);
-}
-
-.drop-card:hover::after {
+.card-3d:hover .card-3d-shine {
     opacity: 1;
 }
 
-.drop-card > * {
-    position: relative;
-    z-index: 2;
+/* Elements that float above the card in 3D */
+.card-3d-float {
+    transform: translateZ(40px);
+    transform-style: preserve-3d;
+}
+
+.card-3d .drop-badge {
+    transform: translateZ(30px);
+    transform-style: preserve-3d;
+}
+
+.card-3d .drop-icon {
+    transform: translateZ(50px);
+    transform-style: preserve-3d;
+}
+
+.card-3d h3 {
+    transform: translateZ(25px);
+    transform-style: preserve-3d;
 }
 
 .drop-badge {
@@ -575,7 +660,7 @@ a {
     margin-bottom: 12px;
 }
 
-.drop-card h3 {
+.card-3d h3, .drop-card h3 {
     font-family: var(--font-heading);
     font-size: 1.4rem;
     font-weight: 700;
@@ -590,11 +675,91 @@ a {
     margin-bottom: 12px;
 }
 
-.drop-card p {
+.card-3d p, .drop-card p {
     color: var(--color-text-muted);
     font-size: 0.88rem;
     margin-bottom: 20px;
     line-height: 1.55;
+}
+
+/* ===== Global Partners / Globe ===== */
+.globe-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.globe-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.globe-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 60px rgba(168, 85, 247, 0.15), 0 0 80px rgba(168, 85, 247, 0.08);
+    pointer-events: none;
+}
+
+#globeCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.partners-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.partner-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.partner-item:hover {
+    border-color: var(--color-border);
+    transform: translateX(6px);
+    box-shadow: var(--shadow-glow);
+}
+
+.partner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--dot-color);
+    box-shadow: 0 0 10px var(--dot-color);
+    flex-shrink: 0;
+}
+
+.partner-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.partner-info strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.partner-info span {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
 }
 
 /* ===== Brand Directory ===== */
@@ -694,20 +859,39 @@ a {
         display: none;
     }
 
-    .nav-links {
-        display: none;
+    .floating-dock {
+        bottom: 12px;
     }
 
-    .nav-actions {
-        display: none;
+    .dock-container {
+        padding: 6px 8px;
+        gap: 2px;
+    }
+
+    .dock-item {
+        width: 40px;
+        height: 40px;
+    }
+
+    .dock-item .dock-icon {
+        font-size: 1rem;
     }
 
     .hero {
-        padding: 130px 0 70px;
+        padding: 120px 0 70px;
     }
 
-    .hero h1 {
+    .hero-title {
         font-size: 2.5rem;
+    }
+
+    .text-flip-container {
+        height: 2.7rem;
+    }
+
+    .text-flip-word {
+        height: 2.7rem;
+        line-height: 2.7rem;
     }
 
     .hero-cta {
@@ -750,6 +934,14 @@ a {
         grid-template-columns: 1fr;
     }
 
+    .globe-section {
+        grid-template-columns: 1fr;
+    }
+
+    .globe-container {
+        max-width: 300px;
+    }
+
     .brand-grid {
         grid-template-columns: 1fr;
     }
@@ -765,16 +957,18 @@ a {
 
 /* ===== Scroll Animations ===== */
 .ad-banner,
-.drop-card,
-.brand-category {
+.card-3d,
+.brand-category,
+.partner-item {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
 .ad-banner.visible,
-.drop-card.visible,
-.brand-category.visible {
+.card-3d.visible,
+.brand-category.visible,
+.partner-item.visible {
     opacity: 1;
     transform: translateY(0);
 }

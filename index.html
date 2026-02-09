@@ -8,36 +8,56 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <!-- Custom Cursor Follower -->
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">FASHION<span class="accent">.</span></a>
-            <ul class="nav-links">
-                <li><a href="#drops">Drops</a></li>
-                <li><a href="#banners">Sales</a></li>
-                <li><a href="#brands">Brands</a></li>
-                <li><a href="#about">About</a></li>
-            </ul>
-            <div class="nav-actions">
-                <a href="#drops" class="btn btn-glow btn-sm">Shop Now</a>
-            </div>
+    <!-- Floating Dock Navigation -->
+    <nav class="floating-dock" id="floatingDock">
+        <div class="dock-container">
+            <a href="#" class="dock-item" data-tooltip="Home">
+                <div class="dock-icon">🏠</div>
+            </a>
+            <a href="#drops" class="dock-item" data-tooltip="Drops">
+                <div class="dock-icon">🔥</div>
+            </a>
+            <a href="#banners" class="dock-item" data-tooltip="Sales">
+                <div class="dock-icon">💰</div>
+            </a>
+            <a href="#partners" class="dock-item" data-tooltip="Partners">
+                <div class="dock-icon">🌍</div>
+            </a>
+            <a href="#brands" class="dock-item" data-tooltip="Brands">
+                <div class="dock-icon">💎</div>
+            </a>
+            <a href="#about" class="dock-item" data-tooltip="About">
+                <div class="dock-icon">✦</div>
+            </a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Text Flip -->
     <header class="hero">
         <div class="hero-bg-grid"></div>
         <div class="hero-glow hero-glow-1"></div>
         <div class="hero-glow hero-glow-2"></div>
         <div class="container hero-content">
             <div class="hero-badge">✦ EXCLUSIVE DROPS — UPDATED WEEKLY</div>
-            <h1>THE FUTURE OF<br><span class="gradient-text">STREETWEAR</span></h1>
+            <h1 class="hero-title">
+                <span class="title-static">THE FUTURE OF</span>
+                <span class="text-flip-container">
+                    <span class="text-flip-wrapper" id="textFlipWrapper">
+                        <span class="text-flip-word gradient-text active">STREETWEAR</span>
+                        <span class="text-flip-word gradient-text">SNEAKERS</span>
+                        <span class="text-flip-word gradient-text">LUXURY</span>
+                        <span class="text-flip-word gradient-text">CULTURE</span>
+                        <span class="text-flip-word gradient-text">FASHION</span>
+                    </span>
+                </span>
+            </h1>
             <p class="hero-subtitle">Curated luxury sneakers & high-end streetwear sales from the world's most iconic stores. Your gateway to exclusive drops and limited collections.</p>
             <div class="hero-cta">
                 <a href="#drops" class="btn btn-glow">Explore Drops →</a>
@@ -59,7 +79,6 @@
             <h2 class="section-title">LIVE <span class="gradient-text">PROMOTIONS</span></h2>
             <p class="section-subtitle">Horizontal banners showcasing this week's hottest store sales. Hover to explore.</p>
 
-            <!-- Banner 1: Nike / Sneakers -->
             <div class="ad-banner banner-interactive" data-pointer="true">
                 <div class="banner-glow"></div>
                 <div class="banner-content">
@@ -70,16 +89,12 @@
                         <a href="https://www.nike.com/w/sale-3yaep" target="_blank" class="btn btn-glow btn-sm">Shop Nike Sale →</a>
                     </div>
                     <div class="banner-right">
-                        <div class="banner-visual">
-                            <div class="sneaker-silhouette">👟</div>
-                            <div class="floating-tag">-40%</div>
-                        </div>
+                        <div class="banner-visual"><div class="sneaker-silhouette">👟</div><div class="floating-tag">-40%</div></div>
                     </div>
                 </div>
                 <div class="banner-pointer-trail"></div>
             </div>
 
-            <!-- Banner 2: END. Clothing -->
             <div class="ad-banner banner-interactive" data-pointer="true">
                 <div class="banner-glow"></div>
                 <div class="banner-content">
@@ -90,16 +105,12 @@
                         <a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-glow btn-sm">Shop END. Sale →</a>
                     </div>
                     <div class="banner-right">
-                        <div class="banner-visual">
-                            <div class="sneaker-silhouette">🧥</div>
-                            <div class="floating-tag">-60%</div>
-                        </div>
+                        <div class="banner-visual"><div class="sneaker-silhouette">🧥</div><div class="floating-tag">-60%</div></div>
                     </div>
                 </div>
                 <div class="banner-pointer-trail"></div>
             </div>
 
-            <!-- Banner 3: SSENSE -->
             <div class="ad-banner banner-interactive" data-pointer="true">
                 <div class="banner-glow"></div>
                 <div class="banner-content">
@@ -110,16 +121,12 @@
                         <a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-glow btn-sm">Shop SSENSE →</a>
                     </div>
                     <div class="banner-right">
-                        <div class="banner-visual">
-                            <div class="sneaker-silhouette">👑</div>
-                            <div class="floating-tag">-70%</div>
-                        </div>
+                        <div class="banner-visual"><div class="sneaker-silhouette">👑</div><div class="floating-tag">-70%</div></div>
                     </div>
                 </div>
                 <div class="banner-pointer-trail"></div>
             </div>
 
-            <!-- Banner 4: StockX -->
             <div class="ad-banner banner-interactive" data-pointer="true">
                 <div class="banner-glow"></div>
                 <div class="banner-content">
@@ -130,16 +137,12 @@
                         <a href="https://stockx.com/sneakers/most-popular" target="_blank" class="btn btn-glow btn-sm">Browse StockX →</a>
                     </div>
                     <div class="banner-right">
-                        <div class="banner-visual">
-                            <div class="sneaker-silhouette">🔥</div>
-                            <div class="floating-tag">AUTH</div>
-                        </div>
+                        <div class="banner-visual"><div class="sneaker-silhouette">🔥</div><div class="floating-tag">AUTH</div></div>
                     </div>
                 </div>
                 <div class="banner-pointer-trail"></div>
             </div>
 
-            <!-- Banner 5: Farfetch -->
             <div class="ad-banner banner-interactive" data-pointer="true">
                 <div class="banner-glow"></div>
                 <div class="banner-content">
@@ -150,10 +153,7 @@
                         <a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-glow btn-sm">Shop Farfetch →</a>
                     </div>
                     <div class="banner-right">
-                        <div class="banner-visual">
-                            <div class="sneaker-silhouette">💎</div>
-                            <div class="floating-tag">-50%</div>
-                        </div>
+                        <div class="banner-visual"><div class="sneaker-silhouette">💎</div><div class="floating-tag">-50%</div></div>
                     </div>
                 </div>
                 <div class="banner-pointer-trail"></div>
@@ -161,66 +161,183 @@
         </div>
     </section>
 
-    <!-- Featured Drops -->
+    <!-- Featured Drops with 3D Card Effect -->
     <section id="drops" class="section section-alt">
         <div class="container">
             <h2 class="section-title">THIS WEEK'S <span class="gradient-text">DROPS</span></h2>
-            <p class="section-subtitle">Curated deals from the world's best streetwear & sneaker destinations</p>
+            <p class="section-subtitle">Hover over a card to experience the 3D perspective effect</p>
             <div class="drops-grid">
-                <div class="drop-card">
-                    <div class="drop-badge">Up to 50% Off</div>
-                    <div class="drop-icon">🔵</div>
-                    <h3>Zalando</h3>
-                    <p class="drop-region">🇩🇪 Germany</p>
-                    <p>Sneaker clearance across 2,000+ brands — Nike, adidas, New Balance, Puma & more.</p>
-                    <a href="https://www.zalando.com/men-shoes-sneakers/" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Up to 50% Off</div>
+                        <div class="drop-icon">🔵</div>
+                        <h3>Zalando</h3>
+                        <p class="drop-region">🇩🇪 Germany</p>
+                        <p>Sneaker clearance across 2,000+ brands — Nike, adidas, New Balance, Puma & more.</p>
+                        <a href="https://www.zalando.com/men-shoes-sneakers/" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
                 </div>
-                <div class="drop-card">
-                    <div class="drop-badge">Up to 70% Off</div>
-                    <div class="drop-icon">⚡</div>
-                    <h3>ASOS</h3>
-                    <p class="drop-region">🇬🇧 United Kingdom</p>
-                    <p>Massive streetwear sale — 850+ brands including The North Face, Carhartt WIP, Nike & Jordan.</p>
-                    <a href="https://www.asos.com/men/sale/" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Up to 70% Off</div>
+                        <div class="drop-icon">⚡</div>
+                        <h3>ASOS</h3>
+                        <p class="drop-region">🇬🇧 United Kingdom</p>
+                        <p>Massive streetwear sale — 850+ brands including The North Face, Carhartt WIP, Nike & Jordan.</p>
+                        <a href="https://www.asos.com/men/sale/" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
                 </div>
-                <div class="drop-card">
-                    <div class="drop-badge">Up to 60% Off</div>
-                    <div class="drop-icon">🏴</div>
-                    <h3>END. Clothing</h3>
-                    <p class="drop-region">🇬🇧 United Kingdom</p>
-                    <p>Premium streetwear & sneakers — Stone Island, Off-White, Stüssy & exclusive collaborations.</p>
-                    <a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Up to 60% Off</div>
+                        <div class="drop-icon">🏴</div>
+                        <h3>END. Clothing</h3>
+                        <p class="drop-region">🇬🇧 United Kingdom</p>
+                        <p>Premium streetwear & sneakers — Stone Island, Off-White, Stüssy & exclusive collaborations.</p>
+                        <a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
                 </div>
-                <div class="drop-card">
-                    <div class="drop-badge">Up to 80% Off</div>
-                    <div class="drop-icon">👑</div>
-                    <h3>SSENSE</h3>
-                    <p class="drop-region">🇨🇦 Global</p>
-                    <p>High-fashion meets street — Balenciaga, Rick Owens, Fear of God at steep discounts.</p>
-                    <a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Up to 80% Off</div>
+                        <div class="drop-icon">👑</div>
+                        <h3>SSENSE</h3>
+                        <p class="drop-region">🌍 Global</p>
+                        <p>High-fashion meets street — Balenciaga, Rick Owens, Fear of God at steep discounts.</p>
+                        <a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
                 </div>
-                <div class="drop-card">
-                    <div class="drop-badge">Below Retail</div>
-                    <div class="drop-icon">✅</div>
-                    <h3>StockX</h3>
-                    <p class="drop-region">🌍 Global</p>
-                    <p>Authenticated sneakers, streetwear & collectibles. Deadstock guaranteed.</p>
-                    <a href="https://stockx.com/sneakers" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Below Retail</div>
+                        <div class="drop-icon">✅</div>
+                        <h3>StockX</h3>
+                        <p class="drop-region">🌍 Global</p>
+                        <p>Authenticated sneakers, streetwear & collectibles. Deadstock guaranteed.</p>
+                        <a href="https://stockx.com/sneakers" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
                 </div>
-                <div class="drop-card">
-                    <div class="drop-badge">Up to 50% Off</div>
-                    <div class="drop-icon">💎</div>
-                    <h3>Farfetch</h3>
-                    <p class="drop-region">🇵🇹 Global</p>
-                    <p>Luxury sneakers & streetwear from 700+ boutiques — Gucci, Prada, Golden Goose.</p>
-                    <a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-outline">Shop →</a>
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">Up to 50% Off</div>
+                        <div class="drop-icon">💎</div>
+                        <h3>Farfetch</h3>
+                        <p class="drop-region">🌍 Global</p>
+                        <p>Luxury sneakers & streetwear from 700+ boutiques — Gucci, Prada, Golden Goose.</p>
+                        <a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Partners Section with Globe -->
+    <section id="partners" class="section">
+        <div class="container">
+            <h2 class="section-title">GLOBAL <span class="gradient-text">PARTNERS</span></h2>
+            <p class="section-subtitle">Our network spans across the world's fashion capitals</p>
+            <div class="globe-section">
+                <div class="globe-container">
+                    <canvas id="globeCanvas"></canvas>
+                </div>
+                <div class="partners-list">
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #a855f7;"></span>
+                        <div class="partner-info">
+                            <strong>Nike</strong>
+                            <span>Portland, USA</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #7c3aed;"></span>
+                        <div class="partner-info">
+                            <strong>END. Clothing</strong>
+                            <span>Newcastle, UK</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #c084fc;"></span>
+                        <div class="partner-info">
+                            <strong>SSENSE</strong>
+                            <span>Montreal, Canada</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #a855f7;"></span>
+                        <div class="partner-info">
+                            <strong>Farfetch</strong>
+                            <span>Porto, Portugal</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #7c3aed;"></span>
+                        <div class="partner-info">
+                            <strong>Zalando</strong>
+                            <span>Berlin, Germany</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #c084fc;"></span>
+                        <div class="partner-info">
+                            <strong>StockX</strong>
+                            <span>Detroit, USA</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #a855f7;"></span>
+                        <div class="partner-info">
+                            <strong>Slam Jam</strong>
+                            <span>Milan, Italy</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #7c3aed;"></span>
+                        <div class="partner-info">
+                            <strong>ASOS</strong>
+                            <span>London, UK</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #c084fc;"></span>
+                        <div class="partner-info">
+                            <strong>Solebox</strong>
+                            <span>Berlin, Germany</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #a855f7;"></span>
+                        <div class="partner-info">
+                            <strong>GOAT</strong>
+                            <span>Los Angeles, USA</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #7c3aed;"></span>
+                        <div class="partner-info">
+                            <strong>Atmos</strong>
+                            <span>Tokyo, Japan</span>
+                        </div>
+                    </div>
+                    <div class="partner-item">
+                        <span class="partner-dot" style="--dot-color: #c084fc;"></span>
+                        <div class="partner-info">
+                            <strong>Mytheresa</strong>
+                            <span>Munich, Germany</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Brand Directory -->
-    <section id="brands" class="section">
+    <section id="brands" class="section section-alt">
         <div class="container">
             <h2 class="section-title">BRAND <span class="gradient-text">DIRECTORY</span></h2>
             <p class="section-subtitle">The definitive guide to luxury streetwear & sneaker destinations</p>
@@ -270,7 +387,7 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="section section-alt">
+    <section id="about" class="section">
         <div class="container">
             <h2 class="section-title">ABOUT <span class="gradient-text">FASHION.</span></h2>
             <p class="about-text">We curate the best sneaker drops and streetwear sales from across the globe. Every week, we handpick promotions from the most iconic stores — from limited Jordan retros at StockX to designer sales at SSENSE. Bookmark this page and never miss a drop.</p>
@@ -282,7 +399,7 @@
         <div class="container">
             <p class="logo">FASHION<span class="accent">.</span></p>
             <p>Curating the world's best sneaker & streetwear deals — updated weekly.</p>
-            <p class="copyright">&copy; 2026 FASHION. Built for the culture.</p>
+            <p class="copyright">© 2026 FASHION. Built for the culture.</p>
         </div>
     </footer>
 
