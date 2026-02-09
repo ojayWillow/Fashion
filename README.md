@@ -1,133 +1,73 @@
-# 🛍️ Fashion — European Sales & Deals Hub
+# FASHION. — Luxury Streetwear & Sneakers Hub
 
-A curated web platform that promotes **sales, deals, and weekly offers** from the most well-known European fashion stores and retailers. Discover the best discounts from top brands across Europe — all in one place.
+> **The definitive weekly guide to high-end streetwear sales, luxury sneaker drops, and premium fashion promotions.**
 
----
-
-## 🎯 Project Vision
-
-The goal of **Fashion** is to create a clean, modern website that acts as a **rotating showcase** for European fashion sales. Each week (or shorter), the platform highlights selected stores and their current promotions, giving visitors a one-stop destination for the best fashion deals in Europe.
-
-### Core Concept
-- 🔄 **Rotating Weekly Promotions** — Feature different stores and their sales pages each week
-- 🏷️ **Curated Deals** — Handpicked sales from trusted European retailers
-- 🌍 **Pan-European Coverage** — From Scandinavian minimalism to Mediterranean style
-- 📱 **Mobile-First Design** — Beautiful on every device
+![Theme: Purple/Black](https://img.shields.io/badge/Theme-Purple%20%2F%20Black-7c3aed?style=flat-square)
+![Status: Live](https://img.shields.io/badge/Status-Live-a855f7?style=flat-square)
+![Updated: Weekly](https://img.shields.io/badge/Updated-Weekly-6d28d9?style=flat-square)
 
 ---
 
-## 🏪 Featured European Retailers
+## ✦ What is FASHION.?
 
-These are the flagship stores and marketplaces we'll be promoting:
+FASHION. is a curated advertising & sales hub for **high-end streetwear and luxury sneakers**. It features:
 
-### 🔵 Major Marketplaces
-| Store | Country | Specialty |
-|-------|---------|----------|
-| [Zalando](https://www.zalando.com) | Germany | Europe's largest online fashion platform — 51M+ active customers |
-| [ASOS](https://www.asos.com) | UK | 850+ brands, trend-focused, global shipping |
-| [About You](https://www.aboutyou.com) | Germany | Personalized shopping experience, €2B+ revenue |
-| [Veepee](https://www.veepee.com) | France | Flash sales up to 70% off, limited-time events |
-| [Boozt](https://www.boozt.com) | Sweden | Premium Scandinavian & international brands |
+- **Horizontal Ad Banners** — Eye-catching, interactive promotional banners for specific stores, emphasizing their live sales and featured collections.
+- **Following Pointer Visual Effects** — Inspired by [Aceternity UI](https://ui.aceternity.com/components/following-pointer), the site features a custom cursor follower and pointer-tracking glow effects on banner hover.
+- **Weekly Drops Grid** — Curated deals from the world's best sneaker & streetwear destinations.
+- **Brand Directory** — Organized by category: Sneaker Specialists, Streetwear & Hype, Luxury & Designer, and Multi-Brand Retailers.
 
-### 👗 Fast Fashion & High Street
-| Store | Country | Specialty |
-|-------|---------|----------|
-| [Zara](https://www.zara.com) | Spain | Fast fashion leader, runway-inspired pieces |
-| [H&M](https://www.hm.com) | Sweden | Affordable style + designer collaborations |
-| [Mango](https://www.mango.com) | Spain | Mediterranean-inspired modern fashion |
-| [COS](https://www.cos.com) | UK/Sweden | Minimalist, high-quality essentials |
-| [& Other Stories](https://www.stories.com) | Sweden | Curated collections with unique aesthetics |
-| [Weekday](https://www.weekday.com) | Sweden | Street style basics and denim |
-| [Massimo Dutti](https://www.massimodutti.com) | Spain | Elevated casual and smart fashion |
+## 🎨 Design System
 
-### 💎 Premium & Designer
-| Store | Country | Specialty |
-|-------|---------|----------|
-| [THE OUTNET](https://www.theoutnet.com) | UK | Luxury designer fashion up to 70% off |
-| [Net-a-Porter](https://www.net-a-porter.com) | UK | High-end luxury fashion destination |
-| [Farfetch](https://www.farfetch.com) | Portugal/UK | Global luxury marketplace for boutiques |
-| [BrandAlley](https://www.brandalley.co.uk) | UK | Daily designer sales up to 80% off |
-| [Love the Sales](https://www.lovethesales.com) | UK | Aggregates sales from 500+ retailers |
-| [Yoox](https://www.yoox.com) | Italy | Discounted designer fashion |
+| Element | Value |
+|---------|-------|
+| **Primary Colors** | `#a855f7` (Purple), `#0a0a0f` (Black) |
+| **Accent Gradient** | `135deg, #a855f7 → #7c3aed → #6d28d9` |
+| **Heading Font** | Outfit (900 weight, uppercase) |
+| **Body Font** | Space Grotesk |
+| **Border Radius** | 16px |
+| **Effects** | Glow shadows, gradient text, floating animations, pointer trails |
 
-### 🏬 Department Stores & Specialists
-| Store | Country | Specialty |
-|-------|---------|----------|
-| [Galeries Lafayette](https://www.galerieslafayette.com) | France | Iconic Parisian department store |
-| [Selfridges](https://www.selfridges.com) | UK | Premium London department store |
-| [Breuninger](https://www.breuninger.com) | Germany | Premium German fashion retailer |
-| [El Corte Inglés](https://www.elcorteingles.es) | Spain | Spain's biggest department store |
-| [Limango](https://www.limango.de) | Germany | Members-only shopping club, up to 80% off |
-
----
-
-## 🛠️ Tech Stack
-
-- **HTML5 / CSS3** — Semantic, accessible markup with modern styling
-- **JavaScript (Vanilla)** — Lightweight interactivity, no heavy frameworks
-- **JSON Data** — Store and promotion data stored in simple JSON files
-- **GitHub Pages** — Free hosting for the live site
-
----
-
-## 📂 Project Structure
+## 🏗 Project Structure
 
 ```
 Fashion/
-├── index.html          # Main landing page
-├── styles.css          # Core stylesheet
-├── data/
-│   └── stores.json     # Retailer data & current promotions
-├── assets/
-│   └── images/         # Store logos and promotional banners
+├── index.html          # Main page — hero, banners, drops, brand directory
+├── styles.css          # Purple/black luxury theme, responsive, animations
+├── script.js           # Following pointer cursor, banner trails, scroll reveal
+├── data/               # Data files (for future JSON-driven content)
 └── README.md           # This file
 ```
 
----
+## 🚀 Featured Stores
 
-## 🚀 Getting Started
+- **Nike** — Air Max, Dunks & Jordan retros
+- **END. Clothing** — Off-White, Stone Island, Stüssy
+- **SSENSE** — Balenciaga, Rick Owens, Maison Margiela
+- **StockX** — Authenticated sneakers below retail
+- **Farfetch** — Gucci, Prada, Alexander McQueen
+- **Zalando** — 2,000+ brand sneaker clearance
+- **ASOS** — 850+ streetwear brands on sale
 
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/ojayWillow/Fashion.git
-   cd Fashion
-   ```
+## 💡 Advertising Concept
 
-2. **Open locally**
-   ```bash
-   open index.html
-   ```
-   Or use a local server:
-   ```bash
-   npx serve .
-   ```
+The core idea is **horizontal ad banners** that act as mini-advertisements for each store's current sales page or promotion. Each banner includes:
 
-3. **Deploy to GitHub Pages**
-   - Go to Settings → Pages → Source: main branch → Save
-   - Your site will be live at `https://ojayWillow.github.io/Fashion/`
+1. **Store identity & sale tag** (e.g., "LIMITED TIME", "SEASONAL SALE")
+2. **Bold headline** with gradient text showing the discount
+3. **Brief copy** highlighting key brands and the sale's value proposition
+4. **Direct CTA button** linking to the store's actual sale page
+5. **Interactive pointer-following glow** that tracks the user's cursor across the banner
+6. **Floating visual elements** with hover animations
 
----
+This format can be easily extended for any new store or brand collaboration.
 
-## 📋 Roadmap
+## 🔧 Setup
 
-- [x] Set up repository and initial structure
-- [x] Create landing page with featured stores
-- [ ] Add weekly rotation system for promotions
-- [ ] Implement store detail pages
-- [ ] Add filtering by country, category, and discount level
-- [ ] Integrate real-time sale detection (RSS/API)
-- [ ] Add newsletter signup for deal alerts
-- [ ] SEO optimization for organic traffic
-- [ ] Affiliate link integration for monetization
+1. Clone the repo: `git clone https://github.com/ojayWillow/Fashion.git`
+2. Open `index.html` in any browser — no build tools needed.
+3. Deploy via GitHub Pages, Netlify, or Vercel.
 
----
+## 📜 License
 
-## 🤝 Contributing
-
-Want to suggest a store or report an issue? Open an issue or submit a PR!
-
----
-
-## 📄 License
-
-MIT License — feel free to use and modify.
+© 2026 FASHION. Built for the culture.
