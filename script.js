@@ -102,7 +102,7 @@ tiltCards.forEach(card => {
     });
 });
 
-// ===== Interactive Globe (Three.js) =====
+// ===== Interactive Globe (Three.js) — Rebuilt =====
 function initGlobe() {
     const canvas = document.getElementById('globeCanvas');
     if (!canvas) return;
@@ -111,38 +111,46 @@ function initGlobe() {
     const width = container.offsetWidth;
     const height = container.offsetHeight || width;
 
+    // — Scene, Camera, Renderer —
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.z = 2.5;
+    camera.position.z = 2.8;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
 
-    const globeGeo = new THREE.SphereGeometry(1, 48, 48);
+    // — Globe group: everything that rotates together —
+    const globeGroup = new THREE.Group();
+    scene.add(globeGroup);
+
+    // Main sphere
+    const globeGeo = new THREE.SphereGeometry(1, 64, 64);
     const globeMat = new THREE.MeshPhongMaterial({
-        color: 0x13131d,
+        color: 0x0f0f18,
         emissive: 0x1a0a2e,
-        emissiveIntensity: 0.3,
-        shininess: 20,
+        emissiveIntensity: 0.4,
+        shininess: 25,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.92,
     });
     const globe = new THREE.Mesh(globeGeo, globeMat);
-    scene.add(globe);
+    globeGroup.add(globe);
 
-    const wireGeo = new THREE.SphereGeometry(1.002, 36, 36);
+    // Wireframe overlay
+    const wireGeo = new THREE.SphereGeometry(1.003, 40, 40);
     const wireMat = new THREE.MeshBasicMaterial({
         color: 0x7c3aed,
         wireframe: true,
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.07,
     });
     const wireframe = new THREE.Mesh(wireGeo, wireMat);
-    scene.add(wireframe);
+    globeGroup.add(wireframe);
 
-    const atmosGeo = new THREE.SphereGeometry(1.15, 48, 48);
+    // Atmosphere glow
+    const atmosGeo = new THREE.SphereGeometry(1.18, 64, 64);
     const atmosMat = new THREE.MeshBasicMaterial({
         color: 0xa855f7,
         transparent: true,
@@ -150,23 +158,25 @@ function initGlobe() {
         side: THREE.BackSide,
     });
     const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
-    scene.add(atmosphere);
+    scene.add(atmosphere); // atmosphere doesn't need to rotate
 
+    // — Partner data with accurate coordinates —
     const partners = [
-        { lat: 45.52, lng: -122.68, name: 'Nike' },
-        { lat: 54.97, lng: -1.61, name: 'END.' },
-        { lat: 45.50, lng: -73.57, name: 'SSENSE' },
-        { lat: 41.15, lng: -8.61, name: 'Farfetch' },
-        { lat: 52.52, lng: 13.40, name: 'Zalando' },
-        { lat: 42.33, lng: -83.05, name: 'StockX' },
-        { lat: 45.46, lng: 9.19, name: 'Slam Jam' },
-        { lat: 51.51, lng: -0.13, name: 'ASOS' },
-        { lat: 52.52, lng: 13.40, name: 'Solebox' },
-        { lat: 34.05, lng: -118.24, name: 'GOAT' },
-        { lat: 35.68, lng: 139.69, name: 'Atmos' },
-        { lat: 48.14, lng: 11.58, name: 'Mytheresa' },
+        { lat: 45.52, lng: -122.68, name: 'Nike', city: 'Portland, USA' },
+        { lat: 54.97, lng: -1.61,   name: 'END. Clothing', city: 'Newcastle, UK' },
+        { lat: 45.50, lng: -73.57,  name: 'SSENSE', city: 'Montreal, Canada' },
+        { lat: 41.15, lng: -8.61,   name: 'Farfetch', city: 'Porto, Portugal' },
+        { lat: 52.52, lng: 13.40,   name: 'Zalando', city: 'Berlin, Germany' },
+        { lat: 42.33, lng: -83.05,  name: 'StockX', city: 'Detroit, USA' },
+        { lat: 45.46, lng: 9.19,    name: 'Slam Jam', city: 'Milan, Italy' },
+        { lat: 51.51, lng: -0.13,   name: 'ASOS', city: 'London, UK' },
+        { lat: 52.50, lng: 13.42,   name: 'Solebox', city: 'Berlin, Germany' },
+        { lat: 34.05, lng: -118.24, name: 'GOAT', city: 'Los Angeles, USA' },
+        { lat: 35.68, lng: 139.69,  name: 'Atmos', city: 'Tokyo, Japan' },
+        { lat: 48.14, lng: 11.58,   name: 'Mytheresa', city: 'Munich, Germany' },
     ];
 
+    // Convert lat/lng to 3D position on sphere surface
     function latLngToVector3(lat, lng, radius) {
         const phi = (90 - lat) * (Math.PI / 180);
         const theta = (lng + 180) * (Math.PI / 180);
@@ -177,59 +187,163 @@ function initGlobe() {
         );
     }
 
-    partners.forEach(p => {
-        const pos = latLngToVector3(p.lat, p.lng, 1.02);
-        const dotGeo = new THREE.SphereGeometry(0.02, 12, 12);
-        const dotMat = new THREE.MeshBasicMaterial({ color: 0xa855f7 });
+    // — Create partner dots & pulse rings on the globe surface —
+    const dotMeshes = []; // for raycasting
+
+    partners.forEach((p, idx) => {
+        const pos = latLngToVector3(p.lat, p.lng, 1.015);
+
+        // Glowing dot
+        const dotGeo = new THREE.SphereGeometry(0.022, 16, 16);
+        const dotMat = new THREE.MeshBasicMaterial({ color: 0xc084fc });
         const dot = new THREE.Mesh(dotGeo, dotMat);
         dot.position.copy(pos);
-        scene.add(dot);
+        dot.userData = { partnerIndex: idx, name: p.name, city: p.city };
+        globeGroup.add(dot);
+        dotMeshes.push(dot);
 
-        const ringGeo = new THREE.RingGeometry(0.03, 0.05, 24);
-        const ringMat = new THREE.MeshBasicMaterial({
-            color: 0xc084fc,
+        // Pulsing ring around dot
+        const pulseGeo = new THREE.RingGeometry(0.025, 0.045, 32);
+        const pulseMat = new THREE.MeshBasicMaterial({
+            color: 0xa855f7,
             transparent: true,
-            opacity: 0.4,
+            opacity: 0.5,
             side: THREE.DoubleSide,
         });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.position.copy(pos);
-        ring.lookAt(0, 0, 0);
-        scene.add(ring);
+        const pulse = new THREE.Mesh(pulseGeo, pulseMat);
+        pulse.position.copy(pos);
+        pulse.lookAt(new THREE.Vector3(0, 0, 0));
+        pulse.userData.isPulse = true;
+        pulse.userData.baseScale = 1;
+        globeGroup.add(pulse);
+
+        // Small vertical line (pin stem) from surface upward
+        const stemLength = 0.06;
+        const stemDir = pos.clone().normalize();
+        const stemStart = pos.clone();
+        const stemEnd = pos.clone().add(stemDir.multiplyScalar(stemLength));
+        const stemGeo = new THREE.BufferGeometry().setFromPoints([stemStart, stemEnd]);
+        const stemMat = new THREE.LineBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.6 });
+        const stem = new THREE.Line(stemGeo, stemMat);
+        globeGroup.add(stem);
     });
 
+    // — Arcs connecting partner pairs —
     const arcPairs = [
-        [0, 5], [1, 7], [2, 0], [3, 6], [4, 8],
-        [9, 10], [6, 11], [7, 3], [10, 2], [5, 9]
+        [0, 5],  // Nike ↔ StockX
+        [1, 7],  // END ↔ ASOS
+        [2, 0],  // SSENSE ↔ Nike
+        [3, 6],  // Farfetch ↔ Slam Jam
+        [4, 8],  // Zalando ↔ Solebox
+        [9, 10], // GOAT ↔ Atmos
+        [6, 11], // Slam Jam ↔ Mytheresa
+        [7, 3],  // ASOS ↔ Farfetch
+        [10, 2], // Atmos ↔ SSENSE
+        [5, 9],  // StockX ↔ GOAT
     ];
 
     arcPairs.forEach(([i, j]) => {
-        const start = latLngToVector3(partners[i].lat, partners[i].lng, 1.02);
-        const end = latLngToVector3(partners[j].lat, partners[j].lng, 1.02);
-        const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(1.3);
+        const start = latLngToVector3(partners[i].lat, partners[i].lng, 1.015);
+        const end = latLngToVector3(partners[j].lat, partners[j].lng, 1.015);
+
+        // Arc height scales with distance between points
+        const dist = start.distanceTo(end);
+        const arcHeight = 1.0 + dist * 0.35;
+        const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(arcHeight);
 
         const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-        const arcGeo = new THREE.TubeGeometry(curve, 32, 0.004, 8, false);
-        const arcMat = new THREE.MeshBasicMaterial({
+        const points = curve.getPoints(48);
+        const arcGeo = new THREE.BufferGeometry().setFromPoints(points);
+        const arcMat = new THREE.LineBasicMaterial({
             color: 0xa855f7,
             transparent: true,
-            opacity: 0.25,
+            opacity: 0.18,
         });
-        const arc = new THREE.Mesh(arcGeo, arcMat);
-        scene.add(arc);
+        const arc = new THREE.Line(arcGeo, arcMat);
+        globeGroup.add(arc);
     });
 
-    const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+    // — Lighting —
+    const ambientLight = new THREE.AmbientLight(0x606080, 0.6);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xa855f7, 0.4);
-    directionalLight.position.set(5, 3, 5);
-    scene.add(directionalLight);
+    const dirLight = new THREE.DirectionalLight(0xa855f7, 0.5);
+    dirLight.position.set(5, 3, 5);
+    scene.add(dirLight);
 
-    const pointLight = new THREE.PointLight(0x7c3aed, 0.6, 100);
-    pointLight.position.set(-5, -3, 2);
+    const pointLight = new THREE.PointLight(0x7c3aed, 0.5, 100);
+    pointLight.position.set(-5, -3, 3);
     scene.add(pointLight);
 
+    // — Tooltip label (HTML overlay) —
+    const tooltip = document.getElementById('globeTooltip');
+
+    // — Raycaster for hover detection —
+    const raycaster = new THREE.Raycaster();
+    raycaster.params.Points = { threshold: 0.05 };
+    const mouse = new THREE.Vector2();
+    let hoveredDot = null;
+
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(dotMeshes);
+
+        if (intersects.length > 0) {
+            const hit = intersects[0].object;
+            if (hoveredDot !== hit) {
+                hoveredDot = hit;
+                // Highlight
+                hit.material.color.setHex(0xffffff);
+                hit.scale.set(1.8, 1.8, 1.8);
+            }
+            // Position tooltip
+            if (tooltip) {
+                tooltip.textContent = hit.userData.name + ' — ' + hit.userData.city;
+                tooltip.style.opacity = '1';
+                tooltip.style.left = (e.clientX - rect.left) + 'px';
+                tooltip.style.top = (e.clientY - rect.top - 40) + 'px';
+            }
+        } else {
+            if (hoveredDot) {
+                hoveredDot.material.color.setHex(0xc084fc);
+                hoveredDot.scale.set(1, 1, 1);
+                hoveredDot = null;
+            }
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+            }
+        }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        if (hoveredDot) {
+            hoveredDot.material.color.setHex(0xc084fc);
+            hoveredDot.scale.set(1, 1, 1);
+            hoveredDot = null;
+        }
+        if (tooltip) tooltip.style.opacity = '0';
+    });
+
+    // — Click to highlight partner in list —
+    canvas.addEventListener('click', (e) => {
+        if (hoveredDot) {
+            const idx = hoveredDot.userData.partnerIndex;
+            const partnerItems = document.querySelectorAll('.partner-item');
+            // Remove previous highlights
+            partnerItems.forEach(p => p.classList.remove('partner-active'));
+            // Highlight clicked one
+            if (partnerItems[idx]) {
+                partnerItems[idx].classList.add('partner-active');
+                partnerItems[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    });
+
+    // — Drag to rotate —
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
     let rotationVelocity = { x: 0, y: 0 };
@@ -243,35 +357,49 @@ function initGlobe() {
         if (!isDragging) return;
         const deltaX = e.clientX - previousMousePosition.x;
         const deltaY = e.clientY - previousMousePosition.y;
-        rotationVelocity.x = deltaY * 0.005;
-        rotationVelocity.y = deltaX * 0.005;
+        rotationVelocity.x = deltaY * 0.004;
+        rotationVelocity.y = deltaX * 0.004;
         previousMousePosition = { x: e.clientX, y: e.clientY };
     });
 
     canvas.addEventListener('mouseup', () => isDragging = false);
     canvas.addEventListener('mouseleave', () => isDragging = false);
 
+    // — Pulse animation clock —
+    const clock = new THREE.Clock();
+
+    // — Animate —
     function animate() {
         requestAnimationFrame(animate);
 
+        const elapsed = clock.getElapsedTime();
+
+        // Auto-rotate when not dragging
         if (!isDragging) {
-            globe.rotation.y += 0.003;
-            wireframe.rotation.y += 0.003;
+            globeGroup.rotation.y += 0.002;
         }
 
-        globe.rotation.x += rotationVelocity.x;
-        globe.rotation.y += rotationVelocity.y;
-        wireframe.rotation.x = globe.rotation.x;
-        wireframe.rotation.y = globe.rotation.y;
+        // Apply drag momentum
+        globeGroup.rotation.x += rotationVelocity.x;
+        globeGroup.rotation.y += rotationVelocity.y;
+        rotationVelocity.x *= 0.94;
+        rotationVelocity.y *= 0.94;
 
-        rotationVelocity.x *= 0.95;
-        rotationVelocity.y *= 0.95;
+        // Animate pulse rings
+        globeGroup.children.forEach(child => {
+            if (child.userData && child.userData.isPulse) {
+                const s = 1 + 0.3 * Math.sin(elapsed * 2.5);
+                child.scale.set(s, s, s);
+                child.material.opacity = 0.3 + 0.2 * Math.sin(elapsed * 2.5);
+            }
+        });
 
         renderer.render(scene, camera);
     }
 
     animate();
 
+    // — Resize handler —
     window.addEventListener('resize', () => {
         const w = container.offsetWidth;
         const h = container.offsetHeight || w;
@@ -281,6 +409,7 @@ function initGlobe() {
     });
 }
 
+// Lazy-load globe when section scrolls into view
 const globeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -318,11 +447,9 @@ let lastScroll = 0;
 window.addEventListener('scroll', () => {
     const currentScroll = window.scrollY;
     if (currentScroll > lastScroll && currentScroll > 200) {
-        // Scrolling down — hide dock upwards
         dock.style.transform = 'translateX(-50%) translateY(-100px)';
         dock.style.opacity = '0';
     } else {
-        // Scrolling up — show dock
         dock.style.transform = 'translateX(-50%) translateY(0)';
         dock.style.opacity = '1';
     }
