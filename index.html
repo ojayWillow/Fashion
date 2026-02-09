@@ -3,133 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discover the best fashion sales and deals from top European stores. Weekly curated promotions from Zalando, Zara, ASOS, H&M, and more.">
-    <title>Fashion — European Sales & Deals Hub</title>
+    <meta name="description" content="FASHION. — Premium high-end streetwear & luxury sneakers. Discover exclusive drops, sales, and curated collections from the world's most iconic brands.">
+    <title>FASHION. — Luxury Streetwear & Sneakers</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Custom Cursor Follower -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <a href="#" class="logo">Fashion<span class="accent">.</span></a>
+            <a href="#" class="logo">FASHION<span class="accent">.</span></a>
             <ul class="nav-links">
-                <li><a href="#featured">This Week</a></li>
-                <li><a href="#stores">Stores</a></li>
-                <li><a href="#categories">Categories</a></li>
+                <li><a href="#drops">Drops</a></li>
+                <li><a href="#banners">Sales</a></li>
+                <li><a href="#brands">Brands</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
+            <div class="nav-actions">
+                <a href="#drops" class="btn btn-glow btn-sm">Shop Now</a>
+            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <header class="hero">
-        <div class="container">
-            <p class="hero-label">✨ Your Weekly Fashion Guide</p>
-            <h1>Discover Europe's<br><span class="accent">Best Fashion Sales</span></h1>
-            <p class="hero-subtitle">Curated deals from the most iconic European stores — updated weekly.</p>
-            <a href="#featured" class="btn btn-primary">See This Week's Deals →</a>
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+        <div class="container hero-content">
+            <div class="hero-badge">✦ EXCLUSIVE DROPS — UPDATED WEEKLY</div>
+            <h1>THE FUTURE OF<br><span class="gradient-text">STREETWEAR</span></h1>
+            <p class="hero-subtitle">Curated luxury sneakers & high-end streetwear sales from the world's most iconic stores. Your gateway to exclusive drops and limited collections.</p>
+            <div class="hero-cta">
+                <a href="#drops" class="btn btn-glow">Explore Drops →</a>
+                <a href="#banners" class="btn btn-ghost">View Sales</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Premium Brands</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat"><span class="stat-num">Weekly</span><span class="stat-label">New Drops</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat"><span class="stat-num">Up to 80%</span><span class="stat-label">Off Retail</span></div>
+            </div>
         </div>
     </header>
 
-    <!-- Featured This Week -->
-    <section id="featured" class="section">
+    <!-- Horizontal Ad Banners Section -->
+    <section id="banners" class="section">
         <div class="container">
-            <h2 class="section-title">🔥 Featured This Week</h2>
-            <p class="section-subtitle">Handpicked sales running right now</p>
-            <div class="deals-grid" id="deals-grid">
-                <!-- Deals will be loaded dynamically from stores.json -->
-                <div class="deal-card">
-                    <div class="deal-badge">Up to 50% Off</div>
+            <h2 class="section-title">LIVE <span class="gradient-text">PROMOTIONS</span></h2>
+            <p class="section-subtitle">Horizontal banners showcasing this week's hottest store sales. Hover to explore.</p>
+
+            <!-- Banner 1: Nike / Sneakers -->
+            <div class="ad-banner banner-interactive" data-pointer="true">
+                <div class="banner-glow"></div>
+                <div class="banner-content">
+                    <div class="banner-left">
+                        <span class="banner-tag">LIMITED TIME</span>
+                        <h3 class="banner-title">NIKE AIR MAX<br><span class="gradient-text">UP TO 40% OFF</span></h3>
+                        <p class="banner-desc">Exclusive member sale on Air Max, Dunks & Jordan retros. Free express shipping on all orders.</p>
+                        <a href="https://www.nike.com/w/sale-3yaep" target="_blank" class="btn btn-glow btn-sm">Shop Nike Sale →</a>
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-visual">
+                            <div class="sneaker-silhouette">👟</div>
+                            <div class="floating-tag">-40%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pointer-trail"></div>
+            </div>
+
+            <!-- Banner 2: END. Clothing -->
+            <div class="ad-banner banner-interactive" data-pointer="true">
+                <div class="banner-glow"></div>
+                <div class="banner-content">
+                    <div class="banner-left">
+                        <span class="banner-tag">SEASONAL SALE</span>
+                        <h3 class="banner-title">END. CLOTHING<br><span class="gradient-text">UP TO 60% OFF</span></h3>
+                        <p class="banner-desc">Streetwear & designer sale — Off-White, Stone Island, Stüssy, New Balance and 200+ premium labels.</p>
+                        <a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-glow btn-sm">Shop END. Sale →</a>
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-visual">
+                            <div class="sneaker-silhouette">🧥</div>
+                            <div class="floating-tag">-60%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pointer-trail"></div>
+            </div>
+
+            <!-- Banner 3: SSENSE -->
+            <div class="ad-banner banner-interactive" data-pointer="true">
+                <div class="banner-glow"></div>
+                <div class="banner-content">
+                    <div class="banner-left">
+                        <span class="banner-tag">DESIGNER EDIT</span>
+                        <h3 class="banner-title">SSENSE SALE<br><span class="gradient-text">UP TO 70% OFF</span></h3>
+                        <p class="banner-desc">The definitive luxury sale — Balenciaga, Rick Owens, Maison Margiela & emerging designers at steep discounts.</p>
+                        <a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-glow btn-sm">Shop SSENSE →</a>
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-visual">
+                            <div class="sneaker-silhouette">👑</div>
+                            <div class="floating-tag">-70%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pointer-trail"></div>
+            </div>
+
+            <!-- Banner 4: StockX -->
+            <div class="ad-banner banner-interactive" data-pointer="true">
+                <div class="banner-glow"></div>
+                <div class="banner-content">
+                    <div class="banner-left">
+                        <span class="banner-tag">VERIFIED AUTHENTIC</span>
+                        <h3 class="banner-title">STOCKX DROPS<br><span class="gradient-text">BELOW RETAIL</span></h3>
+                        <p class="banner-desc">Authenticated sneakers below retail price. Yeezy, Travis Scott, Jordan — all verified, all legit.</p>
+                        <a href="https://stockx.com/sneakers/most-popular" target="_blank" class="btn btn-glow btn-sm">Browse StockX →</a>
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-visual">
+                            <div class="sneaker-silhouette">🔥</div>
+                            <div class="floating-tag">AUTH</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pointer-trail"></div>
+            </div>
+
+            <!-- Banner 5: Farfetch -->
+            <div class="ad-banner banner-interactive" data-pointer="true">
+                <div class="banner-glow"></div>
+                <div class="banner-content">
+                    <div class="banner-left">
+                        <span class="banner-tag">LUXURY SNEAKERS</span>
+                        <h3 class="banner-title">FARFETCH<br><span class="gradient-text">UP TO 50% OFF</span></h3>
+                        <p class="banner-desc">High-fashion sneakers from Gucci, Prada, Alexander McQueen, Golden Goose & more. Global shipping.</p>
+                        <a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-glow btn-sm">Shop Farfetch →</a>
+                    </div>
+                    <div class="banner-right">
+                        <div class="banner-visual">
+                            <div class="sneaker-silhouette">💎</div>
+                            <div class="floating-tag">-50%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pointer-trail"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Drops -->
+    <section id="drops" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">THIS WEEK'S <span class="gradient-text">DROPS</span></h2>
+            <p class="section-subtitle">Curated deals from the world's best streetwear & sneaker destinations</p>
+            <div class="drops-grid">
+                <div class="drop-card">
+                    <div class="drop-badge">Up to 50% Off</div>
+                    <div class="drop-icon">🔵</div>
                     <h3>Zalando</h3>
-                    <p class="deal-country">🇩🇪 Germany</p>
-                    <p>Winter sale across 2,000+ brands. Free shipping & free returns.</p>
-                    <a href="https://www.zalando.com/campaigns/winter-sale/" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                    <p class="drop-region">🇩🇪 Germany</p>
+                    <p>Sneaker clearance across 2,000+ brands — Nike, adidas, New Balance, Puma & more.</p>
+                    <a href="https://www.zalando.com/men-shoes-sneakers/" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
-                <div class="deal-card">
-                    <div class="deal-badge">Up to 70% Off</div>
+                <div class="drop-card">
+                    <div class="drop-badge">Up to 70% Off</div>
+                    <div class="drop-icon">⚡</div>
                     <h3>ASOS</h3>
-                    <p class="deal-country">🇬🇧 United Kingdom</p>
-                    <p>Massive markdowns on 850+ brands. Extra discounts on app orders.</p>
-                    <a href="https://www.asos.com/women/sale/" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                    <p class="drop-region">🇬🇧 United Kingdom</p>
+                    <p>Massive streetwear sale — 850+ brands including The North Face, Carhartt WIP, Nike & Jordan.</p>
+                    <a href="https://www.asos.com/men/sale/" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
-                <div class="deal-card">
-                    <div class="deal-badge">Up to 60% Off</div>
-                    <h3>Zara</h3>
-                    <p class="deal-country">🇪🇸 Spain</p>
-                    <p>Seasonal sale on women's, men's, and kids' collections.</p>
-                    <a href="https://www.zara.com/ww/en/woman-sale-l1314.html" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                <div class="drop-card">
+                    <div class="drop-badge">Up to 60% Off</div>
+                    <div class="drop-icon">🏴</div>
+                    <h3>END. Clothing</h3>
+                    <p class="drop-region">🇬🇧 United Kingdom</p>
+                    <p>Premium streetwear & sneakers — Stone Island, Off-White, Stüssy & exclusive collaborations.</p>
+                    <a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
-                <div class="deal-card">
-                    <div class="deal-badge">Up to 60% Off</div>
-                    <h3>H&M</h3>
-                    <p class="deal-country">🇸🇪 Sweden</p>
-                    <p>End of season sale plus member-exclusive early access deals.</p>
-                    <a href="https://www2.hm.com/en_gb/sale.html" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                <div class="drop-card">
+                    <div class="drop-badge">Up to 80% Off</div>
+                    <div class="drop-icon">👑</div>
+                    <h3>SSENSE</h3>
+                    <p class="drop-region">🇨🇦 Global</p>
+                    <p>High-fashion meets street — Balenciaga, Rick Owens, Fear of God at steep discounts.</p>
+                    <a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
-                <div class="deal-card">
-                    <div class="deal-badge">Up to 80% Off</div>
-                    <h3>THE OUTNET</h3>
-                    <p class="deal-country">🇬🇧 United Kingdom</p>
-                    <p>Luxury designer pieces at a fraction of the price. 350+ brands.</p>
-                    <a href="https://www.theoutnet.com/en-gb/shop/clothing" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                <div class="drop-card">
+                    <div class="drop-badge">Below Retail</div>
+                    <div class="drop-icon">✅</div>
+                    <h3>StockX</h3>
+                    <p class="drop-region">🌍 Global</p>
+                    <p>Authenticated sneakers, streetwear & collectibles. Deadstock guaranteed.</p>
+                    <a href="https://stockx.com/sneakers" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
-                <div class="deal-card">
-                    <div class="deal-badge">Flash Sales Daily</div>
-                    <h3>Veepee</h3>
-                    <p class="deal-country">🇫🇷 France</p>
-                    <p>Limited-time flash sales on premium brands. Members-only access.</p>
-                    <a href="https://www.veepee.com" target="_blank" class="btn btn-outline">Shop Sale →</a>
+                <div class="drop-card">
+                    <div class="drop-badge">Up to 50% Off</div>
+                    <div class="drop-icon">💎</div>
+                    <h3>Farfetch</h3>
+                    <p class="drop-region">🇵🇹 Global</p>
+                    <p>Luxury sneakers & streetwear from 700+ boutiques — Gucci, Prada, Golden Goose.</p>
+                    <a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-outline">Shop →</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Store Directory -->
-    <section id="stores" class="section section-alt">
+    <!-- Brand Directory -->
+    <section id="brands" class="section">
         <div class="container">
-            <h2 class="section-title">🏪 Store Directory</h2>
-            <p class="section-subtitle">Europe's top fashion destinations</p>
-            <div class="store-categories">
-                <div class="store-category">
-                    <h3>🔵 Major Marketplaces</h3>
-                    <ul class="store-list">
-                        <li><a href="https://www.zalando.com" target="_blank">Zalando</a> <span>🇩🇪</span></li>
-                        <li><a href="https://www.asos.com" target="_blank">ASOS</a> <span>🇬🇧</span></li>
-                        <li><a href="https://www.aboutyou.com" target="_blank">About You</a> <span>🇩🇪</span></li>
-                        <li><a href="https://www.veepee.com" target="_blank">Veepee</a> <span>🇫🇷</span></li>
-                        <li><a href="https://www.boozt.com" target="_blank">Boozt</a> <span>🇸🇪</span></li>
+            <h2 class="section-title">BRAND <span class="gradient-text">DIRECTORY</span></h2>
+            <p class="section-subtitle">The definitive guide to luxury streetwear & sneaker destinations</p>
+            <div class="brand-grid">
+                <div class="brand-category">
+                    <h3>👟 Sneaker Specialists</h3>
+                    <ul class="brand-list">
+                        <li><a href="https://www.nike.com" target="_blank">Nike</a><span>🌍</span></li>
+                        <li><a href="https://www.adidas.com" target="_blank">adidas</a><span>🇩🇪</span></li>
+                        <li><a href="https://www.newbalance.com" target="_blank">New Balance</a><span>🇺🇸</span></li>
+                        <li><a href="https://stockx.com" target="_blank">StockX</a><span>🌍</span></li>
+                        <li><a href="https://www.goat.com" target="_blank">GOAT</a><span>🌍</span></li>
                     </ul>
                 </div>
-                <div class="store-category">
-                    <h3>👗 Fast Fashion</h3>
-                    <ul class="store-list">
-                        <li><a href="https://www.zara.com" target="_blank">Zara</a> <span>🇪🇸</span></li>
-                        <li><a href="https://www.hm.com" target="_blank">H&M</a> <span>🇸🇪</span></li>
-                        <li><a href="https://www.mango.com" target="_blank">Mango</a> <span>🇪🇸</span></li>
-                        <li><a href="https://www.cos.com" target="_blank">COS</a> <span>🇸🇪</span></li>
-                        <li><a href="https://www.massimodutti.com" target="_blank">Massimo Dutti</a> <span>🇪🇸</span></li>
+                <div class="brand-category">
+                    <h3>🏴 Streetwear & Hype</h3>
+                    <ul class="brand-list">
+                        <li><a href="https://www.endclothing.com" target="_blank">END. Clothing</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.size.co.uk" target="_blank">size?</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.footpatrol.com" target="_blank">Footpatrol</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.slamjam.com" target="_blank">Slam Jam</a><span>🇮🇹</span></li>
+                        <li><a href="https://www.solebox.com" target="_blank">Solebox</a><span>🇩🇪</span></li>
                     </ul>
                 </div>
-                <div class="store-category">
-                    <h3>💎 Premium & Designer</h3>
-                    <ul class="store-list">
-                        <li><a href="https://www.theoutnet.com" target="_blank">THE OUTNET</a> <span>🇬🇧</span></li>
-                        <li><a href="https://www.net-a-porter.com" target="_blank">Net-a-Porter</a> <span>🇬🇧</span></li>
-                        <li><a href="https://www.farfetch.com" target="_blank">Farfetch</a> <span>🇵🇹</span></li>
-                        <li><a href="https://www.brandalley.co.uk" target="_blank">BrandAlley</a> <span>🇬🇧</span></li>
-                        <li><a href="https://www.yoox.com" target="_blank">Yoox</a> <span>🇮🇹</span></li>
+                <div class="brand-category">
+                    <h3>💎 Luxury & Designer</h3>
+                    <ul class="brand-list">
+                        <li><a href="https://www.ssense.com" target="_blank">SSENSE</a><span>🌍</span></li>
+                        <li><a href="https://www.farfetch.com" target="_blank">Farfetch</a><span>🇵🇹</span></li>
+                        <li><a href="https://www.net-a-porter.com" target="_blank">Net-a-Porter</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.matchesfashion.com" target="_blank">MATCHESFASHION</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.mytheresa.com" target="_blank">Mytheresa</a><span>🇩🇪</span></li>
                     </ul>
                 </div>
-                <div class="store-category">
-                    <h3>🏬 Department Stores</h3>
-                    <ul class="store-list">
-                        <li><a href="https://www.galerieslafayette.com" target="_blank">Galeries Lafayette</a> <span>🇫🇷</span></li>
-                        <li><a href="https://www.selfridges.com" target="_blank">Selfridges</a> <span>🇬🇧</span></li>
-                        <li><a href="https://www.breuninger.com" target="_blank">Breuninger</a> <span>🇩🇪</span></li>
-                        <li><a href="https://www.elcorteingles.es" target="_blank">El Corte Inglés</a> <span>🇪🇸</span></li>
-                        <li><a href="https://www.limango.de" target="_blank">Limango</a> <span>🇩🇪</span></li>
+                <div class="brand-category">
+                    <h3>🏬 Multi-Brand Retailers</h3>
+                    <ul class="brand-list">
+                        <li><a href="https://www.zalando.com" target="_blank">Zalando</a><span>🇩🇪</span></li>
+                        <li><a href="https://www.asos.com" target="_blank">ASOS</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.aboutyou.com" target="_blank">About You</a><span>🇩🇪</span></li>
+                        <li><a href="https://www.selfridges.com" target="_blank">Selfridges</a><span>🇬🇧</span></li>
+                        <li><a href="https://www.mrporter.com" target="_blank">MR PORTER</a><span>🇬🇧</span></li>
                     </ul>
                 </div>
             </div>
@@ -137,20 +270,22 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="section">
+    <section id="about" class="section section-alt">
         <div class="container">
-            <h2 class="section-title">About Fashion.</h2>
-            <p class="about-text">We curate the best fashion sales from across Europe so you don't have to hunt for deals. Every week, we handpick promotions from trusted retailers — from flash sales on luxury designers to seasonal markdowns at your favorite high street stores. Bookmark this page and never miss a deal.</p>
+            <h2 class="section-title">ABOUT <span class="gradient-text">FASHION.</span></h2>
+            <p class="about-text">We curate the best sneaker drops and streetwear sales from across the globe. Every week, we handpick promotions from the most iconic stores — from limited Jordan retros at StockX to designer sales at SSENSE. Bookmark this page and never miss a drop.</p>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p class="logo">Fashion<span class="accent">.</span></p>
-            <p>Curating Europe's best fashion deals — updated weekly.</p>
-            <p class="copyright">&copy; 2026 Fashion. Built with ❤️ for fashion lovers.</p>
+            <p class="logo">FASHION<span class="accent">.</span></p>
+            <p>Curating the world's best sneaker & streetwear deals — updated weekly.</p>
+            <p class="copyright">&copy; 2026 FASHION. Built for the culture.</p>
         </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
