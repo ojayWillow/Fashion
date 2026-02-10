@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FASHION. Sales Dashboard — Browse 69+ curated fashion store sales. Find the best deals on streetwear, sneakers, and luxury fashion.">
+    <title>FASHION. — Sales Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sales.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Floating Dock Header -->
+    <nav class="floating-dock" id="floatingDock">
+        <div class="dock-container">
+            <a href="index.html" class="dock-logo">FASHION<span class="accent">.</span></a>
+            <div class="dock-divider"></div>
+            <a href="index.html" class="dock-item" data-tooltip="Home"><div class="dock-icon">🏠</div></a>
+            <a href="index.html#drops" class="dock-item" data-tooltip="Drops"><div class="dock-icon">🔥</div></a>
+            <a href="sales.html" class="dock-item dock-active" data-tooltip="Sales"><div class="dock-icon">💰</div></a>
+            <a href="index.html#partners" class="dock-item" data-tooltip="Partners"><div class="dock-icon">🌍</div></a>
+            <a href="index.html#brands" class="dock-item" data-tooltip="Brands"><div class="dock-icon">💎</div></a>
+            <a href="index.html#about" class="dock-item" data-tooltip="About"><div class="dock-icon">✦</div></a>
+        </div>
+    </nav>
+
+    <!-- Sales Hero -->
+    <header class="sales-hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+        <div class="container">
+            <div class="sales-hero-content">
+                <div class="hero-badge">💰 69 STORES — LIVE SALES</div>
+                <h1 class="hero-title"><span class="title-static">SALES</span> <span class="gradient-text">DASHBOARD</span></h1>
+                <p class="hero-subtitle">Browse every active sale from our curated partner stores. Search, filter, and click straight through to the deals.</p>
+                
+                <!-- Search Bar -->
+                <div class="sales-search-wrap">
+                    <div class="sales-search">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search stores... (e.g. END, Nike, Zalando)" autocomplete="off">
+                        <span class="search-count" id="searchCount">69 stores</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Tabs -->
+    <section class="filters-bar">
+        <div class="container">
+            <div class="filter-tabs" id="filterTabs">
+                <button class="filter-tab active" data-filter="all">✦ All</button>
+                <!-- Tabs injected by JS from category names -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Grid -->
+    <section class="sales-grid-section">
+        <div class="container">
+            <div class="sales-grid" id="salesGrid">
+                <!-- Cards injected by JS -->
+            </div>
+            <div class="no-results" id="noResults" style="display:none;">
+                <span class="no-results-icon">🔍</span>
+                <h3>No stores found</h3>
+                <p>Try a different search term or filter</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="logo">FASHION<span class="accent">.</span></p>
+            <p>Curating the world's best sneaker & streetwear deals — updated weekly.</p>
+            <p class="copyright">© 2026 FASHION. Built for the culture.</p>
+        </div>
+    </footer>
+
+    <script src="sales.js"></script>
+</body>
+</html>
