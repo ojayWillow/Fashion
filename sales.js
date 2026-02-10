@@ -61,9 +61,15 @@ function renderPicks(picks) {
         const card = document.createElement('div');
         card.className = 'pick-card';
         card.style.animationDelay = `${i * 0.08}s`;
+
+        const sizesHTML = pick.sizes && pick.sizes.length
+            ? `<div class="pick-card-sizes-label">EU Sizes</div>
+               <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
+            : '';
+
         card.innerHTML = `
             <div class="pick-card-image">
-                <img src="${pick.image}" alt="${pick.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400/1a1a28/a855f7?text=No+Image'">
+                <img src="${pick.image}" alt="${pick.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400/130d20/a855f7?text=No+Image'">
                 <span class="pick-card-discount">${pick.discount}</span>
                 <span class="pick-card-store">${pick.storeFlag} ${pick.store}</span>
             </div>
@@ -75,6 +81,7 @@ function renderPicks(picks) {
                     <span class="pick-price-sale">${pick.salePrice}</span>
                     <span class="pick-price-retail">${pick.retailPrice}</span>
                 </div>
+                ${sizesHTML}
                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
                 <button class="pick-card-cta" onclick="window.open('${pick.url}','_blank')">Shop Now →</button>
             </div>
