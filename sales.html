@@ -14,7 +14,6 @@
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
 
-    <!-- Floating Dock Header -->
     <nav class="floating-dock" id="floatingDock">
         <div class="dock-container">
             <a href="index.html" class="dock-logo">FASHION<span class="accent">.</span></a>
@@ -38,8 +37,6 @@
                 <div class="hero-badge">💰 69 STORES — LIVE SALES</div>
                 <h1 class="hero-title"><span class="title-static">SALES</span> <span class="gradient-text">DASHBOARD</span></h1>
                 <p class="hero-subtitle">Browse every active sale from our curated partner stores. Search, filter, and click straight through to the deals.</p>
-                
-                <!-- Search Bar -->
                 <div class="sales-search-wrap">
                     <div class="sales-search">
                         <span class="search-icon">🔍</span>
@@ -51,12 +48,22 @@
         </div>
     </header>
 
+    <!-- Curated Picks -->
+    <section class="picks-section">
+        <div class="container">
+            <h2 class="section-title">CURATED <span class="gradient-text">PICKS</span></h2>
+            <p class="section-subtitle">Hand-picked deals from our team. Real products, real discounts.</p>
+            <div class="picks-grid" id="picksGrid">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </section>
+
     <!-- Filter Tabs -->
     <section class="filters-bar">
         <div class="container">
             <div class="filter-tabs" id="filterTabs">
                 <button class="filter-tab active" data-filter="all">✦ All</button>
-                <!-- Tabs injected by JS from category names -->
             </div>
         </div>
     </section>
@@ -64,9 +71,7 @@
     <!-- Store Grid -->
     <section class="sales-grid-section">
         <div class="container">
-            <div class="sales-grid" id="salesGrid">
-                <!-- Cards injected by JS -->
-            </div>
+            <div class="sales-grid" id="salesGrid"></div>
             <div class="no-results" id="noResults" style="display:none;">
                 <span class="no-results-icon">🔍</span>
                 <h3>No stores found</h3>
