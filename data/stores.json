@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-02-09",
-  "weekLabel": "Week of Feb 9, 2026",
+  "lastUpdated": "2026-02-10",
+  "weekLabel": "Week of Feb 10, 2026",
   "categories": [
     {
       "name": "Major Marketplaces",
@@ -12,7 +12,7 @@
           "flag": "🇩🇪",
           "url": "https://www.zalando.com",
           "saleUrl": "https://www.zalando.com/campaigns/winter-sale/",
-          "description": "Europe's largest online fashion platform with 51M+ active customers across 23 markets.",
+          "description": "Europe's largest online fashion platform. Carries hundreds of brands across all price tiers with frequent sales events.",
           "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands"
         },
         {
@@ -81,7 +81,7 @@
           "flag": "🇪🇸",
           "url": "https://www.mango.com",
           "saleUrl": "https://shop.mango.com/gb/women/sale",
-          "description": "Mediterranean-inspired modern fashion for women and men.",
+          "description": "Spanish fashion chain offering trendy womenswear, menswear, and accessories. Has a 'Committed' sustainable capsule line.",
           "currentDeal": "Up to 50% off selected styles"
         },
         {
@@ -90,7 +90,7 @@
           "flag": "🇸🇪",
           "url": "https://www.cos.com",
           "saleUrl": "https://www.cos.com/en/women/sale.html",
-          "description": "Minimalist, high-quality wardrobe essentials.",
+          "description": "H&M Group subsidiary. Minimalist design, higher quality fabrics. Growing sustainable collections.",
           "currentDeal": "Sale — up to 50% off timeless pieces"
         },
         {
@@ -99,8 +99,62 @@
           "flag": "🇪🇸",
           "url": "https://www.massimodutti.com",
           "saleUrl": "https://www.massimodutti.com/gb/sale-woman-702",
-          "description": "Elevated casual and smart fashion from the Inditex group.",
+          "description": "Part of Inditex group. Premium casual and formalwear with a polished, understated European aesthetic.",
           "currentDeal": "Winter sale — up to 40% off"
+        },
+        {
+          "name": "Primark",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.primark.com",
+          "saleUrl": "https://www.primark.com",
+          "description": "Ultra-affordable fashion chain. Physical stores only — no online shopping. Great for basics and seasonal pieces.",
+          "currentDeal": "In-store seasonal deals"
+        },
+        {
+          "name": "C&A",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.c-and-a.com",
+          "saleUrl": "https://www.c-and-a.com/eu/en/shop/sale",
+          "description": "Affordable everyday basics for the whole family. Wide European presence with over 1,300 stores.",
+          "currentDeal": "Sale — everyday low prices"
+        },
+        {
+          "name": "Reserved",
+          "country": "Poland",
+          "flag": "🇵🇱",
+          "url": "https://www.reserved.com",
+          "saleUrl": "https://www.reserved.com/en/en/sale",
+          "description": "Part of LPP Group. Fast-growing affordable fashion brand from Poland with modern, on-trend collections.",
+          "currentDeal": "Sale — up to 50% off"
+        },
+        {
+          "name": "& Other Stories",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.stories.com",
+          "saleUrl": "https://www.stories.com/en_gb/sale.html",
+          "description": "H&M Group subsidiary. Trend-driven with responsible material sourcing. Designed in Paris, Stockholm, and LA.",
+          "currentDeal": "Sale — up to 60% off"
+        },
+        {
+          "name": "ARKET",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.arket.com",
+          "saleUrl": "https://www.arket.com/en_gbp/sale.html",
+          "description": "H&M Group subsidiary. Transparent about factories and materials. Nordic-inspired modern essentials.",
+          "currentDeal": "Sale — modern essentials discounted"
+        },
+        {
+          "name": "OVS",
+          "country": "Italy",
+          "flag": "🇮🇹",
+          "url": "https://www.ovs.it",
+          "saleUrl": "https://www.ovs.it/en_IT/sale",
+          "description": "Italy's largest domestic fashion chain. Ranks #1 in Fashion Transparency Index. Affordable Italian style.",
+          "currentDeal": "Seasonal sales"
         }
       ]
     },
@@ -109,12 +163,72 @@
       "icon": "💎",
       "stores": [
         {
+          "name": "Hugo Boss",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.hugoboss.com",
+          "saleUrl": "https://www.hugoboss.com/sale/",
+          "description": "Two lines: BOSS (refined, premium) and HUGO (younger, edgier). Strong in formalwear, outerwear, and accessories.",
+          "currentDeal": "Sale — up to 50% off"
+        },
+        {
+          "name": "G-Star RAW",
+          "country": "Netherlands",
+          "flag": "🇳🇱",
+          "url": "https://www.g-star.com",
+          "saleUrl": "https://www.g-star.com/en_gb/sale",
+          "description": "Dutch denim brand known for innovative cuts and raw denim. Urban aesthetic with a sustainability push.",
+          "currentDeal": "Up to 50% off sale"
+        },
+        {
+          "name": "Marks & Spencer",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.marksandspencer.com",
+          "saleUrl": "https://www.marksandspencer.com/l/offers",
+          "description": "British institution known for reliable quality in clothing and food. Strong in knitwear, workwear, and essentials.",
+          "currentDeal": "Special offers — quality essentials"
+        },
+        {
+          "name": "JD Sports",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.jdsports.com",
+          "saleUrl": "https://www.jdsports.com/sale/",
+          "description": "Leading sportswear and athleisure retailer. Carries Nike, adidas, Jordan, and own-brand lines across Europe.",
+          "currentDeal": "Sale — sportswear deals"
+        },
+        {
+          "name": "Decathlon",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.decathlon.com",
+          "saleUrl": "https://www.decathlon.com/collections/sale",
+          "description": "World's largest sporting goods retailer. Excellent value for sport-fashion crossover and outdoor clothing.",
+          "currentDeal": "Sports sale — great value"
+        },
+        {
+          "name": "Bestseller",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.bestseller.com",
+          "saleUrl": "https://www.bestseller.com",
+          "description": "Parent company of Jack & Jones, Vero Moda, ONLY, and SELECTED. Covers casual to smart-casual across price points.",
+          "currentDeal": "Multi-brand sale events"
+        }
+      ]
+    },
+    {
+      "name": "Luxury Platforms",
+      "icon": "✨",
+      "stores": [
+        {
           "name": "THE OUTNET",
           "country": "United Kingdom",
           "flag": "🇬🇧",
           "url": "https://www.theoutnet.com",
           "saleUrl": "https://www.theoutnet.com/en-gb/shop/clothing",
-          "description": "350+ luxury brands at up to 70% off retail.",
+          "description": "350+ luxury brands at permanent discount — previous season stock up to 70% off. Treasure hunting for deals.",
           "currentDeal": "Up to 80% off designer fashion"
         },
         {
@@ -123,8 +237,17 @@
           "flag": "🇬🇧",
           "url": "https://www.net-a-porter.com",
           "saleUrl": "https://www.net-a-porter.com/en-gb/shop/sale",
-          "description": "The world's premier luxury fashion destination.",
+          "description": "The original luxury fashion e-commerce. Editorial approach to womenswear with excellent sales events.",
           "currentDeal": "Seasonal sale — up to 50% off luxury"
+        },
+        {
+          "name": "MR PORTER",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.mrporter.com",
+          "saleUrl": "https://www.mrporter.com/en-gb/mens/sale",
+          "description": "NET-A-PORTER's menswear counterpart. Premium fashion, grooming, and lifestyle for men.",
+          "currentDeal": "Men's sale — luxury menswear"
         },
         {
           "name": "Farfetch",
@@ -132,26 +255,53 @@
           "flag": "🇵🇹",
           "url": "https://www.farfetch.com",
           "saleUrl": "https://www.farfetch.com/shopping/women/sale/items.aspx",
-          "description": "Global luxury marketplace connecting boutiques worldwide.",
+          "description": "Connects 1,300+ luxury boutiques worldwide into one platform. Buy from independent stores globally.",
           "currentDeal": "Sale — up to 60% off luxury pieces"
         },
         {
-          "name": "BrandAlley",
-          "country": "United Kingdom",
-          "flag": "🇬🇧",
-          "url": "https://www.brandalley.co.uk",
-          "saleUrl": "https://www.brandalley.co.uk",
-          "description": "Daily designer sales with up to 80% off.",
-          "currentDeal": "Daily rotating designer sales"
+          "name": "Mytheresa",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.mytheresa.com",
+          "saleUrl": "https://www.mytheresa.com/en-gb/sale",
+          "description": "Curated luxury with 250+ brands like Gucci, Prada, Loewe. Major seasonal sales up to 70% off.",
+          "currentDeal": "Sale — up to 70% off luxury"
         },
         {
-          "name": "Yoox",
+          "name": "YOOX",
           "country": "Italy",
           "flag": "🇮🇹",
           "url": "https://www.yoox.com",
           "saleUrl": "https://www.yoox.com/gb/women/shoponline",
-          "description": "Italian platform for discounted designer fashion.",
+          "description": "Off-season designer pieces at deep discounts. Huge catalogue, treasure-hunting vibe for unique finds.",
           "currentDeal": "Extra 20% off sale items"
+        },
+        {
+          "name": "LuisaViaRoma",
+          "country": "Italy",
+          "flag": "🇮🇹",
+          "url": "https://www.luisaviaroma.com",
+          "saleUrl": "https://www.luisaviaroma.com/en-gb/sale",
+          "description": "Florence-based, 600+ brands. Known for generous popup discount codes (40-50% off) and curated luxury.",
+          "currentDeal": "Sale + popup codes up to 50% off"
+        },
+        {
+          "name": "24S",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.24s.com",
+          "saleUrl": "https://www.24s.com/en-gb/sale",
+          "description": "LVMH's own online store — exclusive access to Dior, Louis Vuitton, Celine, and other LVMH houses.",
+          "currentDeal": "LVMH sale — exclusive access"
+        },
+        {
+          "name": "SSENSE",
+          "country": "Canada",
+          "flag": "🇨🇦",
+          "url": "https://www.ssense.com",
+          "saleUrl": "https://www.ssense.com/en-gb/sale",
+          "description": "Montreal-based but huge in Europe. Bridges luxury and streetwear. Legendary end-of-season sales.",
+          "currentDeal": "Legendary sale — up to 70% off"
         }
       ]
     },
@@ -165,7 +315,7 @@
           "flag": "🇫🇷",
           "url": "https://www.galerieslafayette.com",
           "saleUrl": "https://www.galerieslafayette.com/c/soldes",
-          "description": "Iconic Parisian department store since 1894.",
+          "description": "Iconic French department store offering luxury, mid-range, and emerging designer brands under one roof.",
           "currentDeal": "Soldes — French seasonal sales event"
         },
         {
@@ -183,8 +333,347 @@
           "flag": "🇪🇸",
           "url": "https://www.elcorteingles.es",
           "saleUrl": "https://www.elcorteingles.es/rebajas/",
-          "description": "Spain's biggest department store chain.",
+          "description": "Europe's largest department store group. Carries everything from luxury houses to everyday brands. Famous for seasonal rebajas (sales).",
           "currentDeal": "Rebajas — major seasonal markdowns"
+        },
+        {
+          "name": "Kiabi",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.kiabi.com",
+          "saleUrl": "https://www.kiabi.com/soldes",
+          "description": "French affordable family fashion retailer. Budget-friendly with stores across Southern Europe.",
+          "currentDeal": "Family fashion deals"
+        }
+      ]
+    },
+    {
+      "name": "Sustainable Fashion",
+      "icon": "🌿",
+      "stores": [
+        {
+          "name": "ARMEDANGELS",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.armedangels.com",
+          "saleUrl": "https://www.armedangels.com/sale",
+          "description": "GOTS & Fairtrade certified. Known for 'Detox Denim'. One of Europe's leading sustainable fashion labels.",
+          "currentDeal": "Sustainable sale — eco-certified pieces"
+        },
+        {
+          "name": "Nudie Jeans",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.nudiejeans.com",
+          "saleUrl": "https://www.nudiejeans.com/sale",
+          "description": "100% organic cotton denim. Offers free lifetime repairs at their repair shops across Europe.",
+          "currentDeal": "Organic denim sale + free repairs"
+        },
+        {
+          "name": "Veja",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.veja-store.com",
+          "saleUrl": "https://www.veja-store.com/en_gb/sale",
+          "description": "Iconic sustainable sneaker brand. Uses organic cotton, wild rubber from the Amazon, and recycled materials.",
+          "currentDeal": "Sustainable sneakers on sale"
+        },
+        {
+          "name": "Ecoalf",
+          "country": "Spain",
+          "flag": "🇪🇸",
+          "url": "https://www.ecoalf.com",
+          "saleUrl": "https://www.ecoalf.com/en/sale",
+          "description": "Makes clothing from recycled ocean waste — fishing nets, plastic bottles, tires. 'Because there is no planet B.'",
+          "currentDeal": "Ocean waste fashion sale"
+        },
+        {
+          "name": "People Tree",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.peopletree.co.uk",
+          "saleUrl": "https://www.peopletree.co.uk/sale",
+          "description": "Fairtrade fashion pioneer since 1991. Works with artisan groups in developing countries.",
+          "currentDeal": "Fair Trade fashion sale"
+        },
+        {
+          "name": "Thought",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.thoughtclothing.com",
+          "saleUrl": "https://www.thoughtclothing.com/sale",
+          "description": "Uses hemp, bamboo, organic cotton, and TENCEL for comfortable everyday wear.",
+          "currentDeal": "Natural fiber essentials on sale"
+        },
+        {
+          "name": "MUD Jeans",
+          "country": "Netherlands",
+          "flag": "🇳🇱",
+          "url": "https://www.mudjeans.eu",
+          "saleUrl": "https://www.mudjeans.eu/sale",
+          "description": "Circular denim brand — you can lease jeans, return, and they recycle them into new pairs.",
+          "currentDeal": "Circular denim — lease or buy"
+        },
+        {
+          "name": "Stella McCartney",
+          "country": "Italy",
+          "flag": "🇮🇹",
+          "url": "https://www.stellamccartney.com",
+          "saleUrl": "https://www.stellamccartney.com/gb/en/sale",
+          "description": "Luxury fashion house. No leather, fur, or feathers. Pioneering sustainable luxury since 2001.",
+          "currentDeal": "Sustainable luxury sale"
+        },
+        {
+          "name": "hessnatur",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.hessnatur.com",
+          "saleUrl": "https://www.hessnatur.com/sale",
+          "description": "Pioneer in organic textiles since 1976. Natural fibers and timeless designs for the whole family.",
+          "currentDeal": "Organic textile sale"
+        },
+        {
+          "name": "Finisterre",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.finisterre.com",
+          "saleUrl": "https://www.finisterre.com/collections/sale",
+          "description": "Sustainable outdoor and surf wear from Cornwall. Uses recycled ocean waste and organic materials.",
+          "currentDeal": "Sustainable outdoor wear sale"
+        },
+        {
+          "name": "Jan 'n June",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.jannjune.com",
+          "saleUrl": "https://www.jannjune.com/sale",
+          "description": "Hamburg-based. Transparent supply chain using organic cotton, TENCEL, and recycled materials.",
+          "currentDeal": "Transparent fashion sale"
+        },
+        {
+          "name": "ISTO.",
+          "country": "Portugal",
+          "flag": "🇵🇹",
+          "url": "https://www.isto.pt",
+          "saleUrl": "https://www.isto.pt/collections/sale",
+          "description": "Lisbon-based. Transparent pricing, organic materials, and local Portuguese production.",
+          "currentDeal": "Portuguese essentials on sale"
+        }
+      ]
+    },
+    {
+      "name": "Scandinavian Designers",
+      "icon": "🧊",
+      "stores": [
+        {
+          "name": "Acne Studios",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.acnestudios.com",
+          "saleUrl": "https://www.acnestudios.com/uk/en/sale/",
+          "description": "Stockholm icon — started with 100 pairs of raw denim, now a global minimalist powerhouse.",
+          "currentDeal": "Minimalist sale — iconic pieces"
+        },
+        {
+          "name": "Ganni",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.ganni.com",
+          "saleUrl": "https://www.ganni.com/en-gb/sale.html",
+          "description": "Copenhagen's most exported brand. Playful Scandinavian style with a massive cult following worldwide.",
+          "currentDeal": "Scandi cool sale"
+        },
+        {
+          "name": "Norse Projects",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.norseprojects.com",
+          "saleUrl": "https://www.norseprojects.com/sale",
+          "description": "Peak minimalism meets streetwear. Quality, simplicity, and everyday functionality from Copenhagen.",
+          "currentDeal": "Minimalist streetwear sale"
+        },
+        {
+          "name": "Our Legacy",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.ourlegacy.com",
+          "saleUrl": "https://www.ourlegacy.com/sale",
+          "description": "Swedish brand redefining contemporary menswear with archival textures, unique silhouettes and fabrics.",
+          "currentDeal": "Contemporary menswear sale"
+        },
+        {
+          "name": "Samsoe Samsoe",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.samsoe.com",
+          "saleUrl": "https://www.samsoe.com/sale",
+          "description": "Danish wardrobe essentials — clean, accessible Scandinavian aesthetic for everyday wear.",
+          "currentDeal": "Danish essentials sale"
+        },
+        {
+          "name": "Filling Pieces",
+          "country": "Netherlands",
+          "flag": "🇳🇱",
+          "url": "https://www.fillingpieces.com",
+          "saleUrl": "https://www.fillingpieces.com/sale",
+          "description": "Amsterdam-based, bridges streetwear and high fashion. Premium sneakers and ready-to-wear.",
+          "currentDeal": "Premium streetwear sale"
+        }
+      ]
+    },
+    {
+      "name": "Sneaker & Streetwear",
+      "icon": "👟",
+      "stores": [
+        {
+          "name": "Foot Locker",
+          "country": "EU-wide",
+          "flag": "🇪🇺",
+          "url": "https://www.footlocker.eu",
+          "saleUrl": "https://www.footlocker.eu/sale",
+          "description": "Biggest sneaker retail chain in Europe. Carries all major sneaker brands and exclusives.",
+          "currentDeal": "Sneaker sale — major brands"
+        },
+        {
+          "name": "END. Clothing",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.endclothing.com",
+          "saleUrl": "https://www.endclothing.com/gb/sale",
+          "description": "Newcastle-based. Over 400 brands from streetwear to luxury. Major online destination for sneakers.",
+          "currentDeal": "Streetwear & sneaker sale"
+        },
+        {
+          "name": "SNS (Sneakersnstuff)",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.sneakersnstuff.com",
+          "saleUrl": "https://www.sneakersnstuff.com/sale",
+          "description": "Stockholm-based premium sneaker and streetwear destination. Known for collaborations and limited drops.",
+          "currentDeal": "Premium sneaker sale + collabs"
+        },
+        {
+          "name": "Slam Jam",
+          "country": "Italy",
+          "flag": "🇮🇹",
+          "url": "https://www.slamjam.com",
+          "saleUrl": "https://www.slamjam.com/sale",
+          "description": "Ferrara-based cultural institution since 1989. First to bring Stussy to Europe. Curated streetwear and collabs.",
+          "currentDeal": "Cultural streetwear sale"
+        },
+        {
+          "name": "BSTN",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.bstn.com",
+          "saleUrl": "https://www.bstn.com/sale",
+          "description": "Munich-based. Great for sneaker raffles, limited drops, and premium streetwear brands.",
+          "currentDeal": "Sneaker raffles + sale"
+        },
+        {
+          "name": "Solebox",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.solebox.com",
+          "saleUrl": "https://www.solebox.com/sale",
+          "description": "Berlin-based sneaker boutique with stores in Munich, Amsterdam, Vienna, and Brussels.",
+          "currentDeal": "Berlin sneaker culture sale"
+        },
+        {
+          "name": "size?",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.size.co.uk",
+          "saleUrl": "https://www.size.co.uk/sale/",
+          "description": "Major UK sneaker retailer with exclusive colourways and collaborations.",
+          "currentDeal": "Exclusive sneaker sale"
+        },
+        {
+          "name": "Naked Copenhagen",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.nakedcph.com",
+          "saleUrl": "https://www.nakedcph.com/sale",
+          "description": "World's leading women's sneaker store. Copenhagen-based with curated feminine streetwear.",
+          "currentDeal": "Women's sneaker sale"
+        },
+        {
+          "name": "Overkill",
+          "country": "Germany",
+          "flag": "🇩🇪",
+          "url": "https://www.overkillshop.com",
+          "saleUrl": "https://www.overkillshop.com/sale",
+          "description": "Berlin sneaker culture since 2003. Curated selection with up to 70% off sales.",
+          "currentDeal": "Berlin culture — up to 70% off"
+        },
+        {
+          "name": "Footpatrol",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.footpatrol.com",
+          "saleUrl": "https://www.footpatrol.com/sale",
+          "description": "London and Paris locations. Specialist in hidden gems, collabs, and limited editions.",
+          "currentDeal": "Limited edition sale"
+        },
+        {
+          "name": "Patta",
+          "country": "Netherlands",
+          "flag": "🇳🇱",
+          "url": "https://www.patta.nl",
+          "saleUrl": "https://www.patta.nl/sale",
+          "description": "Amsterdam streetwear institution. Own-brand clothing plus curated sneakers and collabs.",
+          "currentDeal": "Amsterdam streetwear sale"
+        },
+        {
+          "name": "Norse Store",
+          "country": "Denmark",
+          "flag": "🇩🇰",
+          "url": "https://www.norsestore.com",
+          "saleUrl": "https://www.norsestore.com/sale",
+          "description": "Copenhagen-based. Scandinavian minimalism meets streetwear. Carries Norse Projects and curated brands.",
+          "currentDeal": "Scandi streetwear sale"
+        }
+      ]
+    },
+    {
+      "name": "Resale & Vintage",
+      "icon": "♻️",
+      "stores": [
+        {
+          "name": "Vinted",
+          "country": "Lithuania",
+          "flag": "🇱🇹",
+          "url": "https://www.vinted.com",
+          "saleUrl": "https://www.vinted.com",
+          "description": "Europe's #1 resale marketplace with 19% market share. Peer-to-peer selling of pre-owned fashion.",
+          "currentDeal": "Pre-owned fashion marketplace"
+        },
+        {
+          "name": "Vestiaire Collective",
+          "country": "France",
+          "flag": "🇫🇷",
+          "url": "https://www.vestiairecollective.com",
+          "saleUrl": "https://www.vestiairecollective.com/sale/",
+          "description": "Luxury resale with authentication service. Find authenticated Hermes, Chanel, and designer pieces.",
+          "currentDeal": "Authenticated luxury resale"
+        },
+        {
+          "name": "Depop",
+          "country": "United Kingdom",
+          "flag": "🇬🇧",
+          "url": "https://www.depop.com",
+          "saleUrl": "https://www.depop.com",
+          "description": "Gen-Z focused resale platform. Strong for vintage, Y2K, and streetwear finds.",
+          "currentDeal": "Vintage & Y2K marketplace"
+        },
+        {
+          "name": "Beyond Retro",
+          "country": "Sweden",
+          "flag": "🇸🇪",
+          "url": "https://www.beyondretro.com",
+          "saleUrl": "https://www.beyondretro.com/collections/sale",
+          "description": "Curated vintage clothing. Physical stores in UK and Nordics plus online shop.",
+          "currentDeal": "Curated vintage sale"
         }
       ]
     }
