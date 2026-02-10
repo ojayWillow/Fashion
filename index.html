@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div class="cursor-dot" id="cursorDot"></div>
@@ -91,90 +90,17 @@
         </div>
     </section>
 
-    <!-- Global Partners — Rebuilt -->
+    <!-- Global Partners — Floating Marquee -->
     <section id="partners" class="section partners-section">
         <div class="partners-bg-glow partners-glow-1"></div>
         <div class="partners-bg-glow partners-glow-2"></div>
         <div class="partners-bg-glow partners-glow-3"></div>
         <div class="container">
             <h2 class="section-title">GLOBAL <span class="gradient-text">PARTNERS</span></h2>
-            <p class="section-subtitle">Click any partner to locate them on the globe. Drag to explore.</p>
-
-            <!-- Top row of partner cards -->
-            <div class="partners-scattered partners-row-top">
-                <div class="partner-card" data-index="0">
-                    <span class="partner-card-emoji">👟</span>
-                    <div class="partner-card-info"><strong>Nike</strong><span>Portland, USA</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="1">
-                    <span class="partner-card-emoji">🏴</span>
-                    <div class="partner-card-info"><strong>END. Clothing</strong><span>Newcastle, UK</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="2">
-                    <span class="partner-card-emoji">👑</span>
-                    <div class="partner-card-info"><strong>SSENSE</strong><span>Montreal, Canada</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="3">
-                    <span class="partner-card-emoji">💎</span>
-                    <div class="partner-card-info"><strong>Farfetch</strong><span>Porto, Portugal</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="4">
-                    <span class="partner-card-emoji">🔵</span>
-                    <div class="partner-card-info"><strong>Zalando</strong><span>Berlin, Germany</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="5">
-                    <span class="partner-card-emoji">✅</span>
-                    <div class="partner-card-info"><strong>StockX</strong><span>Detroit, USA</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-            </div>
-
-            <!-- Globe centered -->
-            <div class="globe-wrapper">
-                <div class="globe-container">
-                    <canvas id="globeCanvas"></canvas>
-                    <div class="globe-tooltip" id="globeTooltip"></div>
-                </div>
-            </div>
-
-            <!-- Bottom row of partner cards -->
-            <div class="partners-scattered partners-row-bottom">
-                <div class="partner-card" data-index="6">
-                    <span class="partner-card-emoji">🇮🇹</span>
-                    <div class="partner-card-info"><strong>Slam Jam</strong><span>Milan, Italy</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="7">
-                    <span class="partner-card-emoji">⚡</span>
-                    <div class="partner-card-info"><strong>ASOS</strong><span>London, UK</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="8">
-                    <span class="partner-card-emoji">📦</span>
-                    <div class="partner-card-info"><strong>Solebox</strong><span>Berlin, Germany</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="9">
-                    <span class="partner-card-emoji">🐐</span>
-                    <div class="partner-card-info"><strong>GOAT</strong><span>Los Angeles, USA</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="10">
-                    <span class="partner-card-emoji">🇯🇵</span>
-                    <div class="partner-card-info"><strong>Atmos</strong><span>Tokyo, Japan</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-                <div class="partner-card" data-index="11">
-                    <span class="partner-card-emoji">🛍️</span>
-                    <div class="partner-card-info"><strong>Mytheresa</strong><span>Munich, Germany</span></div>
-                    <div class="partner-card-pin"></div>
-                </div>
-            </div>
+            <p class="section-subtitle">69 curated stores across 15+ countries. Click any partner to visit.</p>
+        </div>
+        <div class="marquee-area" id="marqueeArea">
+            <!-- Rows injected by JS -->
         </div>
     </section>
 
