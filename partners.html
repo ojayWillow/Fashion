@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Our 91 global fashion partners across Europe">
+    <title>Partners - FASHION.</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/partners.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Navigation -->
+    <nav class="floating-dock">
+        <div class="dock-container">
+            <a href="home.html" class="dock-logo">FASHION<span class="accent">.</span></a>
+            <div class="dock-divider"></div>
+            <a href="home.html" class="dock-item" data-tooltip="Home"><div class="dock-icon">🏠</div></a>
+            <a href="home.html#stores" class="dock-item" data-tooltip="Stores"><div class="dock-icon">🛍️</div></a>
+            <a href="partners.html" class="dock-item" data-tooltip="Partners"><div class="dock-icon">🌍</div></a>
+            <a href="about.html" class="dock-item" data-tooltip="About"><div class="dock-icon">✦</div></a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="section" style="padding-top: 180px;">
+        <div class="container">
+            <h1 class="section-title">OUR GLOBAL <span class="gradient-text">PARTNERS</span></h1>
+            <p class="section-subtitle">91 premium fashion partners across 15+ European countries</p>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-category="all">All (91)</button>
+                <button class="filter-tab" data-category="luxury">Luxury</button>
+                <button class="filter-tab" data-category="sustainable">Sustainable</button>
+                <button class="filter-tab" data-category="streetwear">Streetwear</button>
+                <button class="filter-tab" data-category="scandinavian">Scandinavian</button>
+            </div>
+
+            <!-- Partners Grid -->
+            <div id="partnersGrid" class="partners-logo-grid">
+                <!-- Logos will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="logo">FASHION<span class="accent">.</span></p>
+            <p>Curating Europe's best fashion stores — updated weekly.</p>
+            <p class="copyright">© 2026 FASHION. Built for style.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/shared.js"></script>
+    <script src="js/partners.js"></script>
+</body>
+</html>

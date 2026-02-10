@@ -1,0 +1,192 @@
+/* ===== Partners Page Styles ===== */
+
+/* Filter Tabs */
+.filter-tabs {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+}
+
+.filter-tab {
+    padding: 12px 28px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 50px;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: none;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-tab:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-light);
+    background: rgba(168, 85, 247, 0.05);
+}
+
+.filter-tab.active {
+    background: var(--gradient-purple);
+    border-color: var(--color-accent);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+}
+
+/* Partners Logo Grid */
+.partners-logo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.partner-logo-card {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 180px;
+    transition: var(--transition);
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.partner-logo-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.partner-logo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-purple);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.partner-logo-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-glow);
+}
+
+.partner-logo-card:hover::before {
+    opacity: 1;
+}
+
+/* Logo container */
+.partner-logo {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.partner-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.partner-logo-card:hover .partner-logo img {
+    opacity: 1;
+    filter: brightness(0) invert(1);
+    transform: scale(1.05);
+}
+
+/* Fallback text logo */
+.partner-logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: var(--gradient-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Partner info */
+.partner-info {
+    text-align: center;
+}
+
+.partner-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.partner-country {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+}
+
+.partner-category {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--color-accent-light);
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid var(--color-accent);
+    border-radius: 50px;
+    padding: 4px 12px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Hide filtered items */
+.partner-logo-card.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .partners-logo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+    
+    .partner-logo-card {
+        padding: 24px 16px;
+        min-height: 160px;
+    }
+    
+    .filter-tabs {
+        gap: 8px;
+    }
+    
+    .filter-tab {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+    }
+}
