@@ -113,34 +113,6 @@ function isValidSize(text) {
   return false;
 }
 
-// ===== HTTP FETCH =====
-function fetchUrl(url, headers = {}) {
-  return new Promise((resolve, reject) => {
-    const lib = url.startsWith('https') ? require('https') : require('http');
-    const parsed = new URL(url);
-    const options = {
-      hostname: parsed.hostname,
-      port: parsed.port,
-      path: parsed.pathname + parsed.search,
-      method: 'GET',
-      headers: { ...headers, 'Connection': 'keep-alive' },
-      timeout: 15000,
-    };
-    const req = lib.request(options, (res) => {
-      // Follow redirects
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return fetchUrl(res.headers.location, headers).then(resolve).catch(reject);
-      }
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => resolve({ status: res.statusCode, body: data }));
-    });
-    req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('Request timeout')); });
-    req.end();
-  });
-}
-
 // ===== STORE CONFIG =====
 function loadStoreConfig(domain) {
   const configs = JSON.parse(fs.readFileSync(CONFIGS_PATH, 'utf-8'));
@@ -232,28 +204,22 @@ function detectTags(name, brand) {
 }
 
 // =====================================================================
-// FOOT LOCKER — API-first scraping (3 layers)
+// FOOT LOCKER — Patchright (bypasses Kasada)
 // =====================================================================
-
-const FL_REGIONS = {
-  'footlocker.nl':    { base: 'https://www.footlocker.nl',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_NL-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'nl-NL' },
-  'footlocker.de':    { base: 'https://www.footlocker.de',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_DE-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'de-DE' },
-  'footlocker.fr':    { base: 'https://www.footlocker.fr',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_FR-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'fr-FR' },
-  'footlocker.es':    { base: 'https://www.footlocker.es',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_ES-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'es-ES' },
-  'footlocker.it':    { base: 'https://www.footlocker.it',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_IT-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'it-IT' },
-  'footlocker.co.uk': { base: 'https://www.footlocker.co.uk', intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_GB-Site/en_GB/-/GBP',  currency: 'GBP', locale: 'en-GB' },
-  'footlocker.com':   { base: 'https://www.footlocker.com',   intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_US-Site/en_US/-/USD',  currency: 'USD', locale: 'en-US' },
-  'footlocker.eu':    { base: 'https://www.footlocker.eu',    intershop: 'INTERSHOP/web/FLE/Footlocker-Footlocker_EU-Site/en_GB/-/EUR',  currency: 'EUR', locale: 'en-GB' },
-};
+// Kasada (KPSDK) blocks regular Playwright and HTTP requests.
+// Patchright is a stealth Playwright fork that bypasses it.
+// Data sources (in priority order):
+//   1. JSON-LD: offers[] has per-size SKU, price, and availability
+//   2. DOM sizes: class ending '--r' = available, '--d' = sold out
+//   3. DOM prices: span.text-sale_red = sale, line-through = original
+// =====================================================================
 
 function isFootLocker(domain) { return domain.includes('footlocker'); }
 
-function getFlRegion(domain) {
-  if (FL_REGIONS[domain]) return FL_REGIONS[domain];
-  for (const [key, val] of Object.entries(FL_REGIONS)) {
-    if (domain.includes(key.split('.')[0]) && domain.endsWith(key.split('.').slice(1).join('.'))) return val;
-  }
-  return FL_REGIONS['footlocker.nl'];
+function getFlCurrency(domain) {
+  if (domain.endsWith('.co.uk') || domain.endsWith('.uk')) return 'GBP';
+  if (domain.endsWith('.com') && !domain.includes('.co')) return 'USD';
+  return 'EUR';
 }
 
 function extractFlSku(url) {
@@ -261,396 +227,232 @@ function extractFlSku(url) {
   if (m1) return m1[1];
   const m2 = url.match(/[\/-](\d{10,15})(?:\?|$)/);
   if (m2) return m2[1];
-  const m3 = url.match(/[?&]v=(\d{10,15})/);
-  if (m3) return m3[1];
   return null;
 }
 
-const FL_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-  'Accept': 'application/json, text/javascript, */*; q=0.01',
-  'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8',
-  'X-Requested-With': 'XMLHttpRequest',
-};
+let _patchrightBrowser = null;
+
+async function getPatchrightBrowser() {
+  if (_patchrightBrowser) return _patchrightBrowser;
+  const { chromium } = require('patchright');
+  _patchrightBrowser = await chromium.launch({ headless: false });
+  return _patchrightBrowser;
+}
 
 async function scrapeFootLocker(url) {
   const domain = extractDomain(url);
-  const region = getFlRegion(domain);
   const sku = extractFlSku(url);
-
   if (!sku) throw new Error(`Could not extract SKU from FL URL: ${url}`);
 
   log(`FL SKU: ${sku}`);
-  log(`FL Region: ${region.base}`);
+  log(`Using Patchright (Kasada bypass)...`);
 
-  const result = {
-    name: '', image: '', salePrice: '', retailPrice: '',
-    sizes: [], allSizeData: [],
-    description: '', colorway: '', styleCode: sku,
-  };
+  const browser = await getPatchrightBrowser();
+  const page = await browser.newPage();
+  await page.setViewportSize({ width: 1280, height: 900 });
 
-  // ===== IMAGE: Known CDN pattern (always works) =====
-  result.image = `https://images.footlocker.com/is/image/FLEU/${sku}_01?wid=763&hei=538&fmt=png-alpha`;
-  log(`FL Image (CDN): ${result.image}`);
+  try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
+  catch (e) { log('Page load timeout, continuing...'); }
 
-  // ===== LAYER 1: v3 REST API =====
-  log('Trying FL v3 REST API...');
+  // Wait for content to fully render
+  await page.waitForTimeout(8000);
+
+  // Dismiss cookie popup
   try {
-    // First get a session + CSRF token
-    const sessionResp = await fetchUrl(`${region.base}/api/v3/session`, {
-      ...FL_HEADERS, 'Referer': url,
-    });
-    log(`FL v3 session: status ${sessionResp.status}`);
+    const cookieBtn = await page.$('#onetrust-accept-btn-handler');
+    if (cookieBtn) { await cookieBtn.click(); await page.waitForTimeout(1500); }
+  } catch (e) {}
 
-    let csrfToken = '';
-    if (sessionResp.status === 200) {
-      try {
-        const sessionData = JSON.parse(sessionResp.body);
-        csrfToken = sessionData.data?.csrfToken || '';
-        log(`FL v3 CSRF: ${csrfToken ? 'got it' : 'not found'}`);
-      } catch (e) {}
-    }
+  const scraped = await page.evaluate(() => {
+    const data = {
+      name: '', image: '', salePrice: '', retailPrice: '',
+      sizes: [], totalSizes: 0, soldOutSizes: 0,
+      description: '', colorway: '', brand: '',
+    };
 
-    // Fetch product data from v3 API
-    const productResp = await fetchUrl(`${region.base}/api/products/pdp/${sku}`, {
-      ...FL_HEADERS,
-      'Referer': url,
-      ...(csrfToken ? { 'x-csrf-token': csrfToken } : {}),
-    });
-    log(`FL v3 product API: status ${productResp.status}`);
+    // ===== 1. JSON-LD (most reliable source) =====
+    // FL puts a Product JSON-LD with offers[] per size, each with:
+    //   sku: "314217525204-40", price: 125, availability: "InStock"
+    try {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      for (const script of scripts) {
+        const ld = JSON.parse(script.textContent);
+        if (ld['@type'] !== 'Product') continue;
 
-    if (productResp.status === 200) {
-      try {
-        const product = JSON.parse(productResp.body);
+        // Name & brand
+        if (ld.name) data.name = ld.name;
+        if (ld.brand) data.brand = typeof ld.brand === 'string' ? ld.brand : (ld.brand.name || '');
 
-        // Name
-        if (product.name) result.name = product.name;
-        if (product.model) result.name = `${product.model} ${product.name || ''}`;
+        // Image
+        if (ld.image) data.image = ld.image;
 
-        // Prices
-        if (product.price) {
-          if (product.price.formattedOriginalPrice) result.retailPrice = product.price.formattedOriginalPrice;
-          else if (product.price.originalPrice) result.retailPrice = String(product.price.originalPrice);
+        // Sizes from offers (only InStock ones)
+        if (ld.offers && Array.isArray(ld.offers)) {
+          data.totalSizes = ld.offers.length;
+          const inStock = [];
+          const soldOut = [];
+          for (const offer of ld.offers) {
+            // Extract size from SKU like "314217525204-42.5"
+            const skuParts = (offer.sku || '').split('-');
+            const size = skuParts[skuParts.length - 1];
+            if (!size) continue;
 
-          if (product.price.formattedValue) result.salePrice = product.price.formattedValue;
-          else if (product.price.value) result.salePrice = String(product.price.value);
-        }
-
-        // Sizes from sellableUnits
-        if (product.sellableUnits && Array.isArray(product.sellableUnits)) {
-          for (const unit of product.sellableUnits) {
-            const sizeLabel = unit.attributes?.find(a => a.type === 'size')?.value || '';
-            const stockStatus = (unit.stockLevelStatus || '').toLowerCase();
-            const available = stockStatus === 'instock' || stockStatus === 'lowstock';
-            result.allSizeData.push({ size: sizeLabel, sku: unit.code || '', stock: stockStatus, available });
-            if (available && sizeLabel) result.sizes.push(sizeLabel);
-          }
-          log(`FL v3 API: ${result.sizes.length} in-stock / ${result.allSizeData.length} total sizes`);
-        }
-
-        // Variants for sizes
-        if (result.sizes.length === 0 && product.variantAttributes) {
-          for (const variant of product.variantAttributes) {
-            if (variant.sku) {
-              const sizeAttr = variant.attributes?.find(a => a.type === 'size');
-              if (sizeAttr) {
-                const available = variant.stockLevelStatus !== 'outOfStock';
-                result.allSizeData.push({ size: sizeAttr.value, sku: variant.sku, stock: variant.stockLevelStatus, available });
-                if (available) result.sizes.push(sizeAttr.value);
-              }
+            if (offer.availability && offer.availability.includes('InStock')) {
+              inStock.push(size);
+            } else {
+              soldOut.push(size);
             }
           }
-          log(`FL v3 variants: ${result.sizes.length} in-stock sizes`);
-        }
+          data.sizes = inStock;
+          data.soldOutSizes = soldOut.length;
 
-        // Color
-        if (product.color) result.colorway = product.color;
-
-        // Description
-        if (product.description) result.description = product.description.replace(/<[^>]+>/g, '').substring(0, 200);
-
-        log(`FL v3 result: name="${result.name}", sale="${result.salePrice}", retail="${result.retailPrice}", sizes=${result.sizes.length}`);
-      } catch (e) {
-        log(`FL v3 product parse error: ${e.message}`);
-      }
-    }
-  } catch (e) {
-    log(`FL v3 API failed: ${e.message}`);
-  }
-
-  // ===== LAYER 2: INTERSHOP API (classic endpoint) =====
-  if (result.sizes.length === 0) {
-    log('Trying FL INTERSHOP API...');
-    try {
-      const apiUrl = `${region.base}/${region.intershop}/ViewProduct-ProductVariationSelect?BaseSKU=${sku}&InventoryServerity=ProductDetail`;
-      const apiResp = await fetchUrl(apiUrl, { ...FL_HEADERS, 'Referer': url });
-      log(`FL INTERSHOP API: status ${apiResp.status}`);
-
-      if (apiResp.status === 200) {
-        let content = apiResp.body;
-
-        // Try parsing as JSON first (API returns {content: "<html>..."})
-        try {
-          const jsonResp = JSON.parse(content);
-          if (jsonResp.content) content = jsonResp.content;
-        } catch (e) {
-          // Already HTML, that's fine
-        }
-
-        // Extract variation JSON
-        const varPatterns = [
-          /data-product-variation-info-json='({[^']+})'/,
-          /data-product-variation-info-json="({[^"]+})"/,
-          /data-product-variation-info-json=(?:&quot;|")?({.*?})(?:&quot;|")/,
-        ];
-
-        for (const pattern of varPatterns) {
-          const match = content.match(pattern);
-          if (match) {
-            try {
-              const decoded = match[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#39;/g, "'");
-              const variations = JSON.parse(decoded);
-
-              for (const [varSku, info] of Object.entries(variations)) {
-                const available = info.inventoryLevel !== 'RED';
-                result.allSizeData.push({
-                  size: info.sizeValue || '', sku: varSku,
-                  stock: info.inventoryLevel || 'RED', available,
-                });
-                if (available && info.sizeValue) {
-                  result.sizes.push(info.sizeValue);
-                }
-              }
-              log(`FL INTERSHOP: ${result.sizes.length} in-stock / ${result.allSizeData.length} total`);
-              break;
-            } catch (e) {
-              log(`FL INTERSHOP parse error: ${e.message}`);
-            }
+          // Price from first offer
+          if (ld.offers[0] && ld.offers[0].price) {
+            data.salePrice = String(ld.offers[0].price);
           }
         }
+        break;
       }
-    } catch (e) {
-      log(`FL INTERSHOP API failed: ${e.message}`);
-    }
-  }
-
-  // ===== LAYER 3: Playwright DOM (last resort) =====
-  // Also used to get name/prices if APIs didn't return them
-  const needsPlaywright = !result.name || !result.salePrice || result.sizes.length === 0;
-
-  if (needsPlaywright) {
-    log('Using Playwright for remaining data...');
-    const browser = await getBrowser();
-    const page = await browser.newPage();
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
-
-    try {
-      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    } catch (e) { log(`Page load timeout, continuing...`); }
-
-    await page.waitForTimeout(5000);
-
-    // Dismiss cookies
-    try {
-      const cookieBtn = await page.$('#onetrust-accept-btn-handler');
-      if (cookieBtn) { await cookieBtn.click(); await page.waitForTimeout(1000); }
     } catch (e) {}
 
-    const pageData = await page.evaluate(() => {
-      const data = { name: '', salePrice: '', retailPrice: '', colorway: '', description: '', sizes: [] };
-
-      // NAME
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) data.name = (ogTitle.getAttribute('content') || '').trim();
-      if (!data.name) {
-        const h1 = document.querySelector('h1');
-        if (h1) data.name = h1.textContent.trim();
-      }
-
-      // PRICES from JSON-LD
-      try {
-        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
-        for (const script of scripts) {
-          const d = JSON.parse(script.textContent);
-          const product = d['@type'] === 'Product' ? d : (d['@graph'] || []).find(g => g['@type'] === 'Product');
-          if (product && product.offers) {
-            const offers = Array.isArray(product.offers) ? product.offers : [product.offers];
-            for (const offer of offers) {
-              if (offer.price && !data.salePrice) data.salePrice = String(offer.price);
-              if (offer.highPrice && !data.retailPrice) data.retailPrice = String(offer.highPrice);
-            }
-          }
-        }
-      } catch (e) {}
-
-      // PRICES from meta tags
-      if (!data.salePrice) {
-        const metaSale = document.querySelector('meta[property="product:sale_price:amount"]');
-        if (metaSale) data.salePrice = metaSale.getAttribute('content') || '';
-      }
-      if (!data.retailPrice) {
-        const metaPrice = document.querySelector('meta[property="product:price:amount"]');
-        if (metaPrice) data.retailPrice = metaPrice.getAttribute('content') || '';
-      }
-
-      // PRICES from DOM — look for crossed-out (original) and current (sale)
-      if (!data.retailPrice) {
-        // The original price is typically in a <s>, <del>, or element with class containing 'crossed', 'original', 'was'
-        const crossedSelectors = [
-          '[class*="ProductPrice"] s', '[class*="ProductPrice"] del',
-          '[class*="ProductPrice"] [class*="crossed"]', '[class*="ProductPrice"] [class*="original"]',
-          '[class*="price"] s', '[class*="price"] del',
-          '[class*="price"] [class*="crossed"]', '[class*="price"] [class*="was"]',
-          'span[class*="LineThrough"]', '[style*="line-through"]',
-        ];
-        for (const sel of crossedSelectors) {
-          try {
-            const el = document.querySelector(sel);
-            if (el) {
-              const text = el.textContent.trim();
-              if (text && /\d/.test(text)) { data.retailPrice = text; break; }
-            }
-          } catch (e) {}
-        }
-      }
-      if (!data.salePrice) {
-        const saleSelectors = [
-          '[data-testid="ProductPrice-sale"]',
-          '[class*="ProductPrice"] [class*="sale"]', '[class*="ProductPrice--sale"]',
-          '[class*="price"] [class*="reduced"]', '[class*="price"] [class*="current"]',
-          '[class*="FinalPrice"]',
-        ];
-        for (const sel of saleSelectors) {
-          try {
-            const el = document.querySelector(sel);
-            if (el) {
-              const text = el.textContent.trim();
-              if (text && /\d/.test(text)) { data.salePrice = text; break; }
-            }
-          } catch (e) {}
-        }
-      }
-
-      // SIZES from DOM — with crossed-out / unavailable detection
-      // Foot Locker marks unavailable sizes with:
-      //   - aria-disabled="true"
-      //   - data-out-of-stock / data-sold-out attributes
-      //   - class containing: crossed, disabled, unavailable, sold-out, oos, inactive
-      //   - parent <s> or <del> elements
-      //   - opacity < 0.5 or text-decoration: line-through
-      const unavailablePatterns = /crossed|disabled|unavailable|sold.?out|oos|inactive|out.?of.?stock/i;
-
-      function isSizeAvailable(el) {
-        // Check aria-disabled
-        if (el.getAttribute('aria-disabled') === 'true') return false;
-        // Check disabled attribute
-        if (el.disabled) return false;
-        // Check data attributes
-        if (el.getAttribute('data-out-of-stock') === 'true') return false;
-        if (el.getAttribute('data-sold-out') === 'true') return false;
-        if (el.getAttribute('data-available') === 'false') return false;
-        // Check class names
-        const classes = (el.className || '').toString();
-        if (unavailablePatterns.test(classes)) return false;
-        // Check parent class names (2 levels up)
-        let parent = el.parentElement;
-        for (let i = 0; i < 2 && parent; i++) {
-          const parentClasses = (parent.className || '').toString();
-          if (unavailablePatterns.test(parentClasses)) return false;
-          if (parent.tagName === 'S' || parent.tagName === 'DEL') return false;
-          parent = parent.parentElement;
-        }
-        // Check computed style
-        try {
-          const style = window.getComputedStyle(el);
-          if (style.textDecoration && style.textDecoration.includes('line-through')) return false;
-          if (parseFloat(style.opacity) < 0.4) return false;
-        } catch (e) {}
-        return true;
-      }
-
-      // Only search within the product detail area
-      const productArea = document.querySelector('main') ||
-                          document.querySelector('[class*="pdp"]') ||
-                          document.querySelector('#product-detail') ||
-                          document.querySelector('article') ||
-                          document;
-
-      const sizeSelectors = [
-        '[data-testid="SizeSelector"] button',
-        '[class*="SizeSelector"] button',
-        '[class*="SizeButton"]',
-        '[class*="size-selector"] button',
-        '[class*="size-list"] button',
-        '[class*="size-list"] a',
-        '[class*="size-list"] li',
-        '[data-testid*="size"] button',
-      ];
-
-      for (const sel of sizeSelectors) {
-        try {
-          const els = productArea.querySelectorAll(sel);
-          if (els.length === 0) continue;
-          const available = [];
-          const all = [];
-          els.forEach(el => {
-            const text = el.textContent.trim();
-            if (!text || text.length > 10) return;
-            // Must look like a shoe/clothing size
-            if (!/^\d{2}(\.5)?$/.test(text) && !/^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(text) &&
-                !/^(XXS|XS|S|M|L|XL|XXL|2XL|3XL)$/i.test(text)) return;
-            all.push(text);
-            if (isSizeAvailable(el)) {
-              available.push(text);
-            }
-          });
-          if (all.length > 0) {
-            data.sizes = available;
-            data._totalSizes = all.length;
-            data._availableSizes = available.length;
-            break;
-          }
-        } catch (e) {}
-      }
-
-      // COLOR
-      const colorSels = ['[class*="color-name"]', '[class*="ColorName"]', '[class*="colorway"]', '[class*="Colorway"]'];
-      for (const sel of colorSels) {
-        try {
-          const el = document.querySelector(sel);
-          if (el) { data.colorway = el.textContent.trim(); break; }
-        } catch (e) {}
-      }
-
-      // DESCRIPTION
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) data.description = metaDesc.getAttribute('content') || '';
-
-      return data;
-    });
-
-    await page.close();
-
-    // Merge: API data takes priority, Playwright fills gaps
-    if (!result.name) result.name = pageData.name;
-    if (!result.salePrice) result.salePrice = pageData.salePrice;
-    if (!result.retailPrice) result.retailPrice = pageData.retailPrice;
-    if (!result.colorway) result.colorway = pageData.colorway;
-    if (!result.description) result.description = pageData.description;
-
-    // Only use DOM sizes if API gave us nothing
-    if (result.sizes.length === 0 && pageData.sizes.length > 0) {
-      result.sizes = pageData.sizes;
-      log(`Playwright DOM: ${pageData._availableSizes} available / ${pageData._totalSizes} total sizes`);
+    // ===== 2. NAME from H1 (fallback) =====
+    if (!data.name) {
+      const h1 = document.querySelector('h1');
+      if (h1) data.name = h1.textContent.trim();
     }
+
+    // ===== 3. PRICES from DOM =====
+    // Sale price: span with class 'text-sale_red' inside ProductPrice
+    // Retail/original price: element with line-through text-decoration
+    if (!data.salePrice) {
+      const saleEl = document.querySelector('.text-sale_red') ||
+                     document.querySelector('[class*="ProductPrice"] [class*="sale"]');
+      if (saleEl) {
+        const text = saleEl.textContent.trim();
+        if (/\d/.test(text)) data.salePrice = text;
+      }
+    }
+
+    // Look for original/retail price (crossed out)
+    // FL uses line-through text decoration for the original price
+    const priceArea = document.querySelector('.ProductDetails-form__price') ||
+                      document.querySelector('[class*="ProductPrice"]');
+    if (priceArea) {
+      const allSpans = priceArea.querySelectorAll('span');
+      for (const span of allSpans) {
+        const style = window.getComputedStyle(span);
+        const text = span.textContent.trim();
+        if (!text || !/[\d]/.test(text)) continue;
+        // Check for line-through (original/crossed-out price)
+        if (style.textDecorationLine === 'line-through' ||
+            style.textDecoration.includes('line-through')) {
+          data.retailPrice = text;
+          break;
+        }
+      }
+      // Also check <s> and <del> tags
+      if (!data.retailPrice) {
+        const crossed = priceArea.querySelector('s, del, [class*="LineThrough"]');
+        if (crossed) {
+          const text = crossed.textContent.trim();
+          if (/\d/.test(text)) data.retailPrice = text;
+        }
+      }
+    }
+
+    // If no separate retail price found, check meta tag
+    if (!data.retailPrice) {
+      const metaPrice = document.querySelector('meta[property="product:price:amount"]');
+      if (metaPrice) data.retailPrice = metaPrice.getAttribute('content') || '';
+    }
+
+    // ===== 4. SIZES from DOM (fallback if JSON-LD didn't have them) =====
+    if (data.sizes.length === 0) {
+      const sizeArea = document.querySelector('[class*="SizeSelector"]');
+      if (sizeArea) {
+        // FL size buttons:
+        //   class ending '--r' (regional) = AVAILABLE, text color rgb(14,17,17)
+        //   class ending '--d' (disabled) = SOLD OUT, text color rgb(117,117,117)
+        const buttons = sizeArea.querySelectorAll('button[class*="SizeSelector-button"]');
+        const available = [];
+        const total = [];
+        buttons.forEach(btn => {
+          const text = btn.textContent.trim();
+          if (!text || text.length > 10) return;
+          if (!/^\d{2}(\.5)?$/.test(text) && !/^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(text)) return;
+          total.push(text);
+          const cls = (btn.className || '').toString();
+          // '--d' at the end of class = disabled/sold out
+          // '--r' at the end of class = regional/available
+          if (cls.includes('--d')) {
+            // Sold out — skip
+            return;
+          }
+          // Also check color: grey = sold out
+          const style = window.getComputedStyle(btn);
+          const color = style.color;
+          if (color === 'rgb(117, 117, 117)') {
+            // Grey text = sold out
+            return;
+          }
+          available.push(text);
+        });
+        data.sizes = available;
+        data.totalSizes = total.length;
+        data.soldOutSizes = total.length - available.length;
+      }
+    }
+
+    // ===== 5. IMAGE =====
+    // og:image or first product image from FL CDN
+    if (!data.image) {
+      const ogImg = document.querySelector('meta[property="og:image"]');
+      if (ogImg) data.image = ogImg.getAttribute('content') || '';
+    }
+
+    // ===== 6. DESCRIPTION =====
+    if (!data.description) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) data.description = (metaDesc.getAttribute('content') || '').substring(0, 200);
+    }
+
+    // ===== 7. COLORWAY =====
+    const colorSels = ['[class*="color-name"]', '[class*="ColorName"]', '[class*="colorway"]', '[class*="Colorway"]'];
+    for (const sel of colorSels) {
+      const el = document.querySelector(sel);
+      if (el) { data.colorway = el.textContent.trim(); break; }
+    }
+
+    return data;
+  });
+
+  await page.close();
+
+  // Build high-res image URL from FL CDN
+  let image = scraped.image || '';
+  if (image && !image.includes('wid=')) {
+    image = image.split('?')[0] + '?wid=763&hei=538&fmt=png-alpha';
+  }
+  if (!image) {
+    image = `https://images.footlocker.com/is/image/FLEU/${sku}?wid=763&hei=538&fmt=png-alpha`;
   }
 
-  log(`FINAL: name="${result.name}", sale="${result.salePrice}", retail="${result.retailPrice}", sizes=${result.sizes.length}, image=${result.image ? 'YES' : 'NO'}`);
-  return result;
+  log(`FL result: name="${scraped.name}", sale="${scraped.salePrice}", retail="${scraped.retailPrice}"`);
+  log(`FL sizes: ${scraped.sizes.length} available, ${scraped.soldOutSizes} sold out, ${scraped.totalSizes} total`);
+  log(`FL image: ${image}`);
+
+  return {
+    name: scraped.name || '', image,
+    salePrice: scraped.salePrice || '', retailPrice: scraped.retailPrice || '',
+    sizes: scraped.sizes || [],
+    allSizeData: [], // Not needed since JSON-LD gives clean data
+    description: scraped.description || '', colorway: scraped.colorway || '',
+    styleCode: sku, brand: scraped.brand || '',
+    _totalSizes: scraped.totalSizes, _soldOut: scraped.soldOutSizes,
+  };
 }
 
-// ===== GENERIC SCRAPER (non-FL stores) =====
+// ===== GENERIC SCRAPER (non-FL stores, uses regular Playwright) =====
 let _browser = null;
 
 async function getBrowser() {
@@ -676,8 +478,6 @@ async function scrapeGeneric(url, config) {
     const cookieSelectors = [
       '#onetrust-accept-btn-handler', 'button[id*="accept"]', 'button[id*="cookie"]',
       'button[class*="accept"]', 'button[class*="consent"]', '[data-testid*="accept"]',
-      'button:has-text("Accept All")', 'button:has-text("Accept")',
-      'button:has-text("Accepteren")', 'button:has-text("Alle akkoord")',
     ];
     for (const sel of cookieSelectors) {
       const btn = await page.$(sel);
@@ -703,7 +503,6 @@ async function scrapeGeneric(url, config) {
 
     result.name = trySelectors(config.nameSelectors);
 
-    // Image
     const ogImg = document.querySelector('meta[property="og:image"]');
     if (ogImg) { const c = ogImg.getAttribute('content'); if (c && c.startsWith('http')) result.image = c; }
     if (!result.image) {
@@ -717,11 +516,9 @@ async function scrapeGeneric(url, config) {
       }
     }
 
-    // Prices
     result.salePrice = trySelectors(config.priceSelectors);
     result.retailPrice = trySelectors(config.retailPriceSelectors);
 
-    // JSON-LD fallback
     if (!result.salePrice || !result.retailPrice) {
       try {
         const scripts = document.querySelectorAll('script[type="application/ld+json"]');
@@ -751,7 +548,6 @@ async function scrapeGeneric(url, config) {
           if (!text || text.length > 12) return;
           const isSize = /^\d{2}(\.5)?$/.test(text) || /^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(text) || /^(XXS|XS|S|M|L|XL|XXL|2XL|3XL)$/i.test(text);
           if (!isSize) return;
-          // Availability check
           if (el.getAttribute('aria-disabled') === 'true') return;
           if (el.disabled) return;
           const classes = (el.className || '').toString();
@@ -776,7 +572,7 @@ async function scrapeGeneric(url, config) {
 async function scrapePage(url, config) {
   const domain = extractDomain(url);
   if (isFootLocker(domain)) {
-    log('\u2192 Foot Locker API-first scraping');
+    log('\u2192 Foot Locker (Patchright + Kasada bypass)');
     return await scrapeFootLocker(url);
   }
   log('\u2192 Generic Playwright scraping');
@@ -819,7 +615,7 @@ async function main() {
     const domain = extractDomain(url);
     const storeInfo = matchStore(domain);
     const config = loadStoreConfig(domain);
-    const currency = isFootLocker(domain) ? getFlRegion(domain).currency : detectCurrency(domain);
+    const currency = isFootLocker(domain) ? getFlCurrency(domain) : detectCurrency(domain);
 
     console.log(`\n  [${i + 1}/${urls.length}] ${storeInfo.flag} ${storeInfo.name}`);
     console.log(`  ${url}`);
@@ -828,7 +624,7 @@ async function main() {
       const scraped = await scrapePage(url, config);
 
       const name = scraped.name || 'Unknown Product';
-      const brand = detectBrand(name);
+      const brand = scraped.brand || detectBrand(name);
       const salePrice = parsePrice(scraped.salePrice);
       const retailPrice = parsePrice(scraped.retailPrice);
       const discount = (salePrice && retailPrice && retailPrice > salePrice)
@@ -866,9 +662,8 @@ async function main() {
       console.log(`  \u2705 ${name}`);
       console.log(`     ${brand} | ${priceStr}`);
       console.log(`     Sizes: ${validSizes.length > 0 ? validSizes.join(', ') : 'none found'}`);
-      if (scraped.allSizeData && scraped.allSizeData.length > 0) {
-        const soldOut = scraped.allSizeData.filter(s => !s.available).length;
-        console.log(`     Stock: ${validSizes.length} available, ${soldOut} sold out`);
+      if (scraped._totalSizes) {
+        console.log(`     Stock: ${validSizes.length} available, ${scraped._soldOut || 0} sold out of ${scraped._totalSizes} total`);
       }
       console.log(`     Image: ${newPick.image ? '\u2705' : '\u274c'}`);
       console.log(`     Color: ${newPick.colorway || '-'}`);
@@ -886,7 +681,9 @@ async function main() {
     }
   }
 
+  // Close browsers
   if (_browser) { await _browser.close(); _browser = null; }
+  if (_patchrightBrowser) { await _patchrightBrowser.close(); _patchrightBrowser = null; }
 
   const missingImages = picksData.picks.filter(p => !p.image);
   if (missingImages.length > 0 && !DRY_RUN) {
@@ -921,5 +718,6 @@ main().catch(e => {
   console.error('\n\u274c Fatal error:', e.message);
   if (VERBOSE) console.error(e);
   if (_browser) _browser.close();
+  if (_patchrightBrowser) _patchrightBrowser.close();
   process.exit(1);
 });
