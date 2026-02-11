@@ -56,8 +56,8 @@ function initCloudinary() {
     cloudinary = require('cloudinary').v2;
     cloudinary.config({ cloud_name: m[3], api_key: m[1], api_secret: m[2], secure: true });
     CLOUD_NAME = m[3]; CLOUD_ENABLED = true;
-    console.log(`  ☁️  Cloudinary → ${m[3]}`);
-  } catch (e) { console.log(`  ⚠️  Cloudinary init failed: ${e.message}`); }
+    console.log(`  \u2601\ufe0f  Cloudinary \u2192 ${m[3]}`);
+  } catch (e) { console.log(`  \u26a0\ufe0f  Cloudinary init failed: ${e.message}`); }
 }
 
 async function uploadToCloudinary(source, filename) {
@@ -109,18 +109,17 @@ function slugify(s) {
 // ===========================================================
 // FOOT LOCKER PLACEHOLDER DETECTION
 // ===========================================================
-// FL serves a shoe box SVG/PNG placeholder when the real image
-// is unavailable. Known characteristics:
-//   - Exactly 333321 bytes (PNG)
-//   - Contains a simple line-art shoe box
-//   - Always the same file regardless of SKU
+// FL serves a shoe box PNG placeholder when the real image is
+// unavailable. The placeholder is always the SAME file regardless
+// of SKU. We detect it by exact byte size.
 //
-// We detect it by:
-//   1. Exact byte size match (most reliable)
-//   2. Size range check (within 5KB of known size)
-//   3. PNG header + small dimensions check
+// Known placeholder sizes (add new ones as discovered):
+//   - 52353 bytes (763x538 PNG, the standard shoe box)
+//
+// To find new sizes, run:
+//   node -e "const https=require('https');https.get('https://images.footlocker.com/is/image/FLEU/000000000000?wid=763&hei=538&fmt=png-alpha',r=>{let d=[];r.on('data',c=>d.push(c));r.on('end',()=>console.log(Buffer.concat(d).length)})"
 // ===========================================================
-const FL_PLACEHOLDER_SIZES = [333321]; // known exact sizes of the box placeholder
+const FL_PLACEHOLDER_SIZES = [52353]; // exact byte sizes of known box placeholders
 
 function isFootLockerPlaceholder(buffer) {
   if (!buffer || buffer.length < 1000) return true;
@@ -128,24 +127,16 @@ function isFootLockerPlaceholder(buffer) {
   // Check exact known placeholder sizes
   for (const size of FL_PLACEHOLDER_SIZES) {
     if (buffer.length === size) {
-      log(`⚠️  Detected FL placeholder (exact match: ${buffer.length} bytes)`);
+      log(`\u26a0\ufe0f  Detected FL shoe box placeholder (exact match: ${buffer.length} bytes)`);
       return true;
     }
   }
 
-  // Check range: the box placeholder is always ~330-340KB
-  // Real product photos from FL CDN are usually different sizes
-  if (buffer.length >= 330000 && buffer.length <= 340000) {
-    // Additional check: read PNG header for dimensions
-    // PNG IHDR chunk starts at byte 16, width at 16-19, height at 20-23
-    if (buffer[0] === 0x89 && buffer[1] === 0x50) { // PNG magic
-      const width = buffer.readUInt32BE(16);
-      const height = buffer.readUInt32BE(20);
-      // The placeholder is typically 763x538 or similar FL CDN sizes
-      // but so are real images. If size matches range AND all FL products
-      // from the same session have the same size, it's the placeholder.
-      log(`⚠️  Suspicious FL image: ${buffer.length} bytes, ${width}x${height}`);
-      // For safety, reject anything in the exact placeholder size range
+  // Also reject if suspiciously close to known placeholder sizes (within 1KB)
+  // This catches minor FL CDN variations
+  for (const size of FL_PLACEHOLDER_SIZES) {
+    if (Math.abs(buffer.length - size) < 1024) {
+      log(`\u26a0\ufe0f  Detected FL placeholder (near match: ${buffer.length} vs ${size} bytes)`);
       return true;
     }
   }
@@ -183,10 +174,10 @@ async function source0_FootLockerCDN(pick) {
       if (buffer && buffer.length > 5000) {
         // ===== PLACEHOLDER CHECK =====
         if (isFootLockerPlaceholder(buffer)) {
-          console.log(`  ⚠️  FL CDN returned shoe box placeholder — skipping`);
+          console.log(`  \u26a0\ufe0f  FL CDN returned shoe box placeholder (${buffer.length} bytes) \u2014 skipping`);
           continue;
         }
-        log(`✓ Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
+        log(`\u2713 Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
         return { url: cdnUrl, buffer };
       }
     } catch (e) {
@@ -299,7 +290,7 @@ async function source0B_FootLockerPage(pick) {
       try {
         const buffer = await fetchBuffer(imageUrl, 10000);
         if (buffer && buffer.length > 5000 && !isFootLockerPlaceholder(buffer)) {
-          log(`✓ Source 0B found real image: ${imageUrl}`);
+          log(`\u2713 Source 0B found real image: ${imageUrl}`);
           return { url: imageUrl, buffer };
         }
         log('Source 0B: Image from page was still the placeholder');
@@ -341,7 +332,7 @@ async function sourceA_SneaksAPI(pick) {
       const p = products[0];
       const img = p.thumbnail || p.image?.original || p.image?.small;
       if (img && img.startsWith('http')) {
-        log(`✓ Source A found: ${img}`);
+        log(`\u2713 Source A found: ${img}`);
         return img;
       }
     }
@@ -395,7 +386,7 @@ async function sourceB_Playwright(pick) {
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found og:image: ${imageUrl}`);
+      log(`\u2713 Source B found og:image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
@@ -442,7 +433,7 @@ async function sourceB_Playwright(pick) {
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found product image: ${imageUrl}`);
+      log(`\u2713 Source B found product image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
@@ -453,7 +444,7 @@ async function sourceB_Playwright(pick) {
     if (mediaMatch && mediaMatch.length > 0) {
       const productImg = mediaMatch.find(u => u.includes('prodmedia') || u.includes('catalog') || u.includes('w_') || u.includes('800'));
       const img = productImg || mediaMatch[0];
-      log(`✓ Source B found in HTML: ${img}`);
+      log(`\u2713 Source B found in HTML: ${img}`);
       await page.close();
       return img;
     }
@@ -503,7 +494,7 @@ async function sourceC_GoogleImages(pick) {
     });
 
     await page.close();
-    if (imageUrl) { log(`✓ Source C found: ${imageUrl}`); return imageUrl; }
+    if (imageUrl) { log(`\u2713 Source C found: ${imageUrl}`); return imageUrl; }
   } catch (e) { log(`Source C failed: ${e.message}`); }
   return null;
 }
@@ -545,7 +536,7 @@ async function sourceD_Screenshot(pick) {
             const filename = `${pick.id}-${slugify(pick.name)}.png`;
             const filepath = path.join(IMAGES_DIR, filename);
             await el.screenshot({ path: filepath });
-            log(`✓ Source D screenshot saved: ${filepath}`);
+            log(`\u2713 Source D screenshot saved: ${filepath}`);
             await page.close();
             return { localFile: filepath, filename };
           }
@@ -556,7 +547,7 @@ async function sourceD_Screenshot(pick) {
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const filepath = path.join(IMAGES_DIR, filename);
     await page.screenshot({ path: filepath, clip: { x: 0, y: 0, width: 640, height: 640 } });
-    log(`✓ Source D page screenshot saved: ${filepath}`);
+    log(`\u2713 Source D page screenshot saved: ${filepath}`);
     await page.close();
     return { localFile: filepath, filename };
   } catch (e) {
@@ -575,7 +566,7 @@ function sourceE_Fallback(pick) {
   try {
     const fallbacks = JSON.parse(fs.readFileSync(FALLBACK_PATH, 'utf-8'));
     const entry = fallbacks[pick.styleCode] || fallbacks[pick.id] || fallbacks[pick.name];
-    if (entry) { log(`✓ Source E found fallback: ${entry}`); return entry; }
+    if (entry) { log(`\u2713 Source E found fallback: ${entry}`); return entry; }
   } catch (e) { log(`Source E failed: ${e.message}`); }
   return null;
 }
@@ -633,30 +624,30 @@ async function saveImage(pick, imageResult, filename) {
 
 // ===== MAIN =====
 async function main() {
-  console.log('\n🔥 FASHION. Bulletproof Image Fetcher');
+  console.log('\n\ud83d\udd25 FASHION. Bulletproof Image Fetcher');
   console.log('='.repeat(50));
 
   initCloudinary();
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
   if (!fs.existsSync(PICKS_PATH)) {
-    console.error('❌ picks.json not found'); process.exit(1);
+    console.error('\u274c picks.json not found'); process.exit(1);
   }
 
   const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
   const picks = picksData.picks;
-  console.log(`\n📦 ${picks.length} items to process\n`);
+  console.log(`\n\ud83d\udce6 ${picks.length} items to process\n`);
 
   const report = { total: picks.length, success: 0, failed: 0, items: [] };
 
   for (const pick of picks) {
-    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} — ${pick.name}`);
+    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} \u2014 ${pick.name}`);
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const item = { id: pick.id, name: pick.name, source: '', status: '' };
 
     // Skip if already on Cloudinary
     if (!FORCE && pick.image && pick.image.includes('res.cloudinary.com')) {
-      console.log('  ☁️  Already on Cloudinary ✅');
+      console.log('  \u2601\ufe0f  Already on Cloudinary \u2705');
       item.status = 'skipped'; item.source = 'cloudinary';
       report.items.push(item); continue;
     }
@@ -713,21 +704,21 @@ async function main() {
 
     // ========== SAVE ==========
     if (imageResult) {
-      console.log(`  📸 Found via: ${sourceName}`);
+      console.log(`  \ud83d\udcf8 Found via: ${sourceName}`);
       const saved = await saveImage(pick, imageResult, filename);
       if (saved) {
         pick._originalImage = pick._originalImage || pick.image;
         pick.image = saved;
-        console.log(`  ✅ ${saved}`);
+        console.log(`  \u2705 ${saved}`);
         item.status = 'success'; item.source = sourceName;
         report.success++;
       } else {
-        console.log('  ❌ Found image but failed to save');
+        console.log('  \u274c Found image but failed to save');
         item.status = 'save-failed'; item.source = sourceName;
         report.failed++;
       }
     } else {
-      console.log('  ❌ No image found from any source');
+      console.log('  \u274c No image found from any source');
       item.status = 'failed'; item.source = 'none';
       report.failed++;
     }
@@ -739,23 +730,23 @@ async function main() {
   if (_patchrightBrowser) { await _patchrightBrowser.close(); log('Patchright closed'); }
 
   fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
-  console.log('\n💾 Updated picks.json');
+  console.log('\n\ud83d\udcbe Updated picks.json');
 
   console.log('\n' + '='.repeat(50));
-  console.log('📊 RESULTS');
+  console.log('\ud83d\udcca RESULTS');
   console.log('='.repeat(50));
   console.log(`Total:      ${report.total}`);
-  console.log(`✅ Success: ${report.success}`);
-  console.log(`❌ Failed:  ${report.failed}`);
+  console.log(`\u2705 Success: ${report.success}`);
+  console.log(`\u274c Failed:  ${report.failed}`);
   console.log('='.repeat(50));
 
   for (const item of report.items) {
-    const icon = item.status === 'success' ? '✅' : item.status === 'skipped' ? '⏭️' : '❌';
-    console.log(`  ${icon} #${item.id} ${item.name} → ${item.source}`);
+    const icon = item.status === 'success' ? '\u2705' : item.status === 'skipped' ? '\u23ed\ufe0f' : '\u274c';
+    console.log(`  ${icon} #${item.id} ${item.name} \u2192 ${item.source}`);
   }
 
   if (report.failed > 0) {
-    console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
+    console.log('\n\u26a0\ufe0f  For failed items, add manual URLs to data/fallback-images.json:');
     console.log('  {');
     for (const item of report.items) {
       if (item.status === 'failed' || item.status === 'save-failed') {
@@ -767,7 +758,7 @@ async function main() {
   }
 
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
-  console.log('\n✨ Done!\n');
+  console.log('\n\u2728 Done!\n');
 }
 
 main().catch(e => { console.error('Fatal:', e); process.exit(1); });
