@@ -298,6 +298,27 @@
         "UK 7.5"
       ],
       "_originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/i1-2e4a1f6a-0f08-4758-a0f4-30c94e0c8085/AIR+JORDAN+1+LOW.png"
+    },
+    {
+      "id": 11,
+      "name": "New Balance 1906R \"Black\"",
+      "brand": "New Balance",
+      "styleCode": "U1906ROE",
+      "colorway": "Black / Black",
+      "retailPrice": "€169",
+      "salePrice": "€125",
+      "discount": "-26%",
+      "store": "Foot Locker",
+      "storeFlag": "🇳🇱",
+      "image": "",
+      "url": "https://www.footlocker.nl/nl/product/~/314217525204.html",
+      "description": "New Balance 1906R in triple black. ABZORB midsole cushioning with N-ergy technology, mesh and synthetic upper. Foot Locker exclusive.",
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "Sale"
+      ],
+      "sizes": []
     }
   ]
 }
