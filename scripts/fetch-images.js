@@ -56,8 +56,8 @@ function initCloudinary() {
     cloudinary = require('cloudinary').v2;
     cloudinary.config({ cloud_name: m[3], api_key: m[1], api_secret: m[2], secure: true });
     CLOUD_NAME = m[3]; CLOUD_ENABLED = true;
-    console.log(`  \u2601\ufe0f  Cloudinary \u2192 ${m[3]}`);
-  } catch (e) { console.log(`  \u26a0\ufe0f  Cloudinary init failed: ${e.message}`); }
+    console.log(`  ☁️  Cloudinary → ${m[3]}`);
+  } catch (e) { console.log(`  ⚠️  Cloudinary init failed: ${e.message}`); }
 }
 
 async function uploadToCloudinary(source, filename) {
@@ -106,6 +106,53 @@ function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60);
 }
 
+// ===========================================================
+// FOOT LOCKER PLACEHOLDER DETECTION
+// ===========================================================
+// FL serves a shoe box SVG/PNG placeholder when the real image
+// is unavailable. Known characteristics:
+//   - Exactly 333321 bytes (PNG)
+//   - Contains a simple line-art shoe box
+//   - Always the same file regardless of SKU
+//
+// We detect it by:
+//   1. Exact byte size match (most reliable)
+//   2. Size range check (within 5KB of known size)
+//   3. PNG header + small dimensions check
+// ===========================================================
+const FL_PLACEHOLDER_SIZES = [333321]; // known exact sizes of the box placeholder
+
+function isFootLockerPlaceholder(buffer) {
+  if (!buffer || buffer.length < 1000) return true;
+
+  // Check exact known placeholder sizes
+  for (const size of FL_PLACEHOLDER_SIZES) {
+    if (buffer.length === size) {
+      log(`⚠️  Detected FL placeholder (exact match: ${buffer.length} bytes)`);
+      return true;
+    }
+  }
+
+  // Check range: the box placeholder is always ~330-340KB
+  // Real product photos from FL CDN are usually different sizes
+  if (buffer.length >= 330000 && buffer.length <= 340000) {
+    // Additional check: read PNG header for dimensions
+    // PNG IHDR chunk starts at byte 16, width at 16-19, height at 20-23
+    if (buffer[0] === 0x89 && buffer[1] === 0x50) { // PNG magic
+      const width = buffer.readUInt32BE(16);
+      const height = buffer.readUInt32BE(20);
+      // The placeholder is typically 763x538 or similar FL CDN sizes
+      // but so are real images. If size matches range AND all FL products
+      // from the same session have the same size, it's the placeholder.
+      log(`⚠️  Suspicious FL image: ${buffer.length} bytes, ${width}x${height}`);
+      // For safety, reject anything in the exact placeholder size range
+      return true;
+    }
+  }
+
+  return false;
+}
+
 // =============================================================
 // SOURCE 0: Foot Locker CDN (no browser needed)
 // =============================================================
@@ -116,7 +163,7 @@ async function source0_FootLockerCDN(pick) {
   // Extract SKU from URL like /314217525204.html
   const m = pick.url.match(/(\d{10,15})\.html/);
   if (!m) {
-    const m2 = pick.url.match(/[\/-](\d{10,15})(?:\?|$)/);
+    const m2 = pick.url.match(/[\/\-](\d{10,15})(?:\?|$)/);
     if (!m2) { log('No FL SKU found in URL'); return null; }
     var sku = m2[1];
   } else {
@@ -134,12 +181,135 @@ async function source0_FootLockerCDN(pick) {
     try {
       const buffer = await fetchBuffer(cdnUrl, 10000);
       if (buffer && buffer.length > 5000) {
-        log(`\u2713 Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
+        // ===== PLACEHOLDER CHECK =====
+        if (isFootLockerPlaceholder(buffer)) {
+          console.log(`  ⚠️  FL CDN returned shoe box placeholder — skipping`);
+          continue;
+        }
+        log(`✓ Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
         return { url: cdnUrl, buffer };
       }
     } catch (e) {
       log(`Source 0 CDN failed for ${cdnUrl}: ${e.message}`);
     }
+  }
+
+  return null;
+}
+
+// =============================================================
+// SOURCE 0B: Foot Locker Patchright — grab real image from page
+// =============================================================
+let _patchrightBrowser = null;
+
+async function getPatchrightBrowser() {
+  if (_patchrightBrowser) return _patchrightBrowser;
+  try {
+    const { chromium } = require('patchright');
+    _patchrightBrowser = await chromium.launch({ headless: false });
+    return _patchrightBrowser;
+  } catch (e) {
+    log(`Patchright launch failed: ${e.message}`);
+    return null;
+  }
+}
+
+async function source0B_FootLockerPage(pick) {
+  if (!pick.url || !pick.url.includes('footlocker')) return null;
+  log('Source 0B: Foot Locker page (Patchright)...');
+
+  const browser = await getPatchrightBrowser();
+  if (!browser) return null;
+
+  let page;
+  try {
+    page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(8000);
+
+    // Dismiss cookie popup
+    try {
+      const cookieBtn = await page.$('#onetrust-accept-btn-handler');
+      if (cookieBtn) { await cookieBtn.click(); await page.waitForTimeout(1500); }
+    } catch (e) {}
+
+    // Try to get real product image from the page carousel
+    const imageUrl = await page.evaluate(() => {
+      // Strategy 1: Look for the main product image in the carousel/gallery
+      const carouselSelectors = [
+        '#ProductImages img',
+        '[class*="ProductImages"] img',
+        '[class*="product-image"] img',
+        '[class*="ProductCarousel"] img',
+        '[class*="carousel"] img',
+        '.slick-slide img',
+        '[data-testid*="image"] img',
+        'picture source[type="image/webp"]',
+        'picture img',
+      ];
+
+      for (const sel of carouselSelectors) {
+        const els = document.querySelectorAll(sel);
+        for (const el of els) {
+          let src;
+          if (el.tagName === 'SOURCE') {
+            src = el.getAttribute('srcset');
+            if (src) src = src.split(',')[0].trim().split(' ')[0];
+          } else {
+            src = el.getAttribute('src') || el.getAttribute('data-src');
+          }
+          if (!src || !src.startsWith('http')) continue;
+          // Skip tiny images, logos, icons
+          if (src.includes('logo') || src.includes('svg') || src.includes('icon')) continue;
+          // Skip the shoe box placeholder URL pattern
+          if (src.includes('placeholder') || src.includes('no-image')) continue;
+          // Must be from FL CDN or a real image source
+          if (src.includes('images.footlocker.com') || src.includes('media.') || src.includes('scene7')) {
+            return src;
+          }
+        }
+      }
+
+      // Strategy 2: Find any large product image
+      const allImgs = [...document.querySelectorAll('img')];
+      for (const img of allImgs) {
+        const src = img.src;
+        if (!src || !src.startsWith('http')) continue;
+        if (src.includes('logo') || src.includes('svg') || src.includes('icon') || src.includes('flag')) continue;
+        if (img.naturalWidth > 200 && img.naturalHeight > 200) {
+          if (src.includes('footlocker') || src.includes('scene7')) return src;
+        }
+      }
+
+      // Strategy 3: og:image as last resort
+      const og = document.querySelector('meta[property="og:image"]');
+      if (og) {
+        const src = og.getAttribute('content');
+        if (src && src.startsWith('http')) return src;
+      }
+
+      return null;
+    });
+
+    await page.close();
+
+    if (imageUrl) {
+      // Download and validate it's not the placeholder
+      try {
+        const buffer = await fetchBuffer(imageUrl, 10000);
+        if (buffer && buffer.length > 5000 && !isFootLockerPlaceholder(buffer)) {
+          log(`✓ Source 0B found real image: ${imageUrl}`);
+          return { url: imageUrl, buffer };
+        }
+        log('Source 0B: Image from page was still the placeholder');
+      } catch (e) {
+        log(`Source 0B: Download failed: ${e.message}`);
+      }
+    }
+  } catch (e) {
+    log(`Source 0B failed: ${e.message}`);
+    if (page) try { await page.close(); } catch {}
   }
 
   return null;
@@ -171,7 +341,7 @@ async function sourceA_SneaksAPI(pick) {
       const p = products[0];
       const img = p.thumbnail || p.image?.original || p.image?.small;
       if (img && img.startsWith('http')) {
-        log(`\u2713 Source A found: ${img}`);
+        log(`✓ Source A found: ${img}`);
         return img;
       }
     }
@@ -225,7 +395,7 @@ async function sourceB_Playwright(pick) {
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`\u2713 Source B found og:image: ${imageUrl}`);
+      log(`✓ Source B found og:image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
@@ -272,7 +442,7 @@ async function sourceB_Playwright(pick) {
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`\u2713 Source B found product image: ${imageUrl}`);
+      log(`✓ Source B found product image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
@@ -283,7 +453,7 @@ async function sourceB_Playwright(pick) {
     if (mediaMatch && mediaMatch.length > 0) {
       const productImg = mediaMatch.find(u => u.includes('prodmedia') || u.includes('catalog') || u.includes('w_') || u.includes('800'));
       const img = productImg || mediaMatch[0];
-      log(`\u2713 Source B found in HTML: ${img}`);
+      log(`✓ Source B found in HTML: ${img}`);
       await page.close();
       return img;
     }
@@ -333,7 +503,7 @@ async function sourceC_GoogleImages(pick) {
     });
 
     await page.close();
-    if (imageUrl) { log(`\u2713 Source C found: ${imageUrl}`); return imageUrl; }
+    if (imageUrl) { log(`✓ Source C found: ${imageUrl}`); return imageUrl; }
   } catch (e) { log(`Source C failed: ${e.message}`); }
   return null;
 }
@@ -375,7 +545,7 @@ async function sourceD_Screenshot(pick) {
             const filename = `${pick.id}-${slugify(pick.name)}.png`;
             const filepath = path.join(IMAGES_DIR, filename);
             await el.screenshot({ path: filepath });
-            log(`\u2713 Source D screenshot saved: ${filepath}`);
+            log(`✓ Source D screenshot saved: ${filepath}`);
             await page.close();
             return { localFile: filepath, filename };
           }
@@ -386,7 +556,7 @@ async function sourceD_Screenshot(pick) {
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const filepath = path.join(IMAGES_DIR, filename);
     await page.screenshot({ path: filepath, clip: { x: 0, y: 0, width: 640, height: 640 } });
-    log(`\u2713 Source D page screenshot saved: ${filepath}`);
+    log(`✓ Source D page screenshot saved: ${filepath}`);
     await page.close();
     return { localFile: filepath, filename };
   } catch (e) {
@@ -405,7 +575,7 @@ function sourceE_Fallback(pick) {
   try {
     const fallbacks = JSON.parse(fs.readFileSync(FALLBACK_PATH, 'utf-8'));
     const entry = fallbacks[pick.styleCode] || fallbacks[pick.id] || fallbacks[pick.name];
-    if (entry) { log(`\u2713 Source E found fallback: ${entry}`); return entry; }
+    if (entry) { log(`✓ Source E found fallback: ${entry}`); return entry; }
   } catch (e) { log(`Source E failed: ${e.message}`); }
   return null;
 }
@@ -463,30 +633,30 @@ async function saveImage(pick, imageResult, filename) {
 
 // ===== MAIN =====
 async function main() {
-  console.log('\n\ud83d\udd25 FASHION. Bulletproof Image Fetcher');
+  console.log('\n🔥 FASHION. Bulletproof Image Fetcher');
   console.log('='.repeat(50));
 
   initCloudinary();
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
   if (!fs.existsSync(PICKS_PATH)) {
-    console.error('\u274c picks.json not found'); process.exit(1);
+    console.error('❌ picks.json not found'); process.exit(1);
   }
 
   const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
   const picks = picksData.picks;
-  console.log(`\n\ud83d\udce6 ${picks.length} items to process\n`);
+  console.log(`\n📦 ${picks.length} items to process\n`);
 
   const report = { total: picks.length, success: 0, failed: 0, items: [] };
 
   for (const pick of picks) {
-    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} \u2014 ${pick.name}`);
+    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} — ${pick.name}`);
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const item = { id: pick.id, name: pick.name, source: '', status: '' };
 
     // Skip if already on Cloudinary
     if (!FORCE && pick.image && pick.image.includes('res.cloudinary.com')) {
-      console.log('  \u2601\ufe0f  Already on Cloudinary \u2705');
+      console.log('  ☁️  Already on Cloudinary ✅');
       item.status = 'skipped'; item.source = 'cloudinary';
       report.items.push(item); continue;
     }
@@ -498,6 +668,13 @@ async function main() {
     console.log('  [0] Foot Locker CDN...');
     imageResult = await source0_FootLockerCDN(pick);
     if (imageResult) { sourceName = 'fl-cdn'; }
+
+    // ========== SOURCE 0B: Foot Locker Page (Patchright) ==========
+    if (!imageResult && pick.url && pick.url.includes('footlocker')) {
+      console.log('  [0B] Foot Locker page (Patchright)...');
+      imageResult = await source0B_FootLockerPage(pick);
+      if (imageResult) { sourceName = 'fl-patchright'; }
+    }
 
     // ========== SOURCE A ==========
     if (!imageResult) {
@@ -536,21 +713,21 @@ async function main() {
 
     // ========== SAVE ==========
     if (imageResult) {
-      console.log(`  \ud83d\udcf8 Found via: ${sourceName}`);
+      console.log(`  📸 Found via: ${sourceName}`);
       const saved = await saveImage(pick, imageResult, filename);
       if (saved) {
         pick._originalImage = pick._originalImage || pick.image;
         pick.image = saved;
-        console.log(`  \u2705 ${saved}`);
+        console.log(`  ✅ ${saved}`);
         item.status = 'success'; item.source = sourceName;
         report.success++;
       } else {
-        console.log('  \u274c Found image but failed to save');
+        console.log('  ❌ Found image but failed to save');
         item.status = 'save-failed'; item.source = sourceName;
         report.failed++;
       }
     } else {
-      console.log('  \u274c No image found from any source');
+      console.log('  ❌ No image found from any source');
       item.status = 'failed'; item.source = 'none';
       report.failed++;
     }
@@ -559,25 +736,26 @@ async function main() {
   }
 
   if (_browser) { await _browser.close(); log('Browser closed'); }
+  if (_patchrightBrowser) { await _patchrightBrowser.close(); log('Patchright closed'); }
 
   fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
-  console.log('\n\ud83d\udcbe Updated picks.json');
+  console.log('\n💾 Updated picks.json');
 
   console.log('\n' + '='.repeat(50));
-  console.log('\ud83d\udcca RESULTS');
+  console.log('📊 RESULTS');
   console.log('='.repeat(50));
   console.log(`Total:      ${report.total}`);
-  console.log(`\u2705 Success: ${report.success}`);
-  console.log(`\u274c Failed:  ${report.failed}`);
+  console.log(`✅ Success: ${report.success}`);
+  console.log(`❌ Failed:  ${report.failed}`);
   console.log('='.repeat(50));
 
   for (const item of report.items) {
-    const icon = item.status === 'success' ? '\u2705' : item.status === 'skipped' ? '\u23ed\ufe0f' : '\u274c';
-    console.log(`  ${icon} #${item.id} ${item.name} \u2192 ${item.source}`);
+    const icon = item.status === 'success' ? '✅' : item.status === 'skipped' ? '⏭️' : '❌';
+    console.log(`  ${icon} #${item.id} ${item.name} → ${item.source}`);
   }
 
   if (report.failed > 0) {
-    console.log('\n\u26a0\ufe0f  For failed items, add manual URLs to data/fallback-images.json:');
+    console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
     console.log('  {');
     for (const item of report.items) {
       if (item.status === 'failed' || item.status === 'save-failed') {
@@ -589,7 +767,7 @@ async function main() {
   }
 
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
-  console.log('\n\u2728 Done!\n');
+  console.log('\n✨ Done!\n');
 }
 
 main().catch(e => { console.error('Fatal:', e); process.exit(1); });
