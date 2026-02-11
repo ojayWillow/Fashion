@@ -332,7 +332,7 @@
       "discount": "-35%",
       "store": "Foot Locker",
       "storeFlag": "🇪🇺",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/v1770828531/picks/12-jordan-spizike-low.png",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/12-jordan-spizike-low",
       "url": "https://www.footlocker.nl/nl/product/~/314109461104.html",
       "description": "<h3><strong>Combineer cultuur en stijl</strong></h3>\t<p> </p>\t<p>Loop met zelfvertrouwen waar je ook heen gaat met de Jordan Spizike Low. Deze schoenen zijn een eerbetoon aan de familie van Spike Lee ",
       "tags": [
@@ -393,7 +393,7 @@
       "discount": "-11%",
       "store": "Foot Locker",
       "storeFlag": "🇪🇺",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/v1770828537/picks/14-puma-lafrance-icey.png",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/14-puma-lafrance-icey",
       "url": "https://www.footlocker.nl/nl/product/~/314109239104.html",
       "description": " ",
       "tags": [
@@ -404,6 +404,348 @@
         "40.5"
       ],
       "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/14-puma-lafrance-icey"
+    },
+    {
+      "id": 15,
+      "name": "Nike Air Max TL 2.5",
+      "brand": "Nike",
+      "styleCode": "314217367904",
+      "colorway": "Kies een model*",
+      "retailPrice": "€100",
+      "salePrice": "€125",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/15-nike-air-max-tl-2-5",
+      "url": "https://www.footlocker.nl/nl/product/~/314217367904.html",
+      "description": "<h1><b>Ride the Air</b></h1>\t<p>\tDe Nike Air Max TL 2.5 is terug met opvallende energie en een tijdloze flow. Het bovenwerk is gemaakt van ademend textiel met lagen van zacht synthetisch materiaal voo",
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ],
+      "sizes": [
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/15-nike-air-max-tl-2-5"
+    },
+    {
+      "id": 16,
+      "name": "New Balance 1000",
+      "brand": "New Balance",
+      "styleCode": "314217928804",
+      "colorway": "Kies een model*",
+      "retailPrice": "€60",
+      "salePrice": "€115",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/16-new-balance-1000",
+      "url": "https://www.footlocker.nl/nl/product/~/314217928804.html",
+      "description": "<h1><b>Nostalgie met een tech-twist</b></h1>\t<p>\tStap terug in de tijd met de New Balance 1000, een klassieker van rond de millenniumwisseling die terug is en beter dan ooit. Deze schoenen werden oors",
+      "tags": [
+        "New Balance",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41.5",
+        "43",
+        "44",
+        "45",
+        "45.5"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/16-new-balance-1000"
+    },
+    {
+      "id": 17,
+      "name": "Asics GEL-QUANTUM 360 I",
+      "brand": "Asics",
+      "styleCode": "314217920504",
+      "colorway": "Kies een model*",
+      "retailPrice": "€179.99",
+      "salePrice": "€85",
+      "discount": "-53%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/17-asics-gel-quantum-360-i",
+      "url": "https://www.footlocker.nl/nl/product/~/314217920504.html",
+      "description": "<h1><b> De legende keert terug </b></h1>\t<p>\tASICS GEL-QUANTUM 360 I brengt een icoon terug met moderne upgrades. Het bovenwerk van jacquardgaas houdt alles ademend, terwijl de externe TPU-hielkap voo",
+      "tags": [
+        "Sneakers",
+        "Asics",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41.5",
+        "42",
+        "42.5",
+        "43.5",
+        "44",
+        "45"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/17-asics-gel-quantum-360-i"
+    },
+    {
+      "id": 18,
+      "name": "New Balance 1906R",
+      "brand": "New Balance",
+      "styleCode": "314217756304",
+      "colorway": "Kies een model*",
+      "retailPrice": "€100",
+      "salePrice": "€100",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/18-new-balance-1906r",
+      "url": "https://www.footlocker.nl/nl/product/~/314217756304.html",
+      "description": "De 1906W wordt, net als zijn neven de 2002R en de 860v2, geleid door een zool met een combinatie van flexibele ACTEVA LITE demping, schokabsorberende N-ergy en gesegmenteerde ABZORB SBS pods bij de hi",
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "41.5",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/18-new-balance-1906r"
+    },
+    {
+      "id": 19,
+      "name": "Jordan AJ1 Mid",
+      "brand": "Jordan",
+      "styleCode": "314109454604",
+      "colorway": "Kies een model*",
+      "retailPrice": "€95",
+      "salePrice": "€95",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/19-jordan-aj1-mid",
+      "url": "https://www.footlocker.nl/nl/product/~/314109454604.html",
+      "description": " ",
+      "tags": [
+        "Jordan",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/19-jordan-aj1-mid"
+    },
+    {
+      "id": 20,
+      "name": "Jordan AJ1 Mid",
+      "brand": "Jordan",
+      "styleCode": "314109262304",
+      "colorway": "Kies een model*",
+      "retailPrice": "€70",
+      "salePrice": "€95",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/20-jordan-aj1-mid",
+      "url": "https://www.footlocker.nl/nl/product/~/314109262304.html",
+      "description": " ",
+      "tags": [
+        "Jordan",
+        "Sale"
+      ],
+      "sizes": [
+        "40.5",
+        "42",
+        "43",
+        "44"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/20-jordan-aj1-mid"
+    },
+    {
+      "id": 21,
+      "name": "Puma Mb.04 Flare",
+      "brand": "Puma",
+      "styleCode": "314109233404",
+      "colorway": "Kies een model*",
+      "retailPrice": "€85",
+      "salePrice": "€80",
+      "discount": "-6%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/21-puma-mb-04-flare",
+      "url": "https://www.footlocker.nl/nl/product/~/314109233404.html",
+      "description": " ",
+      "tags": [
+        "Puma",
+        "Sale"
+      ],
+      "sizes": [
+        "41",
+        "42.5",
+        "43",
+        "44",
+        "44.5"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/21-puma-mb-04-flare"
+    },
+    {
+      "id": 22,
+      "name": "Puma Lafrance Rnnr",
+      "brand": "Puma",
+      "styleCode": "314109407404",
+      "colorway": "Kies een model*",
+      "retailPrice": "€119.99",
+      "salePrice": "€70",
+      "discount": "-42%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/22-puma-lafrance-rnnr",
+      "url": "https://www.footlocker.nl/nl/product/~/314109407404.html",
+      "description": " ",
+      "tags": [
+        "Puma",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "46",
+        "47"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/22-puma-lafrance-rnnr"
+    },
+    {
+      "id": 23,
+      "name": "Nike Air Force 1 Low",
+      "brand": "Nike",
+      "styleCode": "314109418104",
+      "colorway": "",
+      "retailPrice": "",
+      "salePrice": "€90",
+      "discount": "0%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/23-nike-air-force-1-low",
+      "url": "https://www.footlocker.nl/nl/product/~/314109418104.html",
+      "description": " ",
+      "tags": [
+        "Nike",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45",
+        "47.5"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/23-nike-air-force-1-low"
+    },
+    {
+      "id": 24,
+      "name": "Salomon XT-6",
+      "brand": "Salomon",
+      "styleCode": "314217728204",
+      "colorway": "Kies een model*",
+      "retailPrice": "€179.99",
+      "salePrice": "€125",
+      "discount": "-31%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/24-salomon-xt-6",
+      "url": "https://www.footlocker.nl/nl/product/~/314217728204.html",
+      "description": "<h3><strong> Run Wild, Run Free</strong></h3>\t<p> </p>\t<p>Klaar om je grenzen te verleggen? Stap in de buitengewone Salomon XT-6. Deze krachtpatsers, ontworpen voor ware avonturiers en geliefd door at",
+      "tags": [
+        "Salomon",
+        "Sale"
+      ],
+      "sizes": [
+        "44"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/24-salomon-xt-6"
+    },
+    {
+      "id": 25,
+      "name": "adidas Superstar II",
+      "brand": "adidas",
+      "styleCode": "314310716304",
+      "colorway": "Kies een model*",
+      "retailPrice": "€119.99",
+      "salePrice": "€85",
+      "discount": "-29%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/25-adidas-superstar-ii",
+      "url": "https://www.footlocker.nl/nl/product/~/314310716304.html",
+      "description": "De iconische adidas Superstar schoen is terug. Stap in 50 jaar sport en streetstyle met deze low-top sneakers. Het gladde leren bovenwerk en de rubberen shell-toe doen denken aan basketbalvelden en de",
+      "tags": [
+        "adidas",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "42",
+        "44",
+        "48"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/25-adidas-superstar-ii"
+    },
+    {
+      "id": 26,
+      "name": "Timberland 6 Inch",
+      "brand": "Timberland",
+      "styleCode": "314626953104",
+      "colorway": "Kies een model*",
+      "retailPrice": "€229.99",
+      "salePrice": "€160",
+      "discount": "-30%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/26-timberland-6-inch",
+      "url": "https://www.footlocker.nl/nl/product/~/314626953104.html",
+      "description": "<h1><b> Het originele icoon </b></h1>\t<p>\tTimberland Premium 6-inch laars is gemaakt voor veeleisende duurzaamheid en tijdloze stijl. Deze laars is gemaakt van hoogwaardig waterdicht leer en heeft een",
+      "tags": [
+        "Timberland",
+        "Sale"
+      ],
+      "sizes": [
+        "41.5",
+        "42",
+        "44"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/26-timberland-6-inch"
     }
   ]
 }
