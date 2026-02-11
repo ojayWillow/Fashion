@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 /**
- * FASHION. — Debug Scrape
- * =======================
- * Diagnostic tool: loads a product page and dumps EVERYTHING it finds.
- * Paste the output so we can see exactly what the page provides.
+ * FASHION. — Debug Scrape (Patchright)
+ * =====================================
+ * Loads a product page with Patchright (bypasses Kasada) and dumps everything.
  *
  * Usage:
  *   node scripts/debug-scrape.js https://www.footlocker.nl/nl/product/~/314217525204.html
  */
 
-const { chromium } = require('playwright');
+const { chromium } = require('patchright');
 
 const url = process.argv[2];
 if (!url) {
@@ -24,12 +23,11 @@ function section(title) {
 }
 
 async function main() {
-  console.log(`\n🔍 DEBUG SCRAPE: ${url}\n`);
+  console.log(`\n\ud83d\udd0d DEBUG SCRAPE: ${url}\n`);
 
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
 
   const apiCalls = [];
   page.on('response', async (response) => {
@@ -38,15 +36,16 @@ async function main() {
         reqUrl.includes('product') || reqUrl.includes('inventory')) {
       try {
         const body = await response.text().catch(() => '');
-        apiCalls.push({ url: reqUrl.substring(0, 150), status: response.status(), bodyPreview: body.substring(0, 500) });
+        apiCalls.push({ url: reqUrl.substring(0, 200), status: response.status(), bodyPreview: body.substring(0, 500) });
       } catch (e) {}
     }
   });
 
+  console.log('Loading page...');
   try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
   catch (e) { console.log('Page load timeout, continuing...'); }
 
-  await page.waitForTimeout(6000);
+  await page.waitForTimeout(8000);
 
   try {
     const cookieBtn = await page.$('#onetrust-accept-btn-handler');
@@ -95,11 +94,13 @@ async function main() {
           const text = el.textContent.trim().substring(0, 100);
           if (!text || seen.has(text + el.className)) return;
           seen.add(text + el.className);
+          if (!/\d/.test(text)) return;
           const style = window.getComputedStyle(el);
           data.priceElements.push({
             selector: sel, tag: el.tagName, text: text,
             class: (el.className || '').toString().substring(0, 100),
             textDecoration: style.textDecoration || '', opacity: style.opacity,
+            parentTag: el.parentElement?.tagName || '',
             parentClass: (el.parentElement?.className || '').toString().substring(0, 80),
           });
         });
@@ -158,7 +159,7 @@ async function main() {
             class: (el.className || '').toString().substring(0, 120),
             ariaDisabled: el.getAttribute('aria-disabled'), disabled: el.disabled || false,
             opacity: style.opacity, cursor: style.cursor, textDecoration: style.textDecoration || '',
-            color: style.color, backgroundColor: style.backgroundColor,
+            color: style.color, backgroundColor: style.backgroundColor, borderColor: style.borderColor,
           });
         });
       }
@@ -183,8 +184,10 @@ async function main() {
   // PRINT
   section('META TAGS');
   for (const [sel, val] of Object.entries(dump.metaTags)) console.log(`  ${sel}\n    -> ${val}`);
+  if (Object.keys(dump.metaTags).length === 0) console.log('  (none found)');
 
   section('JSON-LD');
+  if (dump.jsonLd.length === 0) console.log('  (none found)');
   for (const ld of dump.jsonLd) console.log(JSON.stringify(ld, null, 2).substring(0, 1500));
 
   section('PAGE TITLE');
@@ -192,11 +195,12 @@ async function main() {
   console.log(`  Title: ${dump.title}`);
 
   section('PRICE ELEMENTS');
+  if (dump.priceElements.length === 0) console.log('  (none found)');
   for (const el of dump.priceElements) {
     console.log(`  [${el.selector}] <${el.tag}> "${el.text}"`);
     console.log(`    class: "${el.class}"`);
     console.log(`    textDecoration: ${el.textDecoration} | opacity: ${el.opacity}`);
-    console.log(`    parentClass: "${el.parentClass}"\n`);
+    console.log(`    parent: <${el.parentTag}> "${el.parentClass}"\n`);
   }
 
   section(`SIZE BUTTONS (area: ${dump.sizeAreaFound})`);
@@ -212,7 +216,7 @@ async function main() {
     if (btn.cursor === 'not-allowed') flags.push('CURSOR-NOT-ALLOWED');
     if (btn.pointerEvents === 'none') flags.push('NO-POINTER');
     if ((btn.textDecoration || '').includes('line-through')) flags.push('LINE-THROUGH');
-    const status = flags.length > 0 ? `❌ ${flags.join(', ')}` : '✅ AVAILABLE';
+    const status = flags.length > 0 ? `\u274c ${flags.join(', ')}` : '\u2705 AVAILABLE';
     console.log(`  Size ${btn.text.padEnd(6)} ${status}`);
     console.log(`    class: "${btn.class}"`);
     console.log(`    color: ${btn.color} | bg: ${btn.backgroundColor} | border: ${btn.borderColor || '-'}`);
@@ -220,18 +224,20 @@ async function main() {
     console.log('');
   }
 
-  section('SIZE AREA RAW HTML');
-  console.log(dump.sizeAreaHTML.substring(0, 2000));
+  section('SIZE AREA RAW HTML (first 2000 chars)');
+  if (!dump.sizeAreaHTML) console.log('  (none found)');
+  else console.log(dump.sizeAreaHTML.substring(0, 2000));
 
   section('NETWORK API CALLS');
   if (apiCalls.length === 0) console.log('  No product/inventory API calls detected');
   for (const call of apiCalls) { console.log(`  [${call.status}] ${call.url}\n    ${call.bodyPreview.substring(0, 300)}\n`); }
 
   section('IMAGES');
+  if (dump.images.length === 0) console.log('  (none found)');
   for (const img of dump.images) console.log(`  [${img.selector}] ${img.src}`);
 
   await browser.close();
-  console.log('\n✨ Debug complete!\n');
+  console.log('\n\u2728 Debug complete!\n');
 }
 
 main().catch(e => { console.error('Fatal:', e.message); process.exit(1); });
