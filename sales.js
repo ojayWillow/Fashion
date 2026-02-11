@@ -41,71 +41,70 @@ window.addEventListener('scroll', () => {
     lastScroll = s;
 });
 
-// ===== REDIRECT MODAL =====
-function createRedirectModal() {
-    if (document.getElementById('redirectModal')) return;
+// ===== REDIRECT LOADING SCREEN =====
+function createRedirectScreen() {
+    if (document.getElementById('redirectScreen')) return;
 
-    const modal = document.createElement('div');
-    modal.id = 'redirectModal';
-    modal.className = 'redirect-modal';
-    modal.innerHTML = `
-        <div class="redirect-modal-backdrop"></div>
-        <div class="redirect-modal-content">
-            <div class="redirect-modal-icon">↗</div>
-            <h3 class="redirect-modal-title">You're leaving FASHION.</h3>
-            <p class="redirect-modal-text">You're being redirected to an external website:</p>
-            <div class="redirect-modal-url" id="redirectUrl"></div>
-            <p class="redirect-modal-disclaimer">FASHION. is not responsible for the content, privacy policies, or practices of third-party websites.</p>
-            <div class="redirect-modal-actions">
-                <button class="redirect-btn-cancel" id="redirectCancel">Cancel</button>
-                <button class="redirect-btn-continue" id="redirectContinue">Continue →</button>
+    const screen = document.createElement('div');
+    screen.id = 'redirectScreen';
+    screen.className = 'redirect-screen';
+    screen.innerHTML = `
+        <div class="redirect-screen-content">
+            <div class="redirect-logo">FASHION.</div>
+            <div class="redirect-spinner">
+                <div class="redirect-spinner-ring"></div>
             </div>
+            <div class="redirect-status">
+                <p class="redirect-heading" id="redirectHeading">Redirecting...</p>
+                <p class="redirect-store" id="redirectStore"></p>
+                <p class="redirect-domain" id="redirectDomain"></p>
+            </div>
+            <div class="redirect-progress-bar">
+                <div class="redirect-progress-fill" id="redirectProgress"></div>
+            </div>
+            <p class="redirect-notice">You are being redirected to an external website</p>
         </div>
     `;
-    document.body.appendChild(modal);
-
-    // Close handlers
-    modal.querySelector('.redirect-modal-backdrop').addEventListener('click', closeRedirectModal);
-    document.getElementById('redirectCancel').addEventListener('click', closeRedirectModal);
-
-    // ESC key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeRedirectModal();
-    });
+    document.body.appendChild(screen);
 }
 
-let pendingRedirectUrl = null;
-
-function showRedirectModal(url, storeName) {
-    createRedirectModal();
-    pendingRedirectUrl = url;
+function redirectTo(url, storeName) {
+    createRedirectScreen();
 
     let domain;
     try { domain = new URL(url).hostname; } catch { domain = url; }
 
-    document.getElementById('redirectUrl').textContent = domain;
-    const modal = document.getElementById('redirectModal');
-    modal.classList.add('active');
+    document.getElementById('redirectHeading').textContent = 'Redirecting you to';
+    document.getElementById('redirectStore').textContent = storeName || domain;
+    document.getElementById('redirectDomain').textContent = domain;
+
+    const screen = document.getElementById('redirectScreen');
+    const progressBar = document.getElementById('redirectProgress');
+
+    // Show screen
+    screen.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Continue button
-    const continueBtn = document.getElementById('redirectContinue');
-    const newBtn = continueBtn.cloneNode(true);
-    continueBtn.parentNode.replaceChild(newBtn, continueBtn);
-    newBtn.id = 'redirectContinue';
-    newBtn.addEventListener('click', () => {
-        window.open(pendingRedirectUrl, '_blank');
-        closeRedirectModal();
+    // Animate progress bar
+    progressBar.style.width = '0%';
+    requestAnimationFrame(() => {
+        progressBar.style.transition = 'width 2.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        progressBar.style.width = '100%';
     });
-}
 
-function closeRedirectModal() {
-    const modal = document.getElementById('redirectModal');
-    if (modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-        pendingRedirectUrl = null;
-    }
+    // Open external site after animation
+    setTimeout(() => {
+        window.open(url, '_blank');
+
+        // Fade out
+        screen.classList.add('fade-out');
+        setTimeout(() => {
+            screen.classList.remove('active', 'fade-out');
+            document.body.style.overflow = '';
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+        }, 500);
+    }, 2500);
 }
 
 // ===== IMAGE FALLBACK HANDLER =====
@@ -175,7 +174,7 @@ function renderPicks(picks) {
                 </div>
                 ${sizesHTML}
                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
-                <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="showRedirectModal('${escapedUrl}', '${escapedStore}')"`}>
+                <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="redirectTo('${escapedUrl}', '${escapedStore}')"`}>
                     ${pick._linkDead ? 'Unavailable' : 'Shop Now →'}
                 </button>
             </div>
@@ -270,7 +269,7 @@ function renderStores() {
             <p class="store-card-desc">${store.description}</p>
             <div class="store-card-footer"><span class="store-card-cta">Shop Sale →</span><span class="store-card-flag">${store.flag}</span></div>
         `;
-        card.addEventListener('click', () => showRedirectModal(store.saleUrl, store.name));
+        card.addEventListener('click', () => redirectTo(store.saleUrl, store.name));
         addHoverCursor(card); grid.appendChild(card);
     });
 }
