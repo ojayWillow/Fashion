@@ -310,7 +310,7 @@
       "discount": "-26%",
       "store": "Foot Locker",
       "storeFlag": "🇳🇱",
-      "image": "",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/11-new-balance-1906r-black",
       "url": "https://www.footlocker.nl/nl/product/~/314217525204.html",
       "description": "New Balance 1906R in triple black. ABZORB midsole cushioning with N-ergy technology, mesh and synthetic upper. Foot Locker exclusive.",
       "tags": [
@@ -318,7 +318,92 @@
         "New Balance",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/11-new-balance-1906r-black"
+    },
+    {
+      "id": 12,
+      "name": "Jordan Spizike Low",
+      "brand": "Jordan",
+      "styleCode": "314109461104",
+      "colorway": "Kies een model*",
+      "retailPrice": "€169.99",
+      "salePrice": "€110",
+      "discount": "-35%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/12-jordan-spizike-low",
+      "url": "https://www.footlocker.nl/nl/product/~/314109461104.html",
+      "description": "<h3><strong>Combineer cultuur en stijl</strong></h3>\t<p> </p>\t<p>Loop met zelfvertrouwen waar je ook heen gaat met de Jordan Spizike Low. Deze schoenen zijn een eerbetoon aan de familie van Spike Lee ",
+      "tags": [
+        "Jordan",
+        "Sale"
+      ],
+      "sizes": [
+        "40",
+        "40.5",
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "45",
+        "46"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/12-jordan-spizike-low"
+    },
+    {
+      "id": 13,
+      "name": "Nike Air Max TL 2.5",
+      "brand": "Nike",
+      "styleCode": "314217829804",
+      "colorway": "Kies een model*",
+      "retailPrice": "€179.99",
+      "salePrice": "€125",
+      "discount": "-31%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/13-nike-air-max-tl-2-5",
+      "url": "https://www.footlocker.nl/nl/product/~/314217829804.html",
+      "description": "<h1><b>Ride the Air</b></h1>\t<p>\tDe Nike Air Max TL 2.5 is terug met opvallende energie en een tijdloze flow. Het bovenwerk is gemaakt van ademend textiel met lagen van zacht synthetisch materiaal voo",
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ],
+      "sizes": [
+        "41",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/13-nike-air-max-tl-2-5"
+    },
+    {
+      "id": 14,
+      "name": "Puma Lafrance Icey",
+      "brand": "Puma",
+      "styleCode": "314109239104",
+      "colorway": "Kies een model*",
+      "retailPrice": "€90",
+      "salePrice": "€80",
+      "discount": "-11%",
+      "store": "Foot Locker",
+      "storeFlag": "🇪🇺",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/14-puma-lafrance-icey",
+      "url": "https://www.footlocker.nl/nl/product/~/314109239104.html",
+      "description": " ",
+      "tags": [
+        "Puma",
+        "Sale"
+      ],
+      "sizes": [
+        "40.5"
+      ],
+      "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/14-puma-lafrance-icey"
     }
   ]
 }
