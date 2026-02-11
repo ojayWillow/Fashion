@@ -81,22 +81,17 @@ function redirectTo(url, storeName) {
     const screen = document.getElementById('redirectScreen');
     const progressBar = document.getElementById('redirectProgress');
 
-    // Show screen
     screen.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Animate progress bar
     progressBar.style.width = '0%';
     requestAnimationFrame(() => {
         progressBar.style.transition = 'width 2.2s cubic-bezier(0.4, 0, 0.2, 1)';
         progressBar.style.width = '100%';
     });
 
-    // Open external site after animation
     setTimeout(() => {
         window.open(url, '_blank');
-
-        // Fade out
         screen.classList.add('fade-out');
         setTimeout(() => {
             screen.classList.remove('active', 'fade-out');
@@ -123,33 +118,276 @@ function handleImageError(imgEl, brandName) {
     wrapper.appendChild(fallback);
 }
 
-// ===== CURATED PICKS =====
+// ===== CLOUDINARY IMAGE OPTIMIZATION =====
+// Serve optimized display versions from Cloudinary (HD master stored, smaller served)
+function optimizeCloudinaryUrl(url, width) {
+    if (!url || !url.includes('res.cloudinary.com')) return url;
+    width = width || 800;
+    // If URL already has transforms after /upload/, replace them
+    if (/\/upload\/[a-z]/.test(url)) {
+        return url.replace(/\/upload\/[^/]+\//, `/upload/w_${width},q_auto:good,f_auto/`);
+    }
+    // Otherwise insert transforms
+    return url.replace('/upload/', `/upload/w_${width},q_auto:good,f_auto/`);
+}
+
+// ===== PRICE HELPER =====
+function parsePriceValue(priceStr) {
+    if (!priceStr) return 0;
+    const cleaned = priceStr.replace(/[^0-9.,]/g, '').replace(',', '.');
+    return parseFloat(cleaned) || 0;
+}
+
+function parseDiscountValue(discountStr) {
+    if (!discountStr) return 0;
+    const match = discountStr.match(/-?(\d+)/);
+    return match ? parseInt(match[1]) : 0;
+}
+
+// ===== CURATED PICKS (with filters) =====
 let allPicks = [];
+let picksFilters = {
+    brand: 'all',
+    category: 'all',
+    subcategory: 'all',
+    maxPrice: 600,
+    status: 'all',
+    sort: 'discount',
+};
 
 async function loadPicks() {
     try {
         const res = await fetch('data/picks.json');
         const data = await res.json();
         allPicks = data.picks;
-        renderPicks(allPicks);
+        buildBrandPills();
+        setupPicksFilters();
+        applyPicksFilters();
     } catch (e) {
         console.error('Error loading picks:', e);
     }
+}
+
+// ===== BUILD BRAND PILLS DYNAMICALLY =====
+function buildBrandPills() {
+    const container = document.getElementById('picksBrandPills');
+    if (!container) return;
+
+    // Get unique brands sorted by frequency
+    const brandCounts = {};
+    allPicks.forEach(p => {
+        const b = p.brand || 'Unknown';
+        brandCounts[b] = (brandCounts[b] || 0) + 1;
+    });
+
+    const sortedBrands = Object.entries(brandCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([brand]) => brand);
+
+    // Clear existing pills (except "All")
+    const allBtn = container.querySelector('[data-brand="all"]');
+    container.innerHTML = '';
+    container.appendChild(allBtn);
+
+    sortedBrands.forEach(brand => {
+        const pill = document.createElement('button');
+        pill.className = 'brand-pill';
+        pill.dataset.brand = brand;
+        pill.textContent = `${brand} (${brandCounts[brand]})`;
+        pill.addEventListener('click', () => {
+            picksFilters.brand = brand;
+            updateBrandPillActive();
+            applyPicksFilters();
+        });
+        addHoverCursor(pill);
+        container.appendChild(pill);
+    });
+
+    // "All" button handler
+    allBtn.addEventListener('click', () => {
+        picksFilters.brand = 'all';
+        updateBrandPillActive();
+        applyPicksFilters();
+    });
+    addHoverCursor(allBtn);
+}
+
+function updateBrandPillActive() {
+    document.querySelectorAll('.brand-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.brand === picksFilters.brand);
+    });
+}
+
+// ===== SETUP FILTER EVENT LISTENERS =====
+function setupPicksFilters() {
+    // Category dropdown
+    const catEl = document.getElementById('picksCategoryFilter');
+    if (catEl) catEl.addEventListener('change', (e) => {
+        picksFilters.category = e.target.value;
+        applyPicksFilters();
+    });
+
+    // Subcategory dropdown
+    const subEl = document.getElementById('picksSubcategoryFilter');
+    if (subEl) subEl.addEventListener('change', (e) => {
+        picksFilters.subcategory = e.target.value;
+        applyPicksFilters();
+    });
+
+    // Price range slider
+    const priceEl = document.getElementById('picksPriceRange');
+    const priceValEl = document.getElementById('picksPriceValue');
+    if (priceEl) priceEl.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        picksFilters.maxPrice = val;
+        if (priceValEl) priceValEl.textContent = val >= 600 ? '€600+' : `€${val}`;
+        applyPicksFilters();
+    });
+
+    // Status dropdown
+    const statusEl = document.getElementById('picksStatusFilter');
+    if (statusEl) statusEl.addEventListener('change', (e) => {
+        picksFilters.status = e.target.value;
+        applyPicksFilters();
+    });
+
+    // Sort dropdown
+    const sortEl = document.getElementById('picksSort');
+    if (sortEl) sortEl.addEventListener('change', (e) => {
+        picksFilters.sort = e.target.value;
+        applyPicksFilters();
+    });
+
+    // Reset button
+    const resetEl = document.getElementById('picksFilterReset');
+    if (resetEl) {
+        resetEl.addEventListener('click', resetPicksFilters);
+        addHoverCursor(resetEl);
+    }
+}
+
+function resetPicksFilters() {
+    picksFilters = { brand: 'all', category: 'all', subcategory: 'all', maxPrice: 600, status: 'all', sort: 'discount' };
+    updateBrandPillActive();
+    const catEl = document.getElementById('picksCategoryFilter');
+    const subEl = document.getElementById('picksSubcategoryFilter');
+    const priceEl = document.getElementById('picksPriceRange');
+    const priceValEl = document.getElementById('picksPriceValue');
+    const statusEl = document.getElementById('picksStatusFilter');
+    const sortEl = document.getElementById('picksSort');
+    if (catEl) catEl.value = 'all';
+    if (subEl) subEl.value = 'all';
+    if (priceEl) priceEl.value = 600;
+    if (priceValEl) priceValEl.textContent = '€600';
+    if (statusEl) statusEl.value = 'all';
+    if (sortEl) sortEl.value = 'discount';
+    applyPicksFilters();
+}
+
+// ===== APPLY FILTERS + SORT + RENDER =====
+function applyPicksFilters() {
+    let filtered = [...allPicks];
+
+    // Brand filter
+    if (picksFilters.brand !== 'all') {
+        filtered = filtered.filter(p => p.brand === picksFilters.brand);
+    }
+
+    // Category filter
+    if (picksFilters.category !== 'all') {
+        filtered = filtered.filter(p => p.category === picksFilters.category);
+    }
+
+    // Subcategory filter
+    if (picksFilters.subcategory !== 'all') {
+        filtered = filtered.filter(p => p.subcategory === picksFilters.subcategory);
+    }
+
+    // Price filter
+    if (picksFilters.maxPrice < 600) {
+        filtered = filtered.filter(p => parsePriceValue(p.salePrice) <= picksFilters.maxPrice);
+    }
+
+    // Status filter
+    if (picksFilters.status !== 'all') {
+        filtered = filtered.filter(p => p.status === picksFilters.status);
+    }
+
+    // Sort
+    switch (picksFilters.sort) {
+        case 'discount':
+            filtered.sort((a, b) => parseDiscountValue(b.discount) - parseDiscountValue(a.discount));
+            break;
+        case 'price-asc':
+            filtered.sort((a, b) => parsePriceValue(a.salePrice) - parsePriceValue(b.salePrice));
+            break;
+        case 'price-desc':
+            filtered.sort((a, b) => parsePriceValue(b.salePrice) - parsePriceValue(a.salePrice));
+            break;
+        case 'newest':
+            filtered.sort((a, b) => (b.id || 0) - (a.id || 0));
+            break;
+    }
+
+    // Update count
+    const countEl = document.getElementById('picksCount');
+    if (countEl) {
+        countEl.textContent = `${filtered.length} pick${filtered.length !== 1 ? 's' : ''}`;
+    }
+
+    renderPicks(filtered);
 }
 
 function getPicksByStore(storeName) {
     return allPicks.filter(p => p.store === storeName);
 }
 
+// ===== STATUS BADGE BUILDER =====
+function buildStatusBadge(pick) {
+    if (!pick.status || pick.status === 'active') return '';
+
+    const badges = {
+        price_changed: '<span class="pick-status-badge pick-status-price">💰 Price Changed</span>',
+        sold_out: '<span class="pick-status-badge pick-status-soldout">🚫 Sold Out</span>',
+        ended: '<span class="pick-status-badge pick-status-ended">💀 Ended</span>',
+    };
+    return badges[pick.status] || '';
+}
+
+// ===== PRICE HISTORY INDICATOR =====
+function buildPriceHistoryIndicator(pick) {
+    if (!pick.priceHistory || pick.priceHistory.length < 2) return '';
+    const prev = parsePriceValue(pick.priceHistory[pick.priceHistory.length - 2].salePrice);
+    const curr = parsePriceValue(pick.priceHistory[pick.priceHistory.length - 1].salePrice);
+    if (curr < prev) return '<span class="pick-price-arrow pick-price-down" title="Price dropped!">↓</span>';
+    if (curr > prev) return '<span class="pick-price-arrow pick-price-up" title="Price increased">↑</span>';
+    return '';
+}
+
+// ===== RENDER PICKS =====
 function renderPicks(picks) {
     const grid = document.getElementById('picksGrid');
-    if (!grid || !picks.length) return;
+    if (!grid) return;
+
+    if (!picks.length) {
+        grid.innerHTML = `
+            <div class="picks-empty">
+                <span class="picks-empty-icon">🔍</span>
+                <h3>No picks match your filters</h3>
+                <p>Try adjusting your filters or <button class="picks-empty-reset" onclick="resetPicksFilters()">reset all</button></p>
+            </div>
+        `;
+        return;
+    }
 
     grid.innerHTML = '';
     picks.forEach((pick, i) => {
         const card = document.createElement('div');
         card.className = 'pick-card';
         card.style.animationDelay = `${i * 0.08}s`;
+
+        const statusBadge = buildStatusBadge(pick);
+        const priceArrow = buildPriceHistoryIndicator(pick);
 
         const deadLinkBadge = pick._linkDead
             ? '<span class="pick-card-dead-link" title="This product may no longer be available">⚠ Link Expired</span>'
@@ -160,16 +398,30 @@ function renderPicks(picks) {
                <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
             : '';
 
+        // Category/subcategory tags
+        const categoryTag = pick.category ? `<span class="pick-tag pick-tag-category">${pick.category}</span>` : '';
+        const subcategoryTag = pick.subcategory ? `<span class="pick-tag pick-tag-subcategory">${pick.subcategory}</span>` : '';
+
+        // Last checked indicator
+        const lastChecked = pick.lastChecked
+            ? `<span class="pick-card-checked" title="Last checked: ${new Date(pick.lastChecked).toLocaleString()}">✓</span>`
+            : '';
+
         const escapedBrand = (pick.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const escapedStore = (pick.store || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
 
+        // Optimized image URL (HD master → optimized display)
+        const displayImage = optimizeCloudinaryUrl(pick.image, 800);
+
         card.innerHTML = `
             <div class="pick-card-image">
-                <img src="${pick.image}" alt="${pick.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">
+                <img src="${displayImage}" alt="${pick.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">
                 <span class="pick-card-discount">${pick.discount}</span>
                 <span class="pick-card-store">${pick.storeFlag} ${pick.store}</span>
                 ${deadLinkBadge}
+                ${statusBadge}
+                ${lastChecked}
             </div>
             <div class="pick-card-body">
                 <div class="pick-card-brand">${pick.brand}</div>
@@ -177,10 +429,14 @@ function renderPicks(picks) {
                 <div class="pick-card-colorway">${pick.colorway}</div>
                 <div class="pick-card-pricing">
                     <span class="pick-price-sale">${pick.salePrice}</span>
+                    ${priceArrow}
                     <span class="pick-price-retail">${pick.retailPrice}</span>
                 </div>
                 ${sizesHTML}
-                <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
+                <div class="pick-card-tags">
+                    ${categoryTag}${subcategoryTag}
+                    ${(pick.tags || []).filter(t => t !== pick.category && t !== pick.subcategory).map(t => `<span class="pick-tag">${t}</span>`).join('')}
+                </div>
                 <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="redirectTo('${escapedUrl}', '${escapedStore}')"`}>
                     ${pick._linkDead ? 'Unavailable' : 'Shop Now →'}
                 </button>
@@ -195,7 +451,6 @@ loadPicks();
 
 // ===== STORE DETAIL OVERLAY =====
 function showStoreDetail(store, picks) {
-    // Remove existing overlay if open
     document.querySelector('.store-detail-overlay')?.remove();
 
     const overlay = document.createElement('div');
@@ -235,6 +490,7 @@ function showStoreDetail(store, picks) {
                 ${picks.map((pick, i) => {
                     const escapedBrand = (pick.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
+                    const displayImage = optimizeCloudinaryUrl(pick.image, 800);
                     const sizesHTML = pick.sizes && pick.sizes.length
                         ? `<div class="pick-card-sizes-label">Sizes</div>
                            <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
@@ -243,7 +499,7 @@ function showStoreDetail(store, picks) {
                     return `
                         <div class="pick-card" style="animation-delay: ${i * 0.06}s">
                             <div class="pick-card-image">
-                                <img src="${pick.image}" alt="${pick.name}" loading="lazy"
+                                <img src="${displayImage}" alt="${pick.name}" loading="lazy"
                                      onerror="handleImageError(this, '${escapedBrand}')">
                                 <span class="pick-card-discount">${pick.discount}</span>
                             </div>
@@ -256,7 +512,7 @@ function showStoreDetail(store, picks) {
                                     <span class="pick-price-retail">${pick.retailPrice}</span>
                                 </div>
                                 ${sizesHTML}
-                                <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
+                                <div class="pick-card-tags">${(pick.tags || []).map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
                                 <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStoreName}')">
                                     Shop Now →
                                 </button>
@@ -268,14 +524,12 @@ function showStoreDetail(store, picks) {
         </div>
     `;
 
-    // Close on overlay background click or close button
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay || e.target.closest('.store-detail-close')) {
             closeStoreDetail(overlay);
         }
     });
 
-    // Close on Escape key
     const escHandler = (e) => {
         if (e.key === 'Escape') {
             closeStoreDetail(overlay);
@@ -287,12 +541,10 @@ function showStoreDetail(store, picks) {
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
 
-    // Trigger entrance animation
     requestAnimationFrame(() => {
         overlay.classList.add('active');
     });
 
-    // Add hover cursors to new elements
     overlay.querySelectorAll('.pick-card, .store-detail-visit, .store-detail-close').forEach(addHoverCursor);
 }
 
@@ -375,17 +627,15 @@ function renderStores() {
         const card = document.createElement('div');
         card.className = 'store-card'; card.style.animationDelay = `${i * 0.04}s`;
 
-        // Check if this store has curated picks
         const storePicks = getPicksByStore(store.name);
         const picksBadge = storePicks.length > 0
             ? `<span class="store-card-picks-badge">${storePicks.length} pick${storePicks.length !== 1 ? 's' : ''}</span>`
             : '';
 
-        // Show mini preview of first 3 product images if picks exist
         const previewHTML = storePicks.length > 0
             ? `<div class="store-card-preview">
                    <div class="store-preview-images">
-                       ${storePicks.slice(0, 3).map(p => `<img src="${p.image}" alt="${p.name}" loading="lazy">`).join('')}
+                       ${storePicks.slice(0, 3).map(p => `<img src="${optimizeCloudinaryUrl(p.image, 200)}" alt="${p.name}" loading="lazy">`).join('')}
                        ${storePicks.length > 3 ? `<span class="store-preview-more">+${storePicks.length - 3}</span>` : ''}
                    </div>
                    <span class="store-preview-label">View curated picks</span>
@@ -413,7 +663,6 @@ function renderStores() {
             </div>
         `;
 
-        // Click handler: show detail overlay if picks exist, otherwise redirect
         card.addEventListener('click', () => {
             if (storePicks.length > 0) {
                 showStoreDetail(store, storePicks);

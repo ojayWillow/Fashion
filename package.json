@@ -1,6 +1,6 @@
 {
   "name": "fashion-sales",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "FASHION. — Curated sales dashboard with automated scraping pipeline",
   "private": true,
   "scripts": {
@@ -14,7 +14,11 @@
     "fetch-images:dry": "node scripts/fetch-images.js --dry-run",
     "fetch-images:force": "node scripts/fetch-images.js --force --verbose",
     "validate": "node scripts/validate-picks.js",
-    "setup": "node scripts/setup-cloudinary.js"
+    "setup": "node scripts/setup-cloudinary.js",
+    "check-sales": "node scripts/check-sales.js",
+    "check-sales:verbose": "node scripts/check-sales.js --verbose",
+    "upgrade-picks": "node scripts/upgrade-picks.js",
+    "upgrade-picks:dry": "node scripts/upgrade-picks.js --dry-run"
   },
   "dependencies": {
     "cloudinary": "^2.5.0",

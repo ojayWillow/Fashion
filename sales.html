@@ -51,8 +51,86 @@
     <!-- Curated Picks -->
     <section class="picks-section">
         <div class="container">
-            <h2 class="section-title">CURATED <span class="gradient-text">PICKS</span></h2>
-            <p class="section-subtitle">Hand-picked deals from our team. Real products, real discounts.</p>
+            <div class="picks-header">
+                <div>
+                    <h2 class="section-title">CURATED <span class="gradient-text">PICKS</span></h2>
+                    <p class="section-subtitle">Hand-picked deals from our team. Real products, real discounts.</p>
+                </div>
+                <div class="picks-header-meta">
+                    <span class="picks-count" id="picksCount"></span>
+                    <select class="picks-sort" id="picksSort">
+                        <option value="discount">🔥 Biggest Discount</option>
+                        <option value="price-asc">💰 Price: Low → High</option>
+                        <option value="price-desc">💰 Price: High → Low</option>
+                        <option value="newest">🕐 Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Picks Filter Bar -->
+            <div class="picks-filters" id="picksFilters">
+                <!-- Brand Pills -->
+                <div class="picks-filter-group">
+                    <label class="picks-filter-label">Brand</label>
+                    <div class="picks-brand-pills" id="picksBrandPills">
+                        <button class="brand-pill active" data-brand="all">All</button>
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="picks-filter-group">
+                    <label class="picks-filter-label">Category</label>
+                    <select class="picks-filter-select" id="picksCategoryFilter">
+                        <option value="all">All Categories</option>
+                        <option value="Sneakers">👟 Sneakers</option>
+                        <option value="Boots">🥾 Boots</option>
+                        <option value="Clothing">👕 Clothing</option>
+                        <option value="Accessories">🎒 Accessories</option>
+                    </select>
+                </div>
+
+                <!-- Subcategory -->
+                <div class="picks-filter-group">
+                    <label class="picks-filter-label">Style</label>
+                    <select class="picks-filter-select" id="picksSubcategoryFilter">
+                        <option value="all">All Styles</option>
+                        <option value="Basketball">🏀 Basketball</option>
+                        <option value="Running">🏃 Running</option>
+                        <option value="Lifestyle">✨ Lifestyle</option>
+                        <option value="Trail">🏔️ Trail</option>
+                        <option value="Skateboarding">🛹 Skateboarding</option>
+                        <option value="Outerwear">🧥 Outerwear</option>
+                        <option value="Tops">👔 Tops</option>
+                        <option value="Bottoms">👖 Bottoms</option>
+                    </select>
+                </div>
+
+                <!-- Price Range -->
+                <div class="picks-filter-group picks-filter-price">
+                    <label class="picks-filter-label">Max Price</label>
+                    <div class="price-range-wrap">
+                        <input type="range" id="picksPriceRange" min="0" max="600" value="600" step="10">
+                        <span class="price-range-value" id="picksPriceValue">€600</span>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="picks-filter-group">
+                    <label class="picks-filter-label">Status</label>
+                    <select class="picks-filter-select" id="picksStatusFilter">
+                        <option value="all">All</option>
+                        <option value="active">✅ Active</option>
+                        <option value="price_changed">💰 Price Changed</option>
+                        <option value="sold_out">🚫 Sold Out</option>
+                        <option value="ended">💀 Ended</option>
+                    </select>
+                </div>
+
+                <!-- Reset -->
+                <button class="picks-filter-reset" id="picksFilterReset" title="Reset all filters">↺ Reset</button>
+            </div>
+
             <div class="picks-grid" id="picksGrid">
                 <!-- Injected by JS -->
             </div>
