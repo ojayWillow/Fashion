@@ -1,0 +1,668 @@
+{
+  "_description": "Store scraping configurations for FASHION. Each store has selectors and settings for product data extraction.",
+  "_renderModes": {
+    "static": "Simple HTTP fetch — works for server-rendered pages",
+    "playwright": "Full browser rendering — required for JS-heavy SPAs"
+  },
+
+  "stores": {
+    "endclothing.com": {
+      "name": "END. Clothing",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "img[data-testid='product-image']",
+        "img[data-testid='main-image']",
+        "picture source[type='image/webp']",
+        ".product-image img",
+        "[class*='ProductImage'] img",
+        "[class*='gallery'] img",
+        "[class*='Gallery'] img"
+      ],
+      "priceSelectors": [
+        "[data-testid='product-price'] [data-testid='sale-price']",
+        "[class*='SalePrice']",
+        "[class*='sale-price']",
+        ".product-price .price--sale",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[data-testid='product-price'] [data-testid='original-price']",
+        "[class*='OriginalPrice']",
+        ".product-price .price--rrp",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[data-testid='product-name']",
+        "h1[class*='ProductName']",
+        ".product-name h1"
+      ],
+      "sizeSelectors": [
+        "[data-testid='size-selector'] button",
+        "[class*='SizeSelector'] button",
+        "[class*='size-selector'] option",
+        "select[name='size'] option"
+      ],
+      "imageUrlPattern": "media.endclothing.com"
+    },
+
+    "footlocker.nl": {
+      "name": "Foot Locker (NL)",
+      "renderMode": "playwright",
+      "waitTime": 5000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "img[data-testid='ProductImage']",
+        "img.ProductImage",
+        "[class*='ProductImage'] img",
+        "[class*='product-image'] img",
+        "[class*='ProductPrimaryImage'] img",
+        "[class*='Gallery'] img",
+        "img[alt*='1906']",
+        "img[alt*='New Balance']",
+        "img[alt*='Nike']",
+        "img[alt*='Jordan']",
+        "img[alt*='adidas']"
+      ],
+      "priceSelectors": [
+        "[data-testid='ProductPrice-sale']",
+        "[class*='ProductPrice'] [class*='sale']",
+        "[class*='ProductPrice--sale']",
+        "[class*='final-price']",
+        "meta[property='product:sale_price:amount']",
+        "[class*='price'] [class*='reduced']"
+      ],
+      "retailPriceSelectors": [
+        "[data-testid='ProductPrice-original']",
+        "[class*='ProductPrice'] [class*='original']",
+        "[class*='ProductPrice--crossed']",
+        "[class*='price'] [class*='crossed']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[data-testid='ProductName']",
+        "h1[class*='ProductName']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[data-testid='SizeSelector'] button",
+        "[class*='SizeSelector'] button",
+        "[class*='SizeButton']",
+        "[class*='size-selector'] button"
+      ],
+      "imageUrlPattern": "images.footlocker"
+    },
+
+    "footlocker.eu": { "_inherit": "footlocker.nl", "name": "Foot Locker (EU)" },
+    "footlocker.com": { "_inherit": "footlocker.nl", "name": "Foot Locker (US)" },
+    "footlocker.co.uk": { "_inherit": "footlocker.nl", "name": "Foot Locker (UK)" },
+    "footlocker.de": { "_inherit": "footlocker.nl", "name": "Foot Locker (DE)" },
+    "footlocker.fr": { "_inherit": "footlocker.nl", "name": "Foot Locker (FR)" },
+
+    "zalando.com": {
+      "name": "Zalando",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='gallery'] img",
+        "[class*='Gallery'] img",
+        "[data-testid='gallery'] img",
+        "img[class*='focusable']",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='PromotionalPrice']",
+        "[class*='price'] [class*='reduced']",
+        "[data-testid='sale-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='OriginalPrice']",
+        "[class*='price'] [class*='original']",
+        "[class*='price'] s",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[class*='Title']",
+        "[data-testid='product-name']"
+      ],
+      "sizeSelectors": [
+        "[class*='SizePicker'] button",
+        "[data-testid='size-picker'] button",
+        "select[name='size'] option"
+      ],
+      "imageUrlPattern": "img01.ztat.net"
+    },
+
+    "asos.com": {
+      "name": "ASOS",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[data-testid='product-gallery'] img",
+        "img[class*='gallery-image']",
+        "[class*='Gallery'] img",
+        "#product-gallery img",
+        "img[data-testid='image-gallery-image']"
+      ],
+      "priceSelectors": [
+        "[data-testid='current-price']",
+        "[class*='current-price']",
+        "span[class*='SalePrice']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[data-testid='previous-price']",
+        "[class*='previous-price']",
+        "span[class*='OriginalPrice']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[data-testid='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[data-testid='size-selector'] select option",
+        "select[data-id='sizeSelect'] option",
+        "[class*='size-selector'] option"
+      ],
+      "imageUrlPattern": "images.asos-media.com"
+    },
+
+    "ssense.com": {
+      "name": "SSENSE",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-detail'] img",
+        "[class*='pdp-image'] img",
+        "picture img",
+        "[data-testid*='image'] img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "s + span",
+        "[class*='price'] [class*='sale']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='price'] s",
+        "[class*='regular-price']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='product-name']",
+        "h2[class*='pdp']"
+      ],
+      "sizeSelectors": [
+        "[class*='size-selector'] button",
+        "select[class*='size'] option"
+      ],
+      "imageUrlPattern": "img.ssensemedia.com"
+    },
+
+    "mrporter.com": {
+      "name": "MR PORTER",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='ProductImages'] img",
+        "[class*='product-image'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='PriceWithSchema'] [class*='sale']",
+        "[class*='ReducedPrice']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='PriceWithSchema'] s",
+        "[class*='FullPrice']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='ProductInformation'] h2",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='SizePicker'] button",
+        "select[class*='size'] option"
+      ],
+      "imageUrlPattern": "cache.mrporter.com"
+    },
+
+    "net-a-porter.com": { "_inherit": "mrporter.com", "name": "Net-a-Porter" },
+    "theoutnet.com": { "_inherit": "mrporter.com", "name": "THE OUTNET" },
+
+    "farfetch.com": {
+      "name": "Farfetch",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[data-testid='product-image'] img",
+        "[data-component='ProductImageCarousel'] img",
+        "[class*='SliderImage'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[data-testid='product-price'] [data-testid='price--sale']",
+        "[class*='FinalPrice']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[data-testid='product-price'] [data-testid='price--original']",
+        "[class*='OriginalPrice']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[data-testid='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[data-testid='size-selector'] button",
+        "[class*='SizeSelector'] button"
+      ],
+      "imageUrlPattern": "cdn-images.farfetch-contents.com"
+    },
+
+    "mytheresa.com": {
+      "name": "Mytheresa",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='gallery'] img",
+        "[class*='product-image'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='pricing'] [class*='sale']",
+        "[class*='price--reduced']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='pricing'] [class*='original']",
+        "[class*='price--original']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='sizeSelector'] button",
+        "select[name='size'] option"
+      ],
+      "imageUrlPattern": "img.mytheresa.com"
+    },
+
+    "jdsports.com": {
+      "name": "JD Sports",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-image'] img",
+        "#productMainImage img",
+        "[class*='gallery'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='now']",
+        "[class*='price-now']",
+        "[class*='sale-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='was']",
+        "[class*='price-was']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='sizeSelector'] button",
+        "[class*='size-option']"
+      ],
+      "imageUrlPattern": "i8.amplience.net"
+    },
+
+    "sneakersnstuff.com": {
+      "name": "SNS (Sneakersnstuff)",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-gallery'] img",
+        "[class*='ProductImage'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "[class*='SalePrice']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='original-price']",
+        "[class*='ComparePrice']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='product-title']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='size-selector'] button",
+        "select[name='size'] option"
+      ],
+      "imageUrlPattern": "sneakersnstuff.com"
+    },
+
+    "hm.com": {
+      "name": "H&M",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-detail'] img",
+        "[class*='ProductImage'] img",
+        "img[class*='pdp']",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='price'] [class*='red']",
+        "[class*='sale-price']",
+        "[id*='product-price'] span.red",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='price'] s",
+        "[class*='price'] [class*='regular']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[class*='Heading']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='size-selector'] button",
+        "[class*='SizeSelector'] li button"
+      ],
+      "imageUrlPattern": "lp2.hm.com"
+    },
+
+    "zara.com": {
+      "name": "Zara",
+      "renderMode": "playwright",
+      "waitTime": 5000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='media-image'] img",
+        "[class*='product-detail-image'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='price'] [class*='sale']",
+        "[class*='price--old'] + [class*='price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='price--old']",
+        "[class*='price'] s",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[class*='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='size-selector'] [class*='size-list'] button",
+        "[class*='SizeSelector'] li"
+      ],
+      "imageUrlPattern": "static.zara.net"
+    },
+
+    "nike.com": {
+      "name": "Nike",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[data-testid='HeroPDP'] img",
+        "[class*='product-image'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[data-testid='product-price-reduced']",
+        "[class*='product-price'] [class*='is--current-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='product-price'] [class*='is--striked-out']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1#pdp_product_title",
+        "h1[data-testid='product_title']"
+      ],
+      "sizeSelectors": [
+        "[data-testid='size-selector'] input + label",
+        "[class*='size-grid'] button"
+      ],
+      "imageUrlPattern": "static.nike.com"
+    },
+
+    "adidas.com": {
+      "name": "adidas",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[data-testid='product-gallery'] img",
+        "[class*='glass-image-container'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='gl-price-item--sale']",
+        "[class*='sale-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='gl-price-item--crossed']",
+        "[class*='original-price']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[data-testid='product-title']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[data-testid='size-selector'] button",
+        "[class*='size-selector'] button"
+      ],
+      "imageUrlPattern": "assets.adidas.com"
+    },
+
+    "slamjam.com": {
+      "name": "Slam Jam",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "[class*='price'] [class*='special']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='old-price']",
+        "[class*='price'] s",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "h1[class*='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='size'] select option",
+        "[class*='size-selector'] button"
+      ],
+      "imageUrlPattern": "slamjam.com"
+    },
+
+    "bstn.com": {
+      "name": "BSTN",
+      "renderMode": "playwright",
+      "waitTime": 3000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-gallery'] img",
+        "[class*='ProductImage'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "[class*='price--sale']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='original-price']",
+        "[class*='price--original']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": ["meta[property='og:title']", "h1"],
+      "sizeSelectors": ["[class*='size'] button"],
+      "imageUrlPattern": "bstn.com"
+    },
+
+    "acnestudios.com": {
+      "name": "Acne Studios",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-gallery'] img",
+        "[class*='pdp'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='original-price']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": ["meta[property='og:title']", "h1"],
+      "sizeSelectors": ["[class*='size'] button", "select option"],
+      "imageUrlPattern": "acnestudios.com"
+    },
+
+    "hugoboss.com": {
+      "name": "Hugo Boss",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-gallery'] img",
+        "[class*='image-carousel'] img",
+        "picture img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "[class*='price--sale']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='price'] s",
+        "[class*='crossed-price']",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": ["meta[property='og:title']", "h1"],
+      "sizeSelectors": ["[class*='size'] button", "select option"],
+      "imageUrlPattern": "hugoboss.com"
+    },
+
+    "_default": {
+      "name": "Unknown Store",
+      "renderMode": "playwright",
+      "waitTime": 4000,
+      "imageSelectors": [
+        "meta[property='og:image']",
+        "[class*='product-image'] img",
+        "[class*='ProductImage'] img",
+        "[class*='product-gallery'] img",
+        "[class*='gallery'] img",
+        "[class*='Gallery'] img",
+        "[data-testid*='image'] img",
+        "[data-testid*='gallery'] img",
+        "picture source[type='image/webp']",
+        "picture img",
+        "#product-image img",
+        "main img"
+      ],
+      "priceSelectors": [
+        "[class*='sale-price']",
+        "[class*='SalePrice']",
+        "[class*='price'] [class*='sale']",
+        "[class*='price'] [class*='reduced']",
+        "[class*='price'] [class*='current']",
+        "[class*='price--sale']",
+        "[class*='final-price']",
+        "meta[property='product:sale_price:amount']"
+      ],
+      "retailPriceSelectors": [
+        "[class*='original-price']",
+        "[class*='OriginalPrice']",
+        "[class*='price'] s",
+        "[class*='price'] [class*='original']",
+        "[class*='price'] [class*='was']",
+        "[class*='price--original']",
+        "[class*='price'] del",
+        "meta[property='product:price:amount']"
+      ],
+      "nameSelectors": [
+        "meta[property='og:title']",
+        "[class*='product-name']",
+        "[class*='ProductName']",
+        "[data-testid='product-name']",
+        "h1"
+      ],
+      "sizeSelectors": [
+        "[class*='size-selector'] button",
+        "[class*='SizeSelector'] button",
+        "[class*='size-selector'] option",
+        "select[name='size'] option",
+        "[class*='size'] button",
+        "[data-testid*='size'] button"
+      ],
+      "imageUrlPattern": ""
+    }
+  }
+}
