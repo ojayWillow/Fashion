@@ -3,13 +3,15 @@
  * FASHION. — Bulletproof Image Fetcher
  * =====================================
  * Sources tried in order until one works:
- *   0) Foot Locker CDN — predictable URL from SKU, no browser needed
- *   0B) Patchright (undetected Chrome) — opens FL page, extracts real image
+ *   0B) Patchright (undetected Chrome) — opens product page, extracts real image
  *   A) sneaks-api (StockX/GOAT) — sneakers only, fast
- *   B) Patchright browser — opens any product page, extracts real image URL
+ *   B) Patchright browser (retry) — second attempt with different extraction
  *   C) Google Images search — finds product image by name
  *   D) Patchright screenshot — screenshots the product image element
  *   E) fallback-images.json — manual backup URLs
+ *
+ * FL CDN (Source 0) has been REMOVED — it returns shoe-box placeholder
+ * images with varying file sizes that can't be reliably detected.
  *
  * Usage:
  *   node scripts/fetch-images.js
@@ -70,19 +72,19 @@ async function uploadToCloudinary(source, filename) {
   if (!CLOUD_ENABLED) return null;
   const publicId = `picks/${path.parse(filename).name}`;
   try {
+    // Invalidate CDN cache on upload so cached shoe-boxes get replaced
+    const uploadOpts = { public_id: publicId, overwrite: true, resource_type: 'image', invalidate: true };
     let result;
     if (Buffer.isBuffer(source)) {
       result = await new Promise((resolve, reject) => {
         const s = cloudinary.uploader.upload_stream(
-          { public_id: publicId, overwrite: true, resource_type: 'image' },
+          uploadOpts,
           (e, r) => e ? reject(e) : resolve(r)
         );
         s.end(source);
       });
     } else {
-      result = await cloudinary.uploader.upload(source, {
-        public_id: publicId, overwrite: true, resource_type: 'image'
-      });
+      result = await cloudinary.uploader.upload(source, uploadOpts);
     }
     return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
   } catch (e) { log(`Cloudinary upload failed: ${e.message}`); return null; }
@@ -113,36 +115,10 @@ function slugify(s) {
 }
 
 // ===========================================================
-// FOOT LOCKER PLACEHOLDER DETECTION
-// ===========================================================
-const FL_PLACEHOLDER_SIZES = [333321];
-
-function isFootLockerPlaceholder(buffer) {
-  if (!buffer || buffer.length < 1000) return true;
-
-  for (const size of FL_PLACEHOLDER_SIZES) {
-    if (buffer.length === size) {
-      log(`⚠️  Detected FL placeholder (exact match: ${buffer.length} bytes)`);
-      return true;
-    }
-  }
-
-  if (buffer.length >= 330000 && buffer.length <= 340000) {
-    if (buffer[0] === 0x89 && buffer[1] === 0x50) {
-      log(`⚠️  Suspicious FL image: ${buffer.length} bytes — rejecting`);
-      return true;
-    }
-  }
-
-  return false;
-}
-
-// ===========================================================
 // GENERIC IMAGE VALIDATION
 // ===========================================================
 function isValidImage(buffer) {
   if (!buffer || buffer.length < 5000) return false;
-  // Check it's a real image (PNG or JPEG magic bytes)
   const isPNG = buffer[0] === 0x89 && buffer[1] === 0x50;
   const isJPEG = buffer[0] === 0xFF && buffer[1] === 0xD8;
   const isWEBP = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
@@ -170,7 +146,6 @@ async function getPatchrightContext() {
     return _patchrightCtx;
   } catch (e) {
     log(`Patchright launch failed: ${e.message}`);
-    // Fallback: try without persistent context
     try {
       const { chromium } = require('patchright');
       _patchrightCtx = await chromium.launchPersistentContext('', {
@@ -289,52 +264,8 @@ async function extractImageFromPage(page, pick) {
 }
 
 // =============================================================
-// SOURCE 0: Foot Locker CDN (no browser needed)
-// =============================================================
-async function source0_FootLockerCDN(pick) {
-  if (!pick.url || !pick.url.includes('footlocker')) return null;
-  log('Source 0: Foot Locker CDN...');
-
-  const m = pick.url.match(/(\d{10,15})\.html/);
-  if (!m) {
-    const m2 = pick.url.match(/[\/\-](\d{10,15})(?:\?|$)/);
-    if (!m2) { log('No FL SKU found in URL'); return null; }
-    var sku = m2[1];
-  } else {
-    var sku = m[1];
-  }
-
-  const cdnUrls = [
-    `https://images.footlocker.com/is/image/FLEU/${sku}?wid=763&hei=538&fmt=png-alpha`,
-    `https://images.footlocker.com/is/image/EBFL2/${sku}?wid=763&hei=538&fmt=png-alpha`,
-  ];
-
-  for (const cdnUrl of cdnUrls) {
-    try {
-      const buffer = await fetchBuffer(cdnUrl, 10000);
-      if (buffer && buffer.length > 5000) {
-        if (isFootLockerPlaceholder(buffer)) {
-          console.log(`  ⚠️  FL CDN returned shoe box placeholder — skipping`);
-          continue;
-        }
-        if (!isValidImage(buffer)) {
-          log('FL CDN returned non-image data — skipping');
-          continue;
-        }
-        log(`✓ Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
-        return { url: cdnUrl, buffer };
-      }
-    } catch (e) {
-      log(`Source 0 CDN failed for ${cdnUrl}: ${e.message}`);
-    }
-  }
-
-  return null;
-}
-
-// =============================================================
 // SOURCE 0B: Patchright — open product page as real Chrome
-//            Works for Foot Locker AND any other site
+//            First source for ALL sites (including Foot Locker)
 // =============================================================
 async function source0B_PatchrightPage(pick) {
   if (!pick.url) return null;
@@ -371,14 +302,13 @@ async function source0B_PatchrightPage(pick) {
       // Download and validate
       try {
         const buffer = await fetchBuffer(imageUrl, 15000);
-        if (buffer && isValidImage(buffer) && !isFootLockerPlaceholder(buffer)) {
+        if (buffer && isValidImage(buffer)) {
           log(`✓ Source 0B found real image: ${imageUrl} (${Math.round(buffer.length / 1024)}KB)`);
           return { url: imageUrl, buffer };
         }
         log('Source 0B: Downloaded image failed validation');
       } catch (e) {
         log(`Source 0B: Download failed: ${e.message}`);
-        // Return the URL anyway — saveImage will try to download it
         return imageUrl;
       }
     }
@@ -404,7 +334,6 @@ async function sourceA_SneaksAPI(pick) {
     const SneaksAPI = require('sneaks-api');
     const sneaks = new SneaksAPI();
 
-    // Try style code first, then product name
     const searchTerms = [pick.styleCode, `${pick.brand} ${pick.name}`];
 
     for (const term of searchTerms) {
@@ -436,11 +365,10 @@ async function sourceA_SneaksAPI(pick) {
 }
 
 // =============================================================
-// SOURCE B: Patchright — open product page (non-FL fallback)
-//           Now uses Patchright instead of Playwright
+// SOURCE B: Patchright — second attempt
 // =============================================================
 async function sourceB_Patchright(pick) {
-  log('Source B: Patchright browser...');
+  log('Source B: Patchright browser (retry)...');
 
   const ctx = await getPatchrightContext();
   if (!ctx) return null;
@@ -508,7 +436,7 @@ async function sourceC_GoogleImages(pick) {
 }
 
 // =============================================================
-// SOURCE D: Patchright screenshot (works for ALL sites now)
+// SOURCE D: Patchright screenshot (works for ALL sites)
 // =============================================================
 async function sourceD_Screenshot(pick) {
   log('Source D: Patchright screenshot...');
@@ -521,7 +449,6 @@ async function sourceD_Screenshot(pick) {
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
     await randomDelay(3000, 5000);
 
-    // Dismiss cookies
     try {
       const cookieSelectors = ['#onetrust-accept-btn-handler', '[id*="cookie"] button', '[class*="cookie"] button'];
       for (const sel of cookieSelectors) {
@@ -549,7 +476,6 @@ async function sourceD_Screenshot(pick) {
             await el.screenshot({ path: filepath });
             log(`✓ Source D screenshot saved: ${filepath}`);
             await page.close();
-            // Validate the screenshot isn't tiny/broken
             const buf = fs.readFileSync(filepath);
             if (buf.length < 5000) {
               log('Source D: Screenshot too small, skipping');
@@ -562,7 +488,6 @@ async function sourceD_Screenshot(pick) {
       } catch {}
     }
 
-    // Last resort: crop the page
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const filepath = path.join(IMAGES_DIR, filename);
     await page.screenshot({ path: filepath, clip: { x: 0, y: 0, width: 640, height: 640 } });
@@ -601,11 +526,6 @@ async function saveImage(pick, imageResult, filename) {
   }
 
   if (imageResult && typeof imageResult === 'object' && imageResult.buffer) {
-    // Final validation before uploading
-    if (isFootLockerPlaceholder(imageResult.buffer)) {
-      console.log('  ⚠️  Blocked shoe-box placeholder from being uploaded');
-      return null;
-    }
     if (CLOUD_ENABLED) {
       const cdnUrl = await uploadToCloudinary(imageResult.buffer, filename);
       if (cdnUrl) return cdnUrl;
@@ -623,11 +543,6 @@ async function saveImage(pick, imageResult, filename) {
     try {
       const buffer = await fetchBuffer(imageUrl);
       if (buffer && buffer.length > 1000) {
-        // Validate before upload
-        if (isFootLockerPlaceholder(buffer)) {
-          console.log('  ⚠️  Blocked shoe-box placeholder from being uploaded');
-          return null;
-        }
         const cdnUrl2 = await uploadToCloudinary(buffer, filename);
         if (cdnUrl2) return cdnUrl2;
       }
@@ -637,10 +552,6 @@ async function saveImage(pick, imageResult, filename) {
   try {
     const buffer = await fetchBuffer(imageUrl);
     if (buffer && buffer.length > 1000) {
-      if (isFootLockerPlaceholder(buffer)) {
-        console.log('  ⚠️  Blocked shoe-box placeholder from being saved');
-        return null;
-      }
       const localPath = path.join(IMAGES_DIR, filename);
       fs.writeFileSync(localPath, buffer);
       return `images/picks/${filename}`;
@@ -682,19 +593,10 @@ async function main() {
     let imageResult = null;
     let sourceName = '';
 
-    // ========== SOURCE 0: Foot Locker CDN ==========
-    if (pick.url && pick.url.includes('footlocker')) {
-      console.log('  [0] Foot Locker CDN...');
-      imageResult = await source0_FootLockerCDN(pick);
-      if (imageResult) { sourceName = 'fl-cdn'; }
-    }
-
-    // ========== SOURCE 0B: Patchright (any site, undetected Chrome) ==========
-    if (!imageResult) {
-      console.log('  [0B] Patchright (undetected Chrome)...');
-      imageResult = await source0B_PatchrightPage(pick);
-      if (imageResult) { sourceName = 'patchright'; }
-    }
+    // ========== SOURCE 0B: Patchright (FIRST for all sites) ==========
+    console.log('  [0B] Patchright (undetected Chrome)...');
+    imageResult = await source0B_PatchrightPage(pick);
+    if (imageResult) { sourceName = 'patchright'; }
 
     // ========== SOURCE A ==========
     if (!imageResult) {
@@ -742,8 +644,8 @@ async function main() {
         item.status = 'success'; item.source = sourceName;
         report.success++;
       } else {
-        console.log('  ❌ Found image but failed validation (placeholder or broken)');
-        item.status = 'blocked-placeholder'; item.source = sourceName;
+        console.log('  ❌ Found image but failed to save');
+        item.status = 'save-failed'; item.source = sourceName;
         report.failed++;
       }
     } else {
@@ -755,7 +657,6 @@ async function main() {
     report.items.push(item);
   }
 
-  // Close browser
   if (_patchrightCtx) {
     try { await _patchrightCtx.close(); } catch {}
     log('Patchright closed');
@@ -781,7 +682,7 @@ async function main() {
     console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
     console.log('  {');
     for (const item of report.items) {
-      if (item.status === 'failed' || item.status === 'save-failed' || item.status === 'blocked-placeholder') {
+      if (item.status === 'failed' || item.status === 'save-failed') {
         const pick = picks.find(p => p.id === item.id);
         console.log(`    "${pick.styleCode}": "https://example.com/image.jpg",`);
       }
