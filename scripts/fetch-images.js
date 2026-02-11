@@ -2,9 +2,10 @@
 /**
  * FASHION. — Bulletproof Image Fetcher
  * =====================================
- * 5 sources tried in order until one works:
+ * 6 sources tried in order until one works:
+ *   0) Foot Locker CDN — predictable URL from SKU, no browser needed
  *   A) sneaks-api (StockX/GOAT) — sneakers only, fast
- *   B) Playwright browser — opens END. page, extracts real image URL
+ *   B) Playwright browser — opens product page, extracts real image URL
  *   C) Google Images search — finds product image by name
  *   D) Playwright screenshot — screenshots the product image element
  *   E) fallback-images.json — manual backup URLs
@@ -55,8 +56,8 @@ function initCloudinary() {
     cloudinary = require('cloudinary').v2;
     cloudinary.config({ cloud_name: m[3], api_key: m[1], api_secret: m[2], secure: true });
     CLOUD_NAME = m[3]; CLOUD_ENABLED = true;
-    console.log(`  ☁️  Cloudinary → ${m[3]}`);
-  } catch (e) { console.log(`  ⚠️  Cloudinary init failed: ${e.message}`); }
+    console.log(`  \u2601\ufe0f  Cloudinary \u2192 ${m[3]}`);
+  } catch (e) { console.log(`  \u26a0\ufe0f  Cloudinary init failed: ${e.message}`); }
 }
 
 async function uploadToCloudinary(source, filename) {
@@ -106,6 +107,45 @@ function slugify(s) {
 }
 
 // =============================================================
+// SOURCE 0: Foot Locker CDN (no browser needed)
+// =============================================================
+async function source0_FootLockerCDN(pick) {
+  if (!pick.url || !pick.url.includes('footlocker')) return null;
+  log('Source 0: Foot Locker CDN...');
+
+  // Extract SKU from URL like /314217525204.html
+  const m = pick.url.match(/(\d{10,15})\.html/);
+  if (!m) {
+    const m2 = pick.url.match(/[\/-](\d{10,15})(?:\?|$)/);
+    if (!m2) { log('No FL SKU found in URL'); return null; }
+    var sku = m2[1];
+  } else {
+    var sku = m[1];
+  }
+
+  // FL CDN is public — no auth needed
+  // Try FLEU (Europe) first, then EBFL2 (global)
+  const cdnUrls = [
+    `https://images.footlocker.com/is/image/FLEU/${sku}?wid=763&hei=538&fmt=png-alpha`,
+    `https://images.footlocker.com/is/image/EBFL2/${sku}?wid=763&hei=538&fmt=png-alpha`,
+  ];
+
+  for (const cdnUrl of cdnUrls) {
+    try {
+      const buffer = await fetchBuffer(cdnUrl, 10000);
+      if (buffer && buffer.length > 5000) {
+        log(`\u2713 Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
+        return { url: cdnUrl, buffer };
+      }
+    } catch (e) {
+      log(`Source 0 CDN failed for ${cdnUrl}: ${e.message}`);
+    }
+  }
+
+  return null;
+}
+
+// =============================================================
 // SOURCE A: sneaks-api (StockX/GOAT image URLs for sneakers)
 // =============================================================
 async function sourceA_SneaksAPI(pick) {
@@ -131,7 +171,7 @@ async function sourceA_SneaksAPI(pick) {
       const p = products[0];
       const img = p.thumbnail || p.image?.original || p.image?.small;
       if (img && img.startsWith('http')) {
-        log(`✓ Source A found: ${img}`);
+        log(`\u2713 Source A found: ${img}`);
         return img;
       }
     }
@@ -160,6 +200,12 @@ async function getBrowser() {
 }
 
 async function sourceB_Playwright(pick) {
+  // Skip Foot Locker — Kasada blocks Playwright
+  if (pick.url && pick.url.includes('footlocker')) {
+    log('Source B: Skipping FL (Kasada blocks Playwright)');
+    return null;
+  }
+
   log('Source B: Playwright browser...');
   const browser = await getBrowser();
   if (!browser) return null;
@@ -169,13 +215,9 @@ async function sourceB_Playwright(pick) {
     page = await browser.newPage();
     await page.setViewportSize({ width: 1280, height: 900 });
 
-    // Go to the END. product page
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
-
-    // Wait for any product image to render
     await page.waitForTimeout(3000);
 
-    // Strategy 1: Look for og:image meta tag (rendered by JS)
     let imageUrl = await page.evaluate(() => {
       const og = document.querySelector('meta[property="og:image"]');
       if (og) return og.getAttribute('content');
@@ -183,46 +225,33 @@ async function sourceB_Playwright(pick) {
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found og:image: ${imageUrl}`);
+      log(`\u2713 Source B found og:image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
 
-    // Strategy 2: Find the main product image element
     imageUrl = await page.evaluate(() => {
-      // END. uses various selectors for product images
       const selectors = [
-        'img[data-testid="product-image"]',
-        'img[data-testid="main-image"]',
-        'picture source[type="image/webp"]',
-        '.product-image img',
-        '[class*="ProductImage"] img',
-        '[class*="product-image"] img',
-        '[class*="gallery"] img',
-        '[class*="Gallery"] img',
-        '[class*="pdp"] img',
-        'img[srcset]',
-        'main img',
+        'img[data-testid="product-image"]', 'img[data-testid="main-image"]',
+        'picture source[type="image/webp"]', '.product-image img',
+        '[class*="ProductImage"] img', '[class*="product-image"] img',
+        '[class*="gallery"] img', '[class*="Gallery"] img',
+        '[class*="pdp"] img', 'img[srcset]', 'main img',
       ];
 
       for (const sel of selectors) {
         const el = document.querySelector(sel);
         if (el) {
-          // For <source> elements, get srcset
           if (el.tagName === 'SOURCE') {
             const srcset = el.getAttribute('srcset');
             if (srcset) {
-              // Get highest resolution from srcset
               const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
               const best = urls[urls.length - 1] || urls[0];
               if (best && best.startsWith('http')) return best;
             }
           }
-          // For <img> elements
           const src = el.getAttribute('src') || el.getAttribute('data-src');
-          if (src && src.startsWith('http') && !src.includes('placeholder') && !src.includes('logo') && !src.includes('svg')) {
-            return src;
-          }
+          if (src && src.startsWith('http') && !src.includes('placeholder') && !src.includes('logo') && !src.includes('svg')) return src;
           const srcset = el.getAttribute('srcset');
           if (srcset) {
             const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
@@ -232,39 +261,29 @@ async function sourceB_Playwright(pick) {
         }
       }
 
-      // Strategy 3: Find ANY large image on the page
       const allImgs = [...document.querySelectorAll('img')];
       for (const img of allImgs) {
         const src = img.src || img.getAttribute('data-src');
         if (src && src.startsWith('http') && !src.includes('logo') && !src.includes('svg') && !src.includes('icon') && !src.includes('flag')) {
-          // Check if it's likely a product image (large enough)
-          if (img.naturalWidth > 200 || img.width > 200 || src.includes('media') || src.includes('product') || src.includes('catalog')) {
-            return src;
-          }
+          if (img.naturalWidth > 200 || img.width > 200 || src.includes('media') || src.includes('product') || src.includes('catalog')) return src;
         }
       }
-
       return null;
     });
 
     if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found product image: ${imageUrl}`);
+      log(`\u2713 Source B found product image: ${imageUrl}`);
       await page.close();
       return imageUrl;
     }
 
-    // Strategy 3: Check network requests for image URLs
-    // Sometimes the images are loaded via API calls
-    log('Source B: No image in DOM, checking page content...');
+    log('Source B: No image in DOM');
     const content = await page.content();
-
-    // Look for media.endclothing.com URLs in the rendered HTML
     const mediaMatch = content.match(/https?:\/\/media\.endclothing\.com[^"'\s\)]+/gi);
     if (mediaMatch && mediaMatch.length > 0) {
-      // Filter for product images, not icons
       const productImg = mediaMatch.find(u => u.includes('prodmedia') || u.includes('catalog') || u.includes('w_') || u.includes('800'));
       const img = productImg || mediaMatch[0];
-      log(`✓ Source B found in HTML: ${img}`);
+      log(`\u2713 Source B found in HTML: ${img}`);
       await page.close();
       return img;
     }
@@ -278,11 +297,10 @@ async function sourceB_Playwright(pick) {
 }
 
 // =============================================================
-// SOURCE C: Google Images search (no API key needed)
+// SOURCE C: Google Images search
 // =============================================================
 async function sourceC_GoogleImages(pick) {
   log('Source C: Google Images search...');
-
   try {
     const browser = await getBrowser();
     if (!browser) return null;
@@ -294,30 +312,20 @@ async function sourceC_GoogleImages(pick) {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
     await page.waitForTimeout(2000);
 
-    // Extract image URLs from Google Images results
     const imageUrl = await page.evaluate(() => {
-      // Google Images stores original URLs in data attributes or in script tags
       const imgs = [...document.querySelectorAll('img')];
       for (const img of imgs) {
         const src = img.src;
-        // Skip Google's own assets, base64 thumbnails, and tiny images
-        if (src && src.startsWith('http') && !src.includes('google.com') && !src.includes('gstatic') && !src.startsWith('data:') && img.width > 80) {
-          return src;
-        }
+        if (src && src.startsWith('http') && !src.includes('google.com') && !src.includes('gstatic') && !src.startsWith('data:') && img.width > 80) return src;
       }
-
-      // Try to find URLs in the page's script data
       const scripts = document.querySelectorAll('script');
       for (const script of scripts) {
         const text = script.textContent;
         if (!text) continue;
-        // Look for image URLs in the metadata
         const matches = text.match(/https?:\/\/[^"'\s]+\.(?:jpg|jpeg|png|webp)/gi);
         if (matches) {
           for (const m of matches) {
-            if (!m.includes('google') && !m.includes('gstatic') && !m.includes('googleapis')) {
-              return m;
-            }
+            if (!m.includes('google') && !m.includes('gstatic') && !m.includes('googleapis')) return m;
           }
         }
       }
@@ -325,21 +333,21 @@ async function sourceC_GoogleImages(pick) {
     });
 
     await page.close();
-
-    if (imageUrl) {
-      log(`✓ Source C found: ${imageUrl}`);
-      return imageUrl;
-    }
-  } catch (e) {
-    log(`Source C failed: ${e.message}`);
-  }
+    if (imageUrl) { log(`\u2713 Source C found: ${imageUrl}`); return imageUrl; }
+  } catch (e) { log(`Source C failed: ${e.message}`); }
   return null;
 }
 
 // =============================================================
-// SOURCE D: Playwright screenshot of product image
+// SOURCE D: Playwright screenshot
 // =============================================================
 async function sourceD_Screenshot(pick) {
+  // Skip Foot Locker — Kasada blocks Playwright
+  if (pick.url && pick.url.includes('footlocker')) {
+    log('Source D: Skipping FL (Kasada blocks Playwright)');
+    return null;
+  }
+
   log('Source D: Playwright screenshot...');
   const browser = await getBrowser();
   if (!browser) return null;
@@ -351,16 +359,11 @@ async function sourceD_Screenshot(pick) {
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
     await page.waitForTimeout(4000);
 
-    // Try to find and screenshot just the product image
     const selectors = [
-      'img[data-testid="product-image"]',
-      'img[data-testid="main-image"]',
-      '.product-image img',
-      '[class*="ProductImage"] img',
-      '[class*="product-image"] img',
-      '[class*="gallery"] img:first-child',
-      '[class*="Gallery"] img:first-child',
-      'main img',
+      'img[data-testid="product-image"]', 'img[data-testid="main-image"]',
+      '.product-image img', '[class*="ProductImage"] img',
+      '[class*="product-image"] img', '[class*="gallery"] img:first-child',
+      '[class*="Gallery"] img:first-child', 'main img',
     ];
 
     for (const sel of selectors) {
@@ -372,7 +375,7 @@ async function sourceD_Screenshot(pick) {
             const filename = `${pick.id}-${slugify(pick.name)}.png`;
             const filepath = path.join(IMAGES_DIR, filename);
             await el.screenshot({ path: filepath });
-            log(`✓ Source D screenshot saved: ${filepath}`);
+            log(`\u2713 Source D screenshot saved: ${filepath}`);
             await page.close();
             return { localFile: filepath, filename };
           }
@@ -380,14 +383,10 @@ async function sourceD_Screenshot(pick) {
       } catch {}
     }
 
-    // Fallback: screenshot the top-left area (usually the product image)
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const filepath = path.join(IMAGES_DIR, filename);
-    await page.screenshot({
-      path: filepath,
-      clip: { x: 0, y: 0, width: 640, height: 640 }
-    });
-    log(`✓ Source D page screenshot saved: ${filepath}`);
+    await page.screenshot({ path: filepath, clip: { x: 0, y: 0, width: 640, height: 640 } });
+    log(`\u2713 Source D page screenshot saved: ${filepath}`);
     await page.close();
     return { localFile: filepath, filename };
   } catch (e) {
@@ -402,26 +401,18 @@ async function sourceD_Screenshot(pick) {
 // =============================================================
 function sourceE_Fallback(pick) {
   log('Source E: Checking fallback-images.json...');
-  if (!fs.existsSync(FALLBACK_PATH)) {
-    log('No fallback file found');
-    return null;
-  }
+  if (!fs.existsSync(FALLBACK_PATH)) { log('No fallback file found'); return null; }
   try {
     const fallbacks = JSON.parse(fs.readFileSync(FALLBACK_PATH, 'utf-8'));
     const entry = fallbacks[pick.styleCode] || fallbacks[pick.id] || fallbacks[pick.name];
-    if (entry) {
-      log(`✓ Source E found fallback: ${entry}`);
-      return entry;
-    }
-  } catch (e) {
-    log(`Source E failed: ${e.message}`);
-  }
+    if (entry) { log(`\u2713 Source E found fallback: ${entry}`); return entry; }
+  } catch (e) { log(`Source E failed: ${e.message}`); }
   return null;
 }
 
 // ===== SAVE IMAGE =====
 async function saveImage(pick, imageResult, filename) {
-  // If it's already a local screenshot (from Source D)
+  // If it's a local screenshot (from Source D)
   if (imageResult && typeof imageResult === 'object' && imageResult.localFile) {
     if (CLOUD_ENABLED) {
       const cdnUrl = await uploadToCloudinary(imageResult.localFile, imageResult.filename);
@@ -430,15 +421,24 @@ async function saveImage(pick, imageResult, filename) {
     return `images/picks/${imageResult.filename}`;
   }
 
-  // It's a URL — download it
+  // If it's an FL CDN result with pre-downloaded buffer
+  if (imageResult && typeof imageResult === 'object' && imageResult.buffer) {
+    if (CLOUD_ENABLED) {
+      const cdnUrl = await uploadToCloudinary(imageResult.buffer, filename);
+      if (cdnUrl) return cdnUrl;
+    }
+    // Save locally
+    const localPath = path.join(IMAGES_DIR, filename);
+    fs.writeFileSync(localPath, imageResult.buffer);
+    return `images/picks/${filename}`;
+  }
+
+  // It's a URL string — download it
   const imageUrl = imageResult;
 
   if (CLOUD_ENABLED) {
-    // Try uploading URL directly to Cloudinary
     const cdnUrl = await uploadToCloudinary(imageUrl, filename);
     if (cdnUrl) return cdnUrl;
-
-    // If that failed, download buffer then upload
     try {
       const buffer = await fetchBuffer(imageUrl);
       if (buffer && buffer.length > 1000) {
@@ -456,39 +456,37 @@ async function saveImage(pick, imageResult, filename) {
       fs.writeFileSync(localPath, buffer);
       return `images/picks/${filename}`;
     }
-  } catch (e) {
-    log(`Local save failed: ${e.message}`);
-  }
+  } catch (e) { log(`Local save failed: ${e.message}`); }
 
   return null;
 }
 
 // ===== MAIN =====
 async function main() {
-  console.log('\n🔥 FASHION. Bulletproof Image Fetcher');
-  console.log('=' .repeat(50));
+  console.log('\n\ud83d\udd25 FASHION. Bulletproof Image Fetcher');
+  console.log('='.repeat(50));
 
   initCloudinary();
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
   if (!fs.existsSync(PICKS_PATH)) {
-    console.error('❌ picks.json not found'); process.exit(1);
+    console.error('\u274c picks.json not found'); process.exit(1);
   }
 
   const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
   const picks = picksData.picks;
-  console.log(`\n📦 ${picks.length} items to process\n`);
+  console.log(`\n\ud83d\udce6 ${picks.length} items to process\n`);
 
   const report = { total: picks.length, success: 0, failed: 0, items: [] };
 
   for (const pick of picks) {
-    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} — ${pick.name}`);
+    console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} \u2014 ${pick.name}`);
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const item = { id: pick.id, name: pick.name, source: '', status: '' };
 
     // Skip if already on Cloudinary
     if (!FORCE && pick.image && pick.image.includes('res.cloudinary.com')) {
-      console.log('  ☁️  Already on Cloudinary ✅');
+      console.log('  \u2601\ufe0f  Already on Cloudinary \u2705');
       item.status = 'skipped'; item.source = 'cloudinary';
       report.items.push(item); continue;
     }
@@ -496,10 +494,17 @@ async function main() {
     let imageResult = null;
     let sourceName = '';
 
+    // ========== SOURCE 0: Foot Locker CDN ==========
+    console.log('  [0] Foot Locker CDN...');
+    imageResult = await source0_FootLockerCDN(pick);
+    if (imageResult) { sourceName = 'fl-cdn'; }
+
     // ========== SOURCE A ==========
-    console.log('  [A] sneaks-api...');
-    imageResult = await sourceA_SneaksAPI(pick);
-    if (imageResult) { sourceName = 'sneaks-api'; }
+    if (!imageResult) {
+      console.log('  [A] sneaks-api...');
+      imageResult = await sourceA_SneaksAPI(pick);
+      if (imageResult) { sourceName = 'sneaks-api'; }
+    }
 
     // ========== SOURCE B ==========
     if (!imageResult) {
@@ -531,21 +536,21 @@ async function main() {
 
     // ========== SAVE ==========
     if (imageResult) {
-      console.log(`  📸 Found via: ${sourceName}`);
+      console.log(`  \ud83d\udcf8 Found via: ${sourceName}`);
       const saved = await saveImage(pick, imageResult, filename);
       if (saved) {
         pick._originalImage = pick._originalImage || pick.image;
         pick.image = saved;
-        console.log(`  ✅ ${saved}`);
+        console.log(`  \u2705 ${saved}`);
         item.status = 'success'; item.source = sourceName;
         report.success++;
       } else {
-        console.log('  ❌ Found image but failed to save');
+        console.log('  \u274c Found image but failed to save');
         item.status = 'save-failed'; item.source = sourceName;
         report.failed++;
       }
     } else {
-      console.log('  ❌ No image found from any source');
+      console.log('  \u274c No image found from any source');
       item.status = 'failed'; item.source = 'none';
       report.failed++;
     }
@@ -553,32 +558,26 @@ async function main() {
     report.items.push(item);
   }
 
-  // Cleanup
-  if (_browser) {
-    await _browser.close();
-    log('Browser closed');
-  }
+  if (_browser) { await _browser.close(); log('Browser closed'); }
 
-  // Save picks.json
   fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
-  console.log('\n💾 Updated picks.json');
+  console.log('\n\ud83d\udcbe Updated picks.json');
 
-  // Report
   console.log('\n' + '='.repeat(50));
-  console.log('📊 RESULTS');
+  console.log('\ud83d\udcca RESULTS');
   console.log('='.repeat(50));
   console.log(`Total:      ${report.total}`);
-  console.log(`✅ Success: ${report.success}`);
-  console.log(`❌ Failed:  ${report.failed}`);
+  console.log(`\u2705 Success: ${report.success}`);
+  console.log(`\u274c Failed:  ${report.failed}`);
   console.log('='.repeat(50));
 
   for (const item of report.items) {
-    const icon = item.status === 'success' ? '✅' : item.status === 'skipped' ? '⏭️' : '❌';
-    console.log(`  ${icon} #${item.id} ${item.name} → ${item.source}`);
+    const icon = item.status === 'success' ? '\u2705' : item.status === 'skipped' ? '\u23ed\ufe0f' : '\u274c';
+    console.log(`  ${icon} #${item.id} ${item.name} \u2192 ${item.source}`);
   }
 
   if (report.failed > 0) {
-    console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
+    console.log('\n\u26a0\ufe0f  For failed items, add manual URLs to data/fallback-images.json:');
     console.log('  {');
     for (const item of report.items) {
       if (item.status === 'failed' || item.status === 'save-failed') {
@@ -590,7 +589,7 @@ async function main() {
   }
 
   fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
-  console.log('\n✨ Done!\n');
+  console.log('\n\u2728 Done!\n');
 }
 
 main().catch(e => { console.error('Fatal:', e); process.exit(1); });
