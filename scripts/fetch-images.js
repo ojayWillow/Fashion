@@ -2,16 +2,17 @@
 /**
  * FASHION. — Automated Image Fetcher + Cloudinary Uploader
  * ==========================================================
- * Reads picks.json, validates product URLs, downloads images,
- * uploads them to Cloudinary, and updates picks.json with CDN URLs.
+ * Reads picks.json, validates product URLs, tells Cloudinary to
+ * fetch images from the source URLs, and updates picks.json with CDN URLs.
  *
- * Falls back to local storage if Cloudinary is not configured.
+ * Uses Cloudinary's remote fetch — their servers grab the image
+ * (bypasses blocks that hit our script directly).
  *
  * Usage:
  *   node scripts/fetch-images.js
  *
  * Options:
- *   --dry-run     Check URLs without downloading/uploading
+ *   --dry-run     Check URLs without uploading
  *   --force       Re-process even if image already on Cloudinary
  *   --local       Skip Cloudinary, save locally only
  *   --verbose     Show detailed logs
@@ -80,36 +81,54 @@ function initCloudinary() {
   }
 }
 
-async function uploadToCloudinary(buffer, filename) {
+/**
+ * Upload to Cloudinary by giving it a remote URL to fetch.
+ * Cloudinary's servers will download the image themselves.
+ */
+async function uploadUrlToCloudinary(remoteUrl, filename) {
   if (!CLOUD_ENABLED) return null;
 
   try {
-    // Remove extension for the public_id
     const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
 
-    const result = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          public_id: publicId,
-          overwrite: true,
-          resource_type: 'image',
-          // Auto-optimize: Cloudinary serves best format + quality per browser
-          transformation: [{ quality: 'auto', fetch_format: 'auto' }]
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-      uploadStream.end(buffer);
+    const result = await cloudinary.uploader.upload(remoteUrl, {
+      public_id: publicId,
+      overwrite: true,
+      resource_type: 'image',
     });
 
-    // Build a clean CDN URL with auto-format and auto-quality
+    // Build CDN URL with auto-format and auto-quality
     const cdnUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
-    log(`Uploaded to Cloudinary: ${cdnUrl}`);
+    log(`Uploaded to Cloudinary: ${cdnUrl} (${result.bytes} bytes)`);
     return cdnUrl;
   } catch (err) {
     log(`Cloudinary upload failed: ${err.message}`);
+    return null;
+  }
+}
+
+/**
+ * Upload a local buffer to Cloudinary (fallback method).
+ */
+async function uploadBufferToCloudinary(buffer, filename) {
+  if (!CLOUD_ENABLED) return null;
+
+  try {
+    const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
+
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { public_id: publicId, overwrite: true, resource_type: 'image' },
+        (error, result) => { if (error) reject(error); else resolve(result); }
+      );
+      stream.end(buffer);
+    });
+
+    const cdnUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
+    log(`Uploaded buffer to Cloudinary: ${cdnUrl}`);
+    return cdnUrl;
+  } catch (err) {
+    log(`Cloudinary buffer upload failed: ${err.message}`);
     return null;
   }
 }
@@ -163,7 +182,6 @@ function fetchUrl(url, options = {}) {
       if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
         if (maxRedirects <= 0) return reject(new Error('Too many redirects'));
         const redirectUrl = new URL(res.headers.location, url).href;
-        log(`Redirect ${res.statusCode} -> ${redirectUrl}`);
         return fetchUrl(redirectUrl, { ...options, maxRedirects: maxRedirects - 1 }).then(resolve).catch(reject);
       }
 
@@ -241,33 +259,16 @@ async function scrapeOgImage(pageUrl) {
   }
 }
 
-async function downloadBuffer(imageUrl) {
-  try {
-    const buffer = await fetchUrl(imageUrl);
-    if (buffer.length < 1000) {
-      log(`Image too small (${buffer.length} bytes), likely not valid`);
-      return null;
-    }
-    log(`Downloaded ${(buffer.length / 1024).toFixed(1)} KB`);
-    return buffer;
-  } catch (e) {
-    log(`Download failed: ${e.message}`);
-    return null;
-  }
-}
-
 // ===== MAIN =====
 async function main() {
   console.log('\n🔍 FASHION. Image Fetcher + Cloudinary\n' + '='.repeat(45));
   if (DRY_RUN) console.log('📋 DRY RUN — no files will be modified\n');
 
-  // Initialize Cloudinary
   initCloudinary();
 
   const storageMode = CLOUD_ENABLED ? '☁️  Cloudinary' : '📁 Local';
   console.log(`Storage: ${storageMode}\n`);
 
-  // Load picks
   if (!fs.existsSync(PICKS_JSON_PATH)) {
     console.error('❌ picks.json not found at', PICKS_JSON_PATH);
     process.exit(1);
@@ -276,10 +277,7 @@ async function main() {
   const picks = picksData.picks;
   console.log(`📦 Found ${picks.length} picks to process\n`);
 
-  // Ensure local images directory exists (for fallback)
-  if (!DRY_RUN) {
-    fs.mkdirSync(IMAGES_DIR, { recursive: true });
-  }
+  if (!DRY_RUN) fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
   const report = {
     total: picks.length,
@@ -296,7 +294,7 @@ async function main() {
     console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} — ${pick.name}`);
     const itemReport = { id: pick.id, name: pick.name, imageStatus: '', linkStatus: '', actions: [] };
 
-    // --- 1. Check if product page is still alive ---
+    // --- 1. Check product link ---
     console.log(`  🔗 Checking product URL...`);
     const linkCheck = await checkUrlAlive(pick.url);
     if (linkCheck.alive) {
@@ -312,123 +310,91 @@ async function main() {
       itemReport.actions.push('marked link as dead');
     }
 
-    // --- 2. Determine filename ---
+    // --- 2. Filename ---
     const slug = slugify(pick.name);
     const ext = getExtFromUrl(pick._originalImage || pick.image);
     const filename = `${pick.id}-${slug}${ext}`;
 
-    // --- 3. Check if already processed ---
+    // --- 3. Already processed? ---
     const alreadyOnCloud = CLOUD_ENABLED && pick.image && pick.image.includes('res.cloudinary.com');
-    const localPath = path.join(IMAGES_DIR, filename);
-    const alreadyLocal = !CLOUD_ENABLED && fs.existsSync(localPath);
-
-    if ((alreadyOnCloud || alreadyLocal) && !FORCE) {
-      const where = alreadyOnCloud ? 'Cloudinary' : 'local';
-      console.log(`  📁 Already on ${where}, skipping (use --force to re-process)`);
-      itemReport.imageStatus = `already-${where}`;
+    if (alreadyOnCloud && !FORCE) {
+      console.log(`  📁 Already on Cloudinary, skipping`);
+      itemReport.imageStatus = 'already-cloudinary';
       report.imagesSkipped++;
       report.items.push(itemReport);
       continue;
     }
 
-    // Check if exists on Cloudinary even if picks.json isn't updated yet
-    if (CLOUD_ENABLED && !FORCE && !alreadyOnCloud) {
-      const exists = await checkCloudinaryExists(filename);
-      if (exists) {
-        const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
-        const cdnUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
-        console.log(`  ☁️  Found on Cloudinary, updating picks.json`);
-        if (!DRY_RUN) {
-          pick._originalImage = pick._originalImage || pick.image;
-          pick.image = cdnUrl;
-        }
-        itemReport.imageStatus = 'already-cloudinary';
-        itemReport.actions.push('updated URL to Cloudinary');
-        report.imagesSkipped++;
-        report.items.push(itemReport);
-        continue;
-      }
-    }
-
     if (DRY_RUN) {
-      console.log(`  📋 Would download and ${CLOUD_ENABLED ? 'upload to Cloudinary' : 'save locally'}`);
+      console.log(`  📋 Would upload to ${CLOUD_ENABLED ? 'Cloudinary' : 'local'}`);
       report.items.push(itemReport);
       continue;
     }
 
-    // --- 4. Download image ---
-    console.log(`  📥 Downloading image...`);
-    const sourceUrl = pick._originalImage || pick.image;
-    let buffer = await downloadBuffer(sourceUrl);
+    // --- 4. Upload via Cloudinary remote fetch ---
+    const imageUrl = pick._originalImage || pick.image;
+    let cdnUrl = null;
 
-    // Fallback: scrape og:image from product page
-    if (!buffer && linkCheck.alive) {
-      console.log(`  🔄 Fallback: scraping product page for og:image...`);
-      const ogImage = await scrapeOgImage(pick.url);
-      if (ogImage) {
-        console.log(`  🖼️  Found: ${ogImage.substring(0, 80)}...`);
-        buffer = await downloadBuffer(ogImage);
-      } else {
-        console.log(`  ⚠️  No og:image found`);
+    if (CLOUD_ENABLED) {
+      // Method A: Let Cloudinary fetch the image directly from the URL
+      console.log(`  ☁️  Cloudinary fetching from source URL...`);
+      cdnUrl = await uploadUrlToCloudinary(imageUrl, filename);
+
+      // Method B: Try og:image from store page
+      if (!cdnUrl && linkCheck.alive) {
+        console.log(`  🔄 Trying og:image from store page...`);
+        const ogImage = await scrapeOgImage(pick.url);
+        if (ogImage) {
+          console.log(`  🖼️  Found: ${ogImage.substring(0, 80)}...`);
+          cdnUrl = await uploadUrlToCloudinary(ogImage, filename);
+        }
+      }
+
+      // Method C: Download ourselves and upload buffer
+      if (!cdnUrl) {
+        console.log(`  📥 Trying direct download + buffer upload...`);
+        try {
+          const buffer = await fetchUrl(imageUrl);
+          if (buffer && buffer.length > 1000) {
+            cdnUrl = await uploadBufferToCloudinary(buffer, filename);
+          }
+        } catch (e) {
+          log(`Direct download failed: ${e.message}`);
+        }
       }
     }
 
-    if (!buffer) {
+    if (cdnUrl) {
+      console.log(`  ✅ ${cdnUrl}`);
+      pick._originalImage = pick._originalImage || pick.image;
+      pick.image = cdnUrl;
+      itemReport.imageStatus = 'uploaded-cloudinary';
+      itemReport.actions.push('uploaded to Cloudinary');
+      report.imagesUploaded++;
+    } else {
       console.log(`  ❌ Could not fetch image from any source`);
       itemReport.imageStatus = 'failed';
-      itemReport.actions.push('image download failed');
+      itemReport.actions.push('all methods failed');
       report.imagesFailed++;
-      report.items.push(itemReport);
-      continue;
-    }
-
-    // --- 5. Upload to Cloudinary or save locally ---
-    if (CLOUD_ENABLED) {
-      console.log(`  ☁️  Uploading to Cloudinary... (${(buffer.length / 1024).toFixed(0)} KB)`);
-      const cdnUrl = await uploadToCloudinary(buffer, filename);
-      if (cdnUrl) {
-        console.log(`  ✅ ${cdnUrl}`);
-        pick._originalImage = pick._originalImage || pick.image;
-        pick.image = cdnUrl;
-        itemReport.imageStatus = 'uploaded-cloudinary';
-        itemReport.actions.push('uploaded to Cloudinary');
-        report.imagesUploaded++;
-      } else {
-        console.log(`  ⚠️  Upload failed, saving locally instead`);
-        fs.writeFileSync(localPath, buffer);
-        pick._originalImage = pick._originalImage || pick.image;
-        pick.image = `images/picks/${filename}`;
-        itemReport.imageStatus = 'local-fallback';
-        itemReport.actions.push('saved locally (upload failed)');
-        report.imagesUploaded++;
-      }
-    } else {
-      fs.writeFileSync(localPath, buffer);
-      console.log(`  ✅ Saved locally: images/picks/${filename}`);
-      pick._originalImage = pick._originalImage || pick.image;
-      pick.image = `images/picks/${filename}`;
-      itemReport.imageStatus = 'saved-local';
-      itemReport.actions.push('saved locally');
-      report.imagesUploaded++;
     }
 
     report.items.push(itemReport);
   }
 
-  // --- Save updated picks.json ---
+  // Save updated picks.json
   if (!DRY_RUN) {
     fs.writeFileSync(PICKS_JSON_PATH, JSON.stringify(picksData, null, 2) + '\n');
     console.log('\n💾 Updated picks.json');
   }
 
-  // --- Report ---
+  // Report
   console.log('\n' + '='.repeat(45));
   console.log('📊 REPORT');
   console.log('='.repeat(45));
   console.log(`Storage mode:      ${storageMode}`);
   console.log(`Total picks:       ${report.total}`);
   console.log(`Images processed:  ${report.imagesUploaded}`);
-  console.log(`Images skipped:    ${report.imagesSkipped} (already stored)`);
+  console.log(`Images skipped:    ${report.imagesSkipped}`);
   console.log(`Images failed:     ${report.imagesFailed}`);
   console.log(`Product links OK:  ${report.linksAlive}`);
   console.log(`Product links DEAD:${report.linksDead}`);
@@ -440,15 +406,13 @@ async function main() {
       console.log(`   #${i.id} ${i.name}`);
     });
   }
-
   if (report.imagesFailed > 0) {
-    console.log('\n⚠️  Failed image downloads:');
+    console.log('\n⚠️  Failed images:');
     report.items.filter(i => i.imageStatus === 'failed').forEach(i => {
       console.log(`   #${i.id} ${i.name}`);
     });
   }
 
-  // Save report
   const reportPath = path.join(__dirname, '..', 'data', 'image-report.json');
   if (!DRY_RUN) {
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
