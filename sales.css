@@ -1,4 +1,5 @@
 /* ===== Sales Dashboard Styles ===== */
+/* HYBRID THEME: Dark hero + White product grid */
 
 .sales-hero {
     position: relative;
@@ -24,47 +25,49 @@
 .sales-search input::placeholder { color: var(--color-text-muted); }
 .search-count { font-size:0.75rem; color:var(--color-accent-light); font-weight:600; white-space:nowrap; letter-spacing:0.5px; }
 
-/* ===== CURATED PICKS ===== */
+/* ===== TRANSITION: Dark to Light ===== */
 .picks-section {
     padding: 80px 0 60px;
     position: relative;
+    background: #f8f8fa;
 }
 
 .picks-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
+    gap: 28px;
 }
 
+/* ===== PRODUCT CARD — Clean White ===== */
 .pick-card {
-    background: rgba(19, 13, 32, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(168, 85, 247, 0.1);
-    border-radius: var(--radius);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
     overflow: hidden;
-    cursor: none;
+    cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .pick-card:hover {
-    border-color: rgba(168, 85, 247, 0.4);
-    transform: translateY(-8px);
-    box-shadow: 0 16px 50px rgba(168, 85, 247, 0.2), 0 0 80px rgba(168, 85, 247, 0.08);
+    border-color: rgba(168, 85, 247, 0.25);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(168, 85, 247, 0.06);
 }
 
-/* === Product Image — blended dark background === */
+/* === Product Image — clean white bg === */
 .pick-card-image {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    background: linear-gradient(180deg, rgba(30, 20, 50, 0.6) 0%, rgba(19, 13, 32, 0.9) 100%);
+    background: #ffffff;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 32px;
+    padding: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .pick-card-image img {
@@ -72,11 +75,10 @@
     height: 100%;
     object-fit: contain;
     transition: transform 0.5s ease;
-    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
 }
 
 .pick-card:hover .pick-card-image img {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
 .pick-card-discount {
@@ -85,12 +87,12 @@
     right: 14px;
     background: var(--gradient-purple);
     color: #fff;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     padding: 6px 14px;
     border-radius: 50px;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 4px 16px rgba(168, 85, 247, 0.35);
     z-index: 2;
 }
 
@@ -98,14 +100,14 @@
     position: absolute;
     top: 14px;
     left: 14px;
-    background: rgba(10, 6, 18, 0.75);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(8px);
-    color: #fff;
+    color: #1a1a2e;
     font-size: 0.7rem;
     font-weight: 600;
     padding: 5px 12px;
     border-radius: 50px;
-    border: 1px solid rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     letter-spacing: 0.3px;
     z-index: 2;
 }
@@ -119,7 +121,7 @@
     align-items: center;
     justify-content: center;
     gap: 14px;
-    background: linear-gradient(145deg, rgba(30, 20, 55, 0.95) 0%, rgba(15, 10, 30, 0.98) 100%);
+    background: #f5f5f7;
     z-index: 1;
 }
 
@@ -127,15 +129,15 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.08) 100%);
-    border: 2px solid rgba(168, 85, 247, 0.2);
+    background: rgba(168, 85, 247, 0.06);
+    border: 2px solid rgba(168, 85, 247, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;
-    color: rgba(168, 85, 247, 0.6);
+    color: rgba(168, 85, 247, 0.4);
     letter-spacing: 1px;
 }
 
@@ -143,7 +145,7 @@
     font-family: var(--font-body);
     font-size: 0.75rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.25);
+    color: rgba(0, 0, 0, 0.2);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -153,15 +155,13 @@
     position: absolute;
     bottom: 14px;
     left: 14px;
-    background: rgba(245, 158, 11, 0.15);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    color: #b45309;
     font-size: 0.65rem;
     font-weight: 700;
     padding: 5px 12px;
     border-radius: 50px;
-    border: 1px solid rgba(245, 158, 11, 0.25);
+    border: 1px solid rgba(245, 158, 11, 0.2);
     letter-spacing: 0.5px;
     text-transform: uppercase;
     z-index: 3;
@@ -173,11 +173,11 @@
     50% { opacity: 0.6; }
 }
 
-/* ===== DISABLED CTA (dead link) ===== */
+/* ===== DISABLED CTA ===== */
 .pick-card-cta:disabled,
 .pick-card-cta[disabled] {
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.3);
+    background: #e5e5ea;
+    color: rgba(0, 0, 0, 0.3);
     cursor: not-allowed;
     box-shadow: none;
     pointer-events: none;
@@ -189,16 +189,16 @@
     transform: none;
 }
 
-/* Card with dead link gets subtle desaturation */
 .pick-card:has(.pick-card-dead-link) {
     border-color: rgba(245, 158, 11, 0.1);
 }
 
 .pick-card:has(.pick-card-dead-link):hover {
-    border-color: rgba(245, 158, 11, 0.3);
-    box-shadow: 0 16px 50px rgba(245, 158, 11, 0.08), 0 0 40px rgba(245, 158, 11, 0.04);
+    border-color: rgba(245, 158, 11, 0.2);
+    box-shadow: 0 16px 50px rgba(245, 158, 11, 0.06);
 }
 
+/* ===== CARD BODY — Dark text on white ===== */
 .pick-card-body {
     padding: 22px;
 }
@@ -206,7 +206,7 @@
 .pick-card-brand {
     font-size: 0.7rem;
     font-weight: 700;
-    color: var(--color-accent-light);
+    color: #7c3aed;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     margin-bottom: 6px;
@@ -219,11 +219,12 @@
     letter-spacing: 0.3px;
     margin-bottom: 4px;
     line-height: 1.3;
+    color: #1a1a2e;
 }
 
 .pick-card-colorway {
     font-size: 0.78rem;
-    color: var(--color-text-muted);
+    color: #6b7280;
     margin-bottom: 14px;
 }
 
@@ -238,12 +239,12 @@
     font-family: var(--font-heading);
     font-size: 1.3rem;
     font-weight: 800;
-    color: var(--color-text);
+    color: #1a1a2e;
 }
 
 .pick-price-retail {
     font-size: 0.85rem;
-    color: var(--color-text-muted);
+    color: #9ca3af;
     text-decoration: line-through;
 }
 
@@ -251,7 +252,7 @@
 .pick-card-sizes-label {
     font-size: 0.68rem;
     font-weight: 700;
-    color: var(--color-text-muted);
+    color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     margin-bottom: 8px;
@@ -268,20 +269,20 @@
     font-family: var(--font-body);
     font-size: 0.72rem;
     font-weight: 600;
-    color: var(--color-text-muted);
-    background: rgba(168, 85, 247, 0.06);
-    border: 1px solid rgba(168, 85, 247, 0.12);
+    color: #6b7280;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
     padding: 5px 10px;
     border-radius: 8px;
-    cursor: none;
+    cursor: pointer;
     transition: all 0.25s ease;
     line-height: 1;
 }
 
 .pick-size:hover {
-    color: #fff;
-    background: rgba(168, 85, 247, 0.2);
-    border-color: var(--color-accent);
+    color: #7c3aed;
+    background: rgba(168, 85, 247, 0.08);
+    border-color: rgba(168, 85, 247, 0.3);
     transform: translateY(-1px);
 }
 
@@ -295,8 +296,8 @@
 .pick-tag {
     font-size: 0.65rem;
     font-weight: 600;
-    color: var(--color-accent-light);
-    background: rgba(168, 85, 247, 0.1);
+    color: #7c3aed;
+    background: rgba(168, 85, 247, 0.06);
     padding: 3px 10px;
     border-radius: 50px;
     letter-spacing: 0.3px;
@@ -316,72 +317,127 @@
     padding: 12px 24px;
     border-radius: 50px;
     border: none;
-    cursor: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     letter-spacing: 0.3px;
 }
 
 .pick-card:hover .pick-card-cta:not(:disabled) {
-    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.35);
 }
 
-/* Filter Tabs */
+/* ===== Filter Tabs ===== */
 .filters-bar {
-    padding: 20px 0 10px; position: sticky; top: 0; z-index: 100;
-    background: rgba(10,6,18,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--color-border-subtle);
+    padding: 20px 0 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248, 248, 250, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
+
 .filter-tabs { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; padding-bottom:8px; }
 .filter-tabs::-webkit-scrollbar { display:none; }
 .filter-tab {
-    background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.12); border-radius: 50px;
-    padding: 10px 22px; color: var(--color-text-muted); font-family: var(--font-body);
-    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; white-space: nowrap; cursor: none; transition: all 0.3s ease;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 50px;
+    padding: 10px 22px;
+    color: #6b7280;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-.filter-tab:hover { background: rgba(168,85,247,0.12); color: var(--color-text); border-color: rgba(168,85,247,0.25); }
-.filter-tab.active { background: var(--gradient-purple); color: #fff; border-color: transparent; box-shadow: 0 4px 20px rgba(168,85,247,0.3); }
+.filter-tab:hover {
+    background: #f3f4f6;
+    color: #1a1a2e;
+    border-color: #d1d5db;
+}
+.filter-tab.active {
+    background: var(--gradient-purple);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(168,85,247,0.3);
+}
 
-/* Sales Grid */
-.sales-grid-section { padding: 40px 0 100px; min-height: 60vh; }
+/* ===== Sales Grid (Stores) ===== */
+.sales-grid-section {
+    padding: 40px 0 100px;
+    min-height: 60vh;
+    background: #f8f8fa;
+}
+
 .sales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
-/* Store Card */
+/* Store Card — also white on light bg */
 .store-card {
-    background: rgba(19,13,32,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(168,85,247,0.1); border-radius: var(--radius); padding: 28px;
-    cursor: none; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; display: flex; flex-direction: column;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius);
+    padding: 28px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 .store-card::before { content:''; position:absolute; inset:0; background:var(--gradient-purple); opacity:0; transition:opacity 0.4s ease; }
-.store-card:hover { border-color: rgba(168,85,247,0.4); transform: translateY(-6px); box-shadow: 0 12px 40px rgba(168,85,247,0.2), 0 0 60px rgba(168,85,247,0.08); }
-.store-card:hover::before { opacity: 0.05; }
+.store-card:hover {
+    border-color: rgba(168,85,247,0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(168, 85, 247, 0.06);
+}
+.store-card:hover::before { opacity: 0.03; }
 .store-card-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; position:relative; z-index:1; }
-.store-card-logo { width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; border:1px solid rgba(255,255,255,0.06); }
+.store-card-logo { width:44px; height:44px; border-radius:12px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; border:1px solid #e5e7eb; }
 .store-card-logo img { width:30px; height:30px; object-fit:contain; border-radius:4px; }
 .store-card-logo .logo-fallback { font-size:1.4rem; }
 .store-card-title { flex:1; }
-.store-card-title h3 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:2px; }
-.store-card-title .store-location { font-size:0.75rem; color:var(--color-text-muted); }
-.store-card-category { display:inline-block; font-size:0.65rem; font-weight:600; color:var(--color-accent-light); background:rgba(168,85,247,0.1); padding:3px 10px; border-radius:50px; letter-spacing:0.5px; text-transform:uppercase; position:relative; z-index:1; flex-shrink:0; }
-.store-card-deal { position:relative; z-index:1; background:rgba(168,85,247,0.08); border:1px solid rgba(168,85,247,0.15); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
-.store-card-deal .deal-label { font-size:0.65rem; font-weight:700; color:var(--color-accent); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px; }
-.store-card-deal .deal-text { font-size:0.92rem; font-weight:600; color:var(--color-text); line-height:1.4; }
-.store-card-desc { font-size:0.82rem; color:var(--color-text-muted); line-height:1.55; margin-bottom:20px; position:relative; z-index:1; flex:1; }
+.store-card-title h3 { font-family:var(--font-heading); font-size:1.1rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:2px; color: #1a1a2e; }
+.store-card-title .store-location { font-size:0.75rem; color:#6b7280; }
+.store-card-category { display:inline-block; font-size:0.65rem; font-weight:600; color:#7c3aed; background:rgba(168,85,247,0.06); padding:3px 10px; border-radius:50px; letter-spacing:0.5px; text-transform:uppercase; position:relative; z-index:1; flex-shrink:0; }
+.store-card-deal { position:relative; z-index:1; background:rgba(168,85,247,0.04); border:1px solid rgba(168,85,247,0.1); border-radius:12px; padding:14px 16px; margin-bottom:14px; }
+.store-card-deal .deal-label { font-size:0.65rem; font-weight:700; color:#7c3aed; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:4px; }
+.store-card-deal .deal-text { font-size:0.92rem; font-weight:600; color:#1a1a2e; line-height:1.4; }
+.store-card-desc { font-size:0.82rem; color:#6b7280; line-height:1.55; margin-bottom:20px; position:relative; z-index:1; flex:1; }
 .store-card-footer { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
-.store-card-cta { display:inline-flex; align-items:center; gap:8px; background:var(--gradient-purple); color:#fff; font-family:var(--font-body); font-size:0.82rem; font-weight:600; padding:10px 22px; border-radius:50px; border:none; cursor:none; transition:all 0.3s ease; letter-spacing:0.3px; }
-.store-card:hover .store-card-cta { box-shadow: 0 4px 20px rgba(168,85,247,0.4); transform: translateY(-1px); }
+.store-card-cta { display:inline-flex; align-items:center; gap:8px; background:var(--gradient-purple); color:#fff; font-family:var(--font-body); font-size:0.82rem; font-weight:600; padding:10px 22px; border-radius:50px; border:none; cursor:pointer; transition:all 0.3s ease; letter-spacing:0.3px; }
+.store-card:hover .store-card-cta { box-shadow: 0 4px 20px rgba(168,85,247,0.35); transform: translateY(-1px); }
 .store-card-flag { font-size:1.5rem; }
 
 /* No Results */
 .no-results { text-align:center; padding:80px 20px; }
 .no-results-icon { font-size:3rem; display:block; margin-bottom:16px; }
-.no-results h3 { font-family:var(--font-heading); font-size:1.3rem; font-weight:700; margin-bottom:8px; }
-.no-results p { color:var(--color-text-muted); font-size:0.9rem; }
+.no-results h3 { font-family:var(--font-heading); font-size:1.3rem; font-weight:700; margin-bottom:8px; color: #1a1a2e; }
+.no-results p { color:#6b7280; font-size:0.9rem; }
 
-.dock-active { background: rgba(168,85,247,0.2) !important; box-shadow: 0 0 15px rgba(168,85,247,0.15); }
+.dock-active { background: rgba(168,85,247,0.15) !important; box-shadow: 0 0 15px rgba(168,85,247,0.1); }
 
 .store-card { opacity:0; transform:translateY(20px); animation: cardFadeIn 0.4s ease forwards; }
 @keyframes cardFadeIn { to { opacity:1; transform:translateY(0); } }
 
+/* ===== SECTION HEADING on light bg ===== */
+.picks-section .section-heading,
+.picks-section .section-title,
+.sales-grid-section .section-heading,
+.sales-grid-section .section-title {
+    color: #1a1a2e;
+}
+
+.picks-section .section-subtitle,
+.sales-grid-section .section-subtitle {
+    color: #6b7280;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .sales-hero { padding: 120px 0 40px; }
     .sales-hero .hero-title { font-size: 2rem; }
@@ -393,9 +449,8 @@
     .filter-tab { padding: 8px 16px; font-size: 0.72rem; }
     .store-card { padding: 22px; }
     .pick-card-body { padding: 16px; }
-    .pick-card-image { padding: 20px; }
+    .pick-card-image { padding: 16px; }
     .pick-size { padding: 4px 8px; font-size: 0.68rem; }
-
     .pick-img-fallback-icon { width: 60px; height: 60px; font-size: 1.5rem; }
     .pick-img-fallback-text { font-size: 0.65rem; letter-spacing: 1.5px; }
 }
