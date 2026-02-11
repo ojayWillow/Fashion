@@ -124,14 +124,21 @@ function handleImageError(imgEl, brandName) {
 }
 
 // ===== CURATED PICKS =====
+let allPicks = [];
+
 async function loadPicks() {
     try {
         const res = await fetch('data/picks.json');
         const data = await res.json();
-        renderPicks(data.picks);
+        allPicks = data.picks;
+        renderPicks(allPicks);
     } catch (e) {
         console.error('Error loading picks:', e);
     }
+}
+
+function getPicksByStore(storeName) {
+    return allPicks.filter(p => p.store === storeName);
 }
 
 function renderPicks(picks) {
@@ -149,7 +156,7 @@ function renderPicks(picks) {
             : '';
 
         const sizesHTML = pick.sizes && pick.sizes.length
-            ? `<div class="pick-card-sizes-label">EU Sizes</div>
+            ? `<div class="pick-card-sizes-label">Sizes</div>
                <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
             : '';
 
@@ -185,6 +192,117 @@ function renderPicks(picks) {
 }
 
 loadPicks();
+
+// ===== STORE DETAIL OVERLAY =====
+function showStoreDetail(store, picks) {
+    // Remove existing overlay if open
+    document.querySelector('.store-detail-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'store-detail-overlay';
+
+    const escapedStoreName = (store.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+    overlay.innerHTML = `
+        <div class="store-detail-panel">
+            <div class="store-detail-header">
+                <div class="store-detail-info">
+                    <div class="store-detail-logo">
+                        <img src="https://logo.clearbit.com/${store.domain}" alt="${store.name}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <span class="store-detail-logo-fallback" style="display:none;">${store.flag}</span>
+                    </div>
+                    <div>
+                        <h2 class="store-detail-name">${store.flag} ${store.name}</h2>
+                        <p class="store-detail-deal">${store.deal}</p>
+                        <p class="store-detail-count">${picks.length} curated pick${picks.length !== 1 ? 's' : ''}</p>
+                    </div>
+                </div>
+                <div class="store-detail-actions">
+                    <button class="store-detail-visit" onclick="redirectTo('${store.saleUrl}', '${escapedStoreName}')">
+                        Visit Store →
+                    </button>
+                    <button class="store-detail-close" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="store-detail-grid">
+                ${picks.map((pick, i) => {
+                    const escapedBrand = (pick.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
+                    const sizesHTML = pick.sizes && pick.sizes.length
+                        ? `<div class="pick-card-sizes-label">Sizes</div>
+                           <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
+                        : '';
+
+                    return `
+                        <div class="pick-card" style="animation-delay: ${i * 0.06}s">
+                            <div class="pick-card-image">
+                                <img src="${pick.image}" alt="${pick.name}" loading="lazy"
+                                     onerror="handleImageError(this, '${escapedBrand}')">
+                                <span class="pick-card-discount">${pick.discount}</span>
+                            </div>
+                            <div class="pick-card-body">
+                                <div class="pick-card-brand">${pick.brand}</div>
+                                <div class="pick-card-name">${pick.name}</div>
+                                <div class="pick-card-colorway">${pick.colorway}</div>
+                                <div class="pick-card-pricing">
+                                    <span class="pick-price-sale">${pick.salePrice}</span>
+                                    <span class="pick-price-retail">${pick.retailPrice}</span>
+                                </div>
+                                ${sizesHTML}
+                                <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
+                                <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStoreName}')">
+                                    Shop Now →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+
+    // Close on overlay background click or close button
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target.closest('.store-detail-close')) {
+            closeStoreDetail(overlay);
+        }
+    });
+
+    // Close on Escape key
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeStoreDetail(overlay);
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    // Trigger entrance animation
+    requestAnimationFrame(() => {
+        overlay.classList.add('active');
+    });
+
+    // Add hover cursors to new elements
+    overlay.querySelectorAll('.pick-card, .store-detail-visit, .store-detail-close').forEach(addHoverCursor);
+}
+
+function closeStoreDetail(overlay) {
+    overlay.classList.add('closing');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+        overlay.remove();
+    }, 400);
+}
 
 // ===== SALES DASHBOARD =====
 let allStores = [], categories = [], activeFilter = 'all', searchQuery = '';
@@ -256,6 +374,24 @@ function renderStores() {
     filtered.forEach((store, i) => {
         const card = document.createElement('div');
         card.className = 'store-card'; card.style.animationDelay = `${i * 0.04}s`;
+
+        // Check if this store has curated picks
+        const storePicks = getPicksByStore(store.name);
+        const picksBadge = storePicks.length > 0
+            ? `<span class="store-card-picks-badge">${storePicks.length} pick${storePicks.length !== 1 ? 's' : ''}</span>`
+            : '';
+
+        // Show mini preview of first 3 product images if picks exist
+        const previewHTML = storePicks.length > 0
+            ? `<div class="store-card-preview">
+                   <div class="store-preview-images">
+                       ${storePicks.slice(0, 3).map(p => `<img src="${p.image}" alt="${p.name}" loading="lazy">`).join('')}
+                       ${storePicks.length > 3 ? `<span class="store-preview-more">+${storePicks.length - 3}</span>` : ''}
+                   </div>
+                   <span class="store-preview-label">View curated picks</span>
+               </div>`
+            : '';
+
         card.innerHTML = `
             <div class="store-card-header">
                 <div class="store-card-logo">
@@ -263,13 +399,29 @@ function renderStores() {
                     <span class="logo-fallback" style="display:none;">${store.flag}</span>
                 </div>
                 <div class="store-card-title"><h3>${store.name}</h3><span class="store-location">${store.flag} ${store.country}</span></div>
-                <span class="store-card-category">${store.categoryIcon} ${store.category}</span>
+                <div class="store-card-badges">
+                    ${picksBadge}
+                    <span class="store-card-category">${store.categoryIcon} ${store.category}</span>
+                </div>
             </div>
             <div class="store-card-deal"><div class="deal-label">🔥 Current Deal</div><div class="deal-text">${store.deal}</div></div>
             <p class="store-card-desc">${store.description}</p>
-            <div class="store-card-footer"><span class="store-card-cta">Shop Sale →</span><span class="store-card-flag">${store.flag}</span></div>
+            ${previewHTML}
+            <div class="store-card-footer">
+                <span class="store-card-cta">${storePicks.length > 0 ? 'View Picks →' : 'Shop Sale →'}</span>
+                <span class="store-card-flag">${store.flag}</span>
+            </div>
         `;
-        card.addEventListener('click', () => redirectTo(store.saleUrl, store.name));
+
+        // Click handler: show detail overlay if picks exist, otherwise redirect
+        card.addEventListener('click', () => {
+            if (storePicks.length > 0) {
+                showStoreDetail(store, storePicks);
+            } else {
+                redirectTo(store.saleUrl, store.name);
+            }
+        });
+
         addHoverCursor(card); grid.appendChild(card);
     });
 }
