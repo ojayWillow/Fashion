@@ -5,7 +5,7 @@
  * One command to rule them all.
  *
  * 1. Reads URLs from data/queue.txt
- * 2. Scrapes each product (Playwright)
+ * 2. Scrapes each product (API-first for known stores, Playwright fallback)
  * 3. Saves to picks.json
  * 4. Fetches images (all 5 sources)
  * 5. Moves processed URLs to data/queue-done.txt
@@ -86,7 +86,7 @@ function slugify(s) {
 
 function parsePrice(text) {
   if (!text) return null;
-  const cleaned = text.replace(/[^\d.,]/g, '').replace(',', '.');
+  const cleaned = text.toString().replace(/[^\d.,]/g, '').replace(',', '.');
   const num = parseFloat(cleaned);
   return isNaN(num) ? null : num;
 }
@@ -101,6 +101,32 @@ function detectCurrency(domain) {
   if (domain.endsWith('.co.uk') || domain.endsWith('.uk')) return 'GBP';
   if (domain.endsWith('.com') && !domain.includes('.co')) return 'USD';
   return 'EUR';
+}
+
+/**
+ * Validates if a string looks like a real product size.
+ * Filters out navigation items, random text, etc.
+ */
+function isValidSize(text) {
+  if (!text || text.length > 12) return false;
+  const t = text.trim();
+  // EU shoe sizes: 35-50, with optional .5
+  if (/^\d{2}(\.5)?$/.test(t)) {
+    const n = parseFloat(t);
+    if (n >= 35 && n <= 52) return true;
+  }
+  // US/UK shoe sizes: 3-16, with optional .5
+  if (/^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(t)) return true;
+  // Clothing sizes
+  if (/^(XXS|XS|S|M|L|XL|XXL|2XL|3XL|XXXL)$/i.test(t)) return true;
+  // Numeric clothing sizes (waist etc): 24-44
+  if (/^\d{2}$/.test(t)) {
+    const n = parseInt(t);
+    if (n >= 24 && n <= 52) return true;
+  }
+  // FR/IT clothing sizes
+  if (/^(FR|IT)?\s?\d{2}$/i.test(t)) return true;
+  return false;
 }
 
 // ===== STORE CONFIG =====
@@ -161,9 +187,9 @@ function matchStore(domain) {
 function detectBrand(name) {
   const brandMap = [
     { keywords: ['jordan', 'air jordan'], brand: 'Jordan' },
-    { keywords: ['nike', 'air max', 'air force', 'dunk', 'blazer', 'vapormax'], brand: 'Nike' },
+    { keywords: ['nike', 'air max', 'air force', 'dunk', 'blazer', 'vapormax', 'air tn'], brand: 'Nike' },
     { keywords: ['adidas', 'yeezy', 'ultraboost', 'nmd', 'stan smith', 'superstar', 'samba', 'gazelle'], brand: 'adidas' },
-    { keywords: ['new balance', 'nb ', '990', '991', '992', '993', '550', '2002r', '1906r', '9060'], brand: 'New Balance' },
+    { keywords: ['new balance', 'nb ', '990', '991', '992', '993', '550', '2002r', '1906r', '9060', '1906'], brand: 'New Balance' },
     { keywords: ['asics', 'gel-', 'gel lyte'], brand: 'ASICS' },
     { keywords: ['puma', 'suede', 'rs-x'], brand: 'Puma' },
     { keywords: ['converse', 'chuck taylor'], brand: 'Converse' },
@@ -201,7 +227,7 @@ function detectBrand(name) {
 function detectTags(name, brand) {
   const tags = [];
   const lower = name.toLowerCase();
-  const sneakerWords = ['shoe', 'sneaker', 'trainer', 'schoen', 'runner', 'air max', 'air jordan', 'dunk', '990', '991', '550', '2002r', '1906r', 'ultraboost', 'samba', 'gazelle', 'gel-'];
+  const sneakerWords = ['shoe', 'sneaker', 'trainer', 'schoen', 'runner', 'air max', 'air jordan', 'dunk', '990', '991', '550', '2002r', '1906r', '1906', 'ultraboost', 'samba', 'gazelle', 'gel-', 'air tn'];
   const clothingWords = ['hoodie', 'jacket', 'shirt', 't-shirt', 'pants', 'trousers', 'shorts', 'jogger', 'sweatshirt', 'coat', 'fleece', 'sweater', 'parka'];
   if (sneakerWords.some(w => lower.includes(w))) tags.push('Sneakers');
   else if (clothingWords.some(w => lower.includes(w))) tags.push('Clothing');
@@ -210,7 +236,459 @@ function detectTags(name, brand) {
   return [...new Set(tags)];
 }
 
-// ===== SCRAPER =====
+// =====================================================================
+// FOOT LOCKER API — proper data extraction via their inventory endpoint
+// =====================================================================
+
+/**
+ * Foot Locker region configs.
+ * Maps TLD to the INTERSHOP path used in their API.
+ */
+const FL_REGIONS = {
+  'footlocker.nl':    { base: 'https://www.footlocker.nl',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_NL-Site/en_GB/-/EUR',  currency: 'EUR' },
+  'footlocker.de':    { base: 'https://www.footlocker.de',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_DE-Site/en_GB/-/EUR',  currency: 'EUR' },
+  'footlocker.fr':    { base: 'https://www.footlocker.fr',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_FR-Site/en_GB/-/EUR',  currency: 'EUR' },
+  'footlocker.es':    { base: 'https://www.footlocker.es',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_ES-Site/en_GB/-/EUR',  currency: 'EUR' },
+  'footlocker.it':    { base: 'https://www.footlocker.it',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_IT-Site/en_GB/-/EUR',  currency: 'EUR' },
+  'footlocker.co.uk': { base: 'https://www.footlocker.co.uk', path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_GB-Site/en_GB/-/GBP',  currency: 'GBP' },
+  'footlocker.com':   { base: 'https://www.footlocker.com',   path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_US-Site/en_US/-/USD',  currency: 'USD' },
+  'footlocker.eu':    { base: 'https://www.footlocker.eu',    path: 'INTERSHOP/web/FLE/Footlocker-Footlocker_EU-Site/en_GB/-/EUR',  currency: 'EUR' },
+};
+
+/**
+ * Detect if a domain is a Foot Locker site.
+ */
+function isFootLocker(domain) {
+  return domain.includes('footlocker');
+}
+
+/**
+ * Get FL region config from domain.
+ */
+function getFlRegion(domain) {
+  // Direct match
+  if (FL_REGIONS[domain]) return FL_REGIONS[domain];
+  // Partial match
+  for (const [key, val] of Object.entries(FL_REGIONS)) {
+    if (domain.includes(key.split('.')[0]) && domain.endsWith(key.split('.').slice(1).join('.'))) return val;
+  }
+  // Default to NL
+  return FL_REGIONS['footlocker.nl'];
+}
+
+/**
+ * Extract BaseSKU (product ID) from Foot Locker URL.
+ * URLs look like:
+ *   /nl/product/~/314217525204.html
+ *   /en/p/new-balance-1906r-314217525204
+ *   /product/new-balance-1906r/314217525204.html
+ */
+function extractFlSku(url) {
+  // Pattern 1: digits before .html at end
+  const m1 = url.match(/(\d{10,15})\.html/);
+  if (m1) return m1[1];
+  // Pattern 2: digits at end of path
+  const m2 = url.match(/[\/-](\d{10,15})(?:\?|$)/);
+  if (m2) return m2[1];
+  // Pattern 3: ?v= param
+  const m3 = url.match(/[?&]v=(\d{10,15})/);
+  if (m3) return m3[1];
+  return null;
+}
+
+/**
+ * Scrape Foot Locker using their actual inventory API.
+ * This is how bots and monitors get FL data — it returns real sizes,
+ * stock levels, and product info in a structured format.
+ */
+async function scrapeFootLocker(url) {
+  const https = require('https');
+  const http = require('http');
+
+  const domain = extractDomain(url);
+  const region = getFlRegion(domain);
+  const sku = extractFlSku(url);
+
+  if (!sku) {
+    throw new Error(`Could not extract product SKU from Foot Locker URL: ${url}`);
+  }
+
+  log(`FL SKU: ${sku}`);
+  log(`FL Region: ${region.base}`);
+
+  const result = {
+    name: '',
+    image: '',
+    salePrice: '',
+    retailPrice: '',
+    sizes: [],
+    allSizeData: [],
+    description: '',
+    colorway: '',
+    styleCode: sku,
+  };
+
+  // ===== METHOD 1: Inventory API (sizes + stock) =====
+  const apiUrl = `${region.base}/${region.path}/ViewProduct-ProductVariationSelect?BaseSKU=${sku}&InventoryServerity=ProductDetail`;
+  log(`FL API URL: ${apiUrl}`);
+
+  try {
+    const apiResponse = await fetchUrl(apiUrl, {
+      'Accept': 'application/json, text/javascript, */*; q=0.01',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': url,
+      'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8',
+    });
+
+    if (apiResponse) {
+      let apiData;
+      try {
+        apiData = JSON.parse(apiResponse);
+      } catch (e) {
+        log('FL API did not return valid JSON, trying HTML parse');
+      }
+
+      if (apiData && apiData.content) {
+        // Parse the HTML content from API response
+        const content = apiData.content;
+
+        // Extract product variation JSON (contains all sizes + stock)
+        const variationMatch = content.match(/data-product-variation-info-json=['"]({[^'"]+})['"]/);
+        if (variationMatch) {
+          try {
+            const variations = JSON.parse(variationMatch[1].replace(/&quot;/g, '"'));
+            for (const [varSku, info] of Object.entries(variations)) {
+              const sizeEntry = {
+                size: info.sizeValue || '',
+                sku: varSku,
+                stock: info.inventoryLevel || 'RED',
+                available: info.inventoryLevel !== 'RED',
+              };
+              result.allSizeData.push(sizeEntry);
+              if (sizeEntry.available && sizeEntry.size) {
+                result.sizes.push(sizeEntry.size);
+              }
+            }
+            log(`FL API: found ${result.allSizeData.length} total sizes, ${result.sizes.length} available`);
+          } catch (e) {
+            log(`FL API: error parsing variation JSON: ${e.message}`);
+          }
+        }
+
+        // Also try to extract variation JSON with escaped quotes
+        if (result.sizes.length === 0) {
+          const variationMatch2 = content.match(/data-product-variation-info-json="({.*?})"/);
+          if (variationMatch2) {
+            try {
+              const decoded = variationMatch2[1]
+                .replace(/&quot;/g, '"')
+                .replace(/&amp;/g, '&')
+                .replace(/&#39;/g, "'");
+              const variations = JSON.parse(decoded);
+              for (const [varSku, info] of Object.entries(variations)) {
+                const sizeEntry = {
+                  size: info.sizeValue || '',
+                  sku: varSku,
+                  stock: info.inventoryLevel || 'RED',
+                  available: info.inventoryLevel !== 'RED',
+                };
+                result.allSizeData.push(sizeEntry);
+                if (sizeEntry.available && sizeEntry.size) {
+                  result.sizes.push(sizeEntry.size);
+                }
+              }
+              log(`FL API (2nd parse): found ${result.sizes.length} available sizes`);
+            } catch (e) {
+              log(`FL API: 2nd parse also failed: ${e.message}`);
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    log(`FL API request failed: ${e.message}`);
+  }
+
+  // ===== METHOD 2: Product page for name, price, image =====
+  // Use Playwright for the actual product page to get name, image, prices
+  const browser = await getBrowser();
+  const page = await browser.newPage();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
+
+  // Intercept network responses to capture JSON data
+  const capturedData = { jsonLd: null, nextData: null, apiResponses: [] };
+  page.on('response', async (response) => {
+    const respUrl = response.url();
+    const contentType = response.headers()['content-type'] || '';
+    try {
+      if (contentType.includes('application/json') && respUrl.includes('ProductVariation')) {
+        const body = await response.json();
+        capturedData.apiResponses.push(body);
+        log(`Captured FL API response from: ${respUrl}`);
+      }
+    } catch (e) {}
+  });
+
+  try {
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  } catch (e) {
+    log(`Page load timeout, continuing...`);
+  }
+
+  await page.waitForTimeout(5000);
+
+  // Dismiss cookie popup
+  try {
+    const cookieBtn = await page.$('#onetrust-accept-btn-handler');
+    if (cookieBtn) { await cookieBtn.click(); await page.waitForTimeout(1000); }
+  } catch (e) {}
+  try {
+    const acceptBtn = await page.$('button[id*="accept"]');
+    if (acceptBtn) { await acceptBtn.click(); await page.waitForTimeout(1000); }
+  } catch (e) {}
+
+  // Extract data from the rendered page
+  const pageData = await page.evaluate((sku) => {
+    const data = { name: '', image: '', salePrice: '', retailPrice: '', colorway: '', description: '', sizes: [] };
+
+    // ===== NAME =====
+    // Try og:title first (most reliable)
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) data.name = ogTitle.getAttribute('content') || '';
+    // Fallback to h1 in the product area
+    if (!data.name) {
+      const h1 = document.querySelector('h1');
+      if (h1) data.name = h1.textContent.trim();
+    }
+
+    // ===== IMAGE =====
+    // og:image is the most reliable source
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    if (ogImg) {
+      const src = ogImg.getAttribute('content');
+      if (src && src.startsWith('http')) data.image = src;
+    }
+    // Known FL image pattern as fallback
+    if (!data.image) {
+      data.image = `https://images.footlocker.com/is/image/FLEU/${sku}_01?wid=763&hei=538&fmt=png-alpha`;
+    }
+
+    // ===== PRICES =====
+    // JSON-LD structured data (most reliable for prices)
+    try {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      for (const script of scripts) {
+        const d = JSON.parse(script.textContent);
+        if (d['@type'] === 'Product' && d.offers) {
+          const offers = Array.isArray(d.offers) ? d.offers[0] : d.offers;
+          if (offers.price) data.salePrice = String(offers.price);
+          if (offers.highPrice) data.retailPrice = String(offers.highPrice);
+          // If only one price, it might be regular price
+          if (data.salePrice && !data.retailPrice) {
+            data.retailPrice = data.salePrice;
+          }
+        }
+        // Handle @graph format
+        if (d['@graph']) {
+          for (const item of d['@graph']) {
+            if (item['@type'] === 'Product' && item.offers) {
+              const offers = Array.isArray(item.offers) ? item.offers[0] : item.offers;
+              if (offers.price) data.salePrice = String(offers.price);
+              if (offers.highPrice) data.retailPrice = String(offers.highPrice);
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
+    // DOM price fallback — specifically in the product detail area
+    if (!data.salePrice) {
+      const priceSelectors = [
+        '[data-testid="ProductPrice-sale"]',
+        '[class*="ProductPrice"] [class*="sale"]',
+        '[class*="ProductPrice--sale"]',
+        'meta[property="product:sale_price:amount"]',
+      ];
+      for (const sel of priceSelectors) {
+        try {
+          const el = document.querySelector(sel);
+          if (!el) continue;
+          if (el.tagName === 'META') {
+            const c = el.getAttribute('content');
+            if (c) { data.salePrice = c; break; }
+          }
+          const text = el.textContent.trim();
+          if (text) { data.salePrice = text; break; }
+        } catch (e) {}
+      }
+    }
+    if (!data.retailPrice) {
+      const retailSelectors = [
+        '[data-testid="ProductPrice-original"]',
+        '[class*="ProductPrice"] [class*="original"]',
+        '[class*="ProductPrice--crossed"]',
+        'meta[property="product:price:amount"]',
+      ];
+      for (const sel of retailSelectors) {
+        try {
+          const el = document.querySelector(sel);
+          if (!el) continue;
+          if (el.tagName === 'META') {
+            const c = el.getAttribute('content');
+            if (c) { data.retailPrice = c; break; }
+          }
+          const text = el.textContent.trim();
+          if (text) { data.retailPrice = text; break; }
+        } catch (e) {}
+      }
+    }
+
+    // ===== COLORWAY =====
+    const colorSels = [
+      '[class*="color-name"]', '[class*="ColorName"]',
+      '[class*="colorway"]', '[class*="Colorway"]',
+      '[class*="product-color"]'
+    ];
+    for (const sel of colorSels) {
+      try {
+        const el = document.querySelector(sel);
+        if (el) { data.colorway = el.textContent.trim(); break; }
+      } catch (e) {}
+    }
+
+    // ===== DESCRIPTION =====
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) data.description = metaDesc.getAttribute('content') || '';
+    if (!data.description) {
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) data.description = ogDesc.getAttribute('content') || '';
+    }
+
+    // ===== SIZES (DOM fallback, ONLY from product area) =====
+    // Target specifically the product variation area, not the nav
+    const sizeContainers = [
+      '[data-product-variation-info-json]',
+      '[class*="SizeSelector"][class*="product"]',
+      '#product-detail [class*="SizeSelector"]',
+      'main [class*="SizeSelector"]',
+      '[class*="pdp"] [class*="SizeSelector"]',
+    ];
+    for (const containerSel of sizeContainers) {
+      try {
+        const container = document.querySelector(containerSel);
+        if (!container) continue;
+        const buttons = container.querySelectorAll('button, a, li');
+        const sizes = [];
+        buttons.forEach(btn => {
+          const text = btn.textContent.trim();
+          // Only accept things that look like shoe/clothing sizes
+          if (text && text.length <= 8 && /^\d{2}(\.5)?$/.test(text)) {
+            sizes.push(text);
+          }
+        });
+        if (sizes.length > 0) {
+          data.sizes = sizes;
+          break;
+        }
+      } catch (e) {}
+    }
+
+    // ===== __NEXT_DATA__ fallback =====
+    try {
+      const nextScript = document.querySelector('#__NEXT_DATA__');
+      if (nextScript) {
+        const nextData = JSON.parse(nextScript.textContent);
+        const props = nextData.props?.pageProps;
+        if (props) {
+          if (props.product) {
+            const p = props.product;
+            if (!data.name && p.name) data.name = p.name;
+            if (!data.salePrice && p.salePrice) data.salePrice = String(p.salePrice);
+            if (!data.retailPrice && p.retailPrice) data.retailPrice = String(p.retailPrice);
+            if (!data.image && p.image) data.image = p.image;
+            if (p.sizes && Array.isArray(p.sizes)) {
+              data.sizes = p.sizes.filter(s => s.available !== false).map(s => s.label || s.value || s.size || String(s));
+            }
+          }
+        }
+      }
+    } catch (e) {}
+
+    return data;
+  }, sku);
+
+  await page.close();
+
+  // Merge: API sizes take priority, page data fills the rest
+  result.name = pageData.name || result.name;
+  result.image = pageData.image || result.image;
+  result.salePrice = pageData.salePrice || result.salePrice;
+  result.retailPrice = pageData.retailPrice || result.retailPrice;
+  result.colorway = pageData.colorway || result.colorway;
+  result.description = pageData.description || result.description;
+
+  // If API didn't get sizes, use DOM sizes
+  if (result.sizes.length === 0 && pageData.sizes.length > 0) {
+    result.sizes = pageData.sizes;
+  }
+
+  // Also check captured API responses from network interception
+  for (const apiResp of capturedData.apiResponses) {
+    if (apiResp.content && result.sizes.length === 0) {
+      const varMatch = apiResp.content.match(/data-product-variation-info-json=['"]({[^'"]+})['"]/);
+      if (varMatch) {
+        try {
+          const variations = JSON.parse(varMatch[1].replace(/&quot;/g, '"'));
+          for (const [, info] of Object.entries(variations)) {
+            if (info.inventoryLevel !== 'RED' && info.sizeValue) {
+              result.sizes.push(info.sizeValue);
+            }
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  // Final fallback image: FL's known CDN pattern
+  if (!result.image) {
+    result.image = `https://images.footlocker.com/is/image/FLEU/${sku}_01?wid=763&hei=538&fmt=png-alpha`;
+  }
+
+  return result;
+}
+
+/**
+ * Simple HTTP fetch helper (no browser needed)
+ */
+function fetchUrl(url, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const lib = url.startsWith('https') ? require('https') : require('http');
+    const parsed = new URL(url);
+    const options = {
+      hostname: parsed.hostname,
+      port: parsed.port,
+      path: parsed.pathname + parsed.search,
+      method: 'GET',
+      headers: {
+        ...headers,
+        'Connection': 'keep-alive',
+      },
+      timeout: 15000,
+    };
+    const req = lib.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('Request timeout')); });
+    req.end();
+  });
+}
+
+// ===== GENERIC PLAYWRIGHT SCRAPER (non-Foot Locker stores) =====
 let _browser = null;
 
 async function getBrowser() {
@@ -220,7 +698,7 @@ async function getBrowser() {
   return _browser;
 }
 
-async function scrapePage(url, config) {
+async function scrapeGeneric(url, config) {
   const browser = await getBrowser();
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 900 });
@@ -270,28 +748,10 @@ async function scrapePage(url, config) {
       return '';
     }
 
-    function trySelectorsAll(selectors) {
-      for (const sel of selectors) {
-        try {
-          const els = document.querySelectorAll(sel);
-          if (els.length === 0) continue;
-          const values = [];
-          els.forEach(el => {
-            const text = el.textContent.trim();
-            if (text && text.length < 15 && !text.toLowerCase().includes('sold') && !text.toLowerCase().includes('uitverkocht')) {
-              values.push(text);
-            }
-          });
-          if (values.length > 0) return values;
-        } catch (e) {}
-      }
-      return [];
-    }
-
     // Name
     result.name = trySelectors(config.nameSelectors);
 
-    // Image
+    // Image — og:image first
     const ogImg = document.querySelector('meta[property="og:image"]');
     if (ogImg) {
       const c = ogImg.getAttribute('content');
@@ -320,17 +780,6 @@ async function scrapePage(url, config) {
         } catch (e) {}
       }
     }
-    if (!result.image) {
-      const allImgs = [...document.querySelectorAll('img')];
-      for (const img of allImgs) {
-        const src = img.src || img.getAttribute('data-src');
-        if (src && src.startsWith('http') && !src.includes('logo') && !src.includes('svg') && !src.includes('icon') && !src.includes('flag') && !src.includes('banner')) {
-          if (img.naturalWidth > 200 || img.width > 200 || src.includes('product') || src.includes('media')) {
-            result.image = src; break;
-          }
-        }
-      }
-    }
 
     // Prices
     result.salePrice = trySelectors(config.priceSelectors);
@@ -352,47 +801,79 @@ async function scrapePage(url, config) {
       } catch (e) {}
     }
 
-    // Sizes
-    result.sizes = trySelectorsAll(config.sizeSelectors);
+    // Sizes — scoped to product area, with validation
+    const sizeAreas = [
+      'main',
+      '#product-detail',
+      '[class*="pdp"]',
+      '[class*="product-detail"]',
+      'article',
+    ];
+    let sizeContainer = null;
+    for (const area of sizeAreas) {
+      sizeContainer = document.querySelector(area);
+      if (sizeContainer) break;
+    }
+    if (!sizeContainer) sizeContainer = document;
+
+    for (const sel of config.sizeSelectors) {
+      try {
+        const els = sizeContainer.querySelectorAll(sel);
+        if (els.length === 0) continue;
+        const values = [];
+        els.forEach(el => {
+          const text = el.textContent.trim();
+          if (text && text.length <= 12) {
+            // Must look like an actual size
+            const isSize = /^\d{2}(\.5)?$/.test(text) ||
+                           /^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(text) ||
+                           /^(XXS|XS|S|M|L|XL|XXL|2XL|3XL)$/i.test(text) ||
+                           /^(One Size)$/i.test(text);
+            if (isSize && !text.toLowerCase().includes('sold') && !text.toLowerCase().includes('uitverkocht')) {
+              values.push(text);
+            }
+          }
+        });
+        if (values.length > 0) { result.sizes = values; break; }
+      } catch (e) {}
+    }
 
     // Description & colorway
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) result.description = metaDesc.getAttribute('content') || '';
-    if (!result.description) {
-      const ogDesc = document.querySelector('meta[property="og:description"]');
-      if (ogDesc) result.description = ogDesc.getAttribute('content') || '';
+
+    const colorSels = ['[class*="color-name"]', '[class*="ColorName"]', '[class*="colorway"]', '[class*="Colorway"]'];
+    for (const sel of colorSels) {
+      try {
+        const el = document.querySelector(sel);
+        if (el) { result.colorway = el.textContent.trim(); break; }
+      } catch (e) {}
     }
 
-    const colorSels = ['[class*="color-name"]', '[class*="ColorName"]', '[class*="colorway"]', '[class*="Colorway"]', '[class*="product-color"]'];
-    result.colorway = trySelectors(colorSels);
-
-    const styleSels = ['[class*="style-code"]', '[class*="StyleCode"]', '[class*="product-code"]', '[class*="article-number"]', '[class*="sku"]'];
-    result.styleCode = trySelectors(styleSels);
+    const styleSels = ['[class*="style-code"]', '[class*="StyleCode"]', '[class*="product-code"]', '[class*="article-number"]'];
+    for (const sel of styleSels) {
+      try {
+        const el = document.querySelector(sel);
+        if (el) { result.styleCode = el.textContent.trim(); break; }
+      } catch (e) {}
+    }
 
     return result;
   }, config);
 
-  // Screenshot fallback
-  if (!data.image) {
-    log('No image found, taking screenshot...');
-    const selectors = config.imageSelectors.filter(s => !s.includes('meta'));
-    for (const sel of selectors) {
-      try {
-        const el = await page.$(sel);
-        if (el) {
-          const box = await el.boundingBox();
-          if (box && box.width > 100 && box.height > 100) {
-            const buf = await el.screenshot();
-            data._screenshotBuffer = buf.toString('base64');
-            break;
-          }
-        }
-      } catch (e) {}
-    }
-  }
-
   await page.close();
   return data;
+}
+
+// ===== MAIN SCRAPE ROUTER =====
+async function scrapePage(url, config) {
+  const domain = extractDomain(url);
+  if (isFootLocker(domain)) {
+    log('Using Foot Locker API-first scraping');
+    return await scrapeFootLocker(url);
+  }
+  log('Using generic Playwright scraping');
+  return await scrapeGeneric(url, config);
 }
 
 // ===== READ QUEUE =====
@@ -438,7 +919,7 @@ async function main() {
     const domain = extractDomain(url);
     const storeInfo = matchStore(domain);
     const config = loadStoreConfig(domain);
-    const currency = detectCurrency(domain);
+    const currency = isFootLocker(domain) ? getFlRegion(domain).currency : detectCurrency(domain);
 
     console.log(`\n  [${i + 1}/${urls.length}] ${storeInfo.flag} ${storeInfo.name}`);
     console.log(`  ${url}`);
@@ -463,17 +944,10 @@ async function main() {
       if (imageUrl && CLOUD_ENABLED) {
         const cdnUrl = await uploadToCloudinary(imageUrl, `picks/${filename}`);
         if (cdnUrl) imageUrl = cdnUrl;
-      } else if (scraped._screenshotBuffer) {
-        const buffer = Buffer.from(scraped._screenshotBuffer, 'base64');
-        if (CLOUD_ENABLED) {
-          const cdnUrl = await uploadToCloudinary(buffer, `picks/${filename}`);
-          if (cdnUrl) imageUrl = cdnUrl;
-        } else {
-          const localPath = path.join(IMAGES_DIR, `${filename}.png`);
-          fs.writeFileSync(localPath, buffer);
-          imageUrl = `images/picks/${filename}.png`;
-        }
       }
+
+      // Filter sizes to only valid ones
+      const validSizes = (scraped.sizes || []).filter(s => isValidSize(s));
 
       // Build pick
       const newPick = {
@@ -491,7 +965,7 @@ async function main() {
         url: url,
         description: (scraped.description || '').substring(0, 200),
         tags: detectTags(name, brand),
-        sizes: scraped.sizes || []
+        sizes: validSizes
       };
 
       if (!DRY_RUN) {
@@ -505,8 +979,13 @@ async function main() {
 
       console.log(`  \u2705 ${name}`);
       console.log(`     ${brand} | ${priceStr}`);
-      console.log(`     Sizes: ${newPick.sizes.length > 0 ? newPick.sizes.join(', ') : 'none found'}`);
+      console.log(`     Sizes: ${validSizes.length > 0 ? validSizes.join(', ') : 'none found'}`);
+      if (scraped.allSizeData && scraped.allSizeData.length > 0) {
+        const soldOut = scraped.allSizeData.filter(s => !s.available).length;
+        console.log(`     Stock: ${validSizes.length} available, ${soldOut} sold out`);
+      }
       console.log(`     Image: ${newPick.image ? '\u2705' : '\u274c'}`);
+      console.log(`     Color: ${newPick.colorway || 'unknown'}`);
 
       results.success++;
       results.items.push({ url, name, status: 'success', id: nextId });
@@ -514,6 +993,7 @@ async function main() {
 
     } catch (e) {
       console.log(`  \u274c Failed: ${e.message}`);
+      if (VERBOSE) console.error(e);
       results.failed++;
       results.items.push({ url, name: '', status: 'failed', error: e.message });
       processedUrls.push(url);
@@ -545,12 +1025,10 @@ async function main() {
 
   // 6. Clear queue & archive processed URLs
   if (!DRY_RUN && processedUrls.length > 0) {
-    // Archive to queue-done.txt
     const timestamp = new Date().toISOString().split('T')[0];
     const doneEntry = `\n# Processed ${timestamp}\n${processedUrls.join('\n')}\n`;
     fs.appendFileSync(DONE_PATH, doneEntry);
 
-    // Clear queue.txt (keep the header comments)
     const header = fs.readFileSync(QUEUE_PATH, 'utf-8')
       .split('\n')
       .filter(line => line.startsWith('#') || line.trim() === '')
