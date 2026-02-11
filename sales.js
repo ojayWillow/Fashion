@@ -41,12 +41,78 @@ window.addEventListener('scroll', () => {
     lastScroll = s;
 });
 
+// ===== REDIRECT MODAL =====
+function createRedirectModal() {
+    if (document.getElementById('redirectModal')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'redirectModal';
+    modal.className = 'redirect-modal';
+    modal.innerHTML = `
+        <div class="redirect-modal-backdrop"></div>
+        <div class="redirect-modal-content">
+            <div class="redirect-modal-icon">↗</div>
+            <h3 class="redirect-modal-title">You're leaving FASHION.</h3>
+            <p class="redirect-modal-text">You're being redirected to an external website:</p>
+            <div class="redirect-modal-url" id="redirectUrl"></div>
+            <p class="redirect-modal-disclaimer">FASHION. is not responsible for the content, privacy policies, or practices of third-party websites.</p>
+            <div class="redirect-modal-actions">
+                <button class="redirect-btn-cancel" id="redirectCancel">Cancel</button>
+                <button class="redirect-btn-continue" id="redirectContinue">Continue →</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Close handlers
+    modal.querySelector('.redirect-modal-backdrop').addEventListener('click', closeRedirectModal);
+    document.getElementById('redirectCancel').addEventListener('click', closeRedirectModal);
+
+    // ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeRedirectModal();
+    });
+}
+
+let pendingRedirectUrl = null;
+
+function showRedirectModal(url, storeName) {
+    createRedirectModal();
+    pendingRedirectUrl = url;
+
+    let domain;
+    try { domain = new URL(url).hostname; } catch { domain = url; }
+
+    document.getElementById('redirectUrl').textContent = domain;
+    const modal = document.getElementById('redirectModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Continue button
+    const continueBtn = document.getElementById('redirectContinue');
+    const newBtn = continueBtn.cloneNode(true);
+    continueBtn.parentNode.replaceChild(newBtn, continueBtn);
+    newBtn.id = 'redirectContinue';
+    newBtn.addEventListener('click', () => {
+        window.open(pendingRedirectUrl, '_blank');
+        closeRedirectModal();
+    });
+}
+
+function closeRedirectModal() {
+    const modal = document.getElementById('redirectModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        pendingRedirectUrl = null;
+    }
+}
+
 // ===== IMAGE FALLBACK HANDLER =====
 function handleImageError(imgEl, brandName) {
     const wrapper = imgEl.parentElement;
     imgEl.style.display = 'none';
 
-    // Don't add fallback twice
     if (wrapper.querySelector('.pick-img-fallback')) return;
 
     const fallback = document.createElement('div');
@@ -79,7 +145,6 @@ function renderPicks(picks) {
         card.className = 'pick-card';
         card.style.animationDelay = `${i * 0.08}s`;
 
-        // Dead link badge
         const deadLinkBadge = pick._linkDead
             ? '<span class="pick-card-dead-link" title="This product may no longer be available">⚠ Link Expired</span>'
             : '';
@@ -89,8 +154,9 @@ function renderPicks(picks) {
                <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
             : '';
 
-        // Escape brand name for use in onerror attribute
         const escapedBrand = (pick.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const escapedStore = (pick.store || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
 
         card.innerHTML = `
             <div class="pick-card-image">
@@ -109,7 +175,7 @@ function renderPicks(picks) {
                 </div>
                 ${sizesHTML}
                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
-                <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="window.open('${pick.url}','_blank')"`}>
+                <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="showRedirectModal('${escapedUrl}', '${escapedStore}')"`}>
                     ${pick._linkDead ? 'Unavailable' : 'Shop Now →'}
                 </button>
             </div>
@@ -204,7 +270,7 @@ function renderStores() {
             <p class="store-card-desc">${store.description}</p>
             <div class="store-card-footer"><span class="store-card-cta">Shop Sale →</span><span class="store-card-flag">${store.flag}</span></div>
         `;
-        card.addEventListener('click', () => window.open(store.saleUrl, '_blank'));
+        card.addEventListener('click', () => showRedirectModal(store.saleUrl, store.name));
         addHoverCursor(card); grid.appendChild(card);
     });
 }

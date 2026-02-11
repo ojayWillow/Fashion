@@ -375,7 +375,7 @@
 
 .sales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 
-/* Store Card — also white on light bg */
+/* Store Card — white on light bg */
 .store-card {
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -437,6 +437,143 @@
     color: #6b7280;
 }
 
+/* ===== REDIRECT MODAL ===== */
+.redirect-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.redirect-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.redirect-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.redirect-modal-content {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.redirect-modal.active .redirect-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.redirect-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
+    color: #7c3aed;
+    border: 2px solid rgba(168, 85, 247, 0.15);
+}
+
+.redirect-modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+}
+
+.redirect-modal-text {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.redirect-modal-url {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #7c3aed;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+    border: 1px solid #e5e7eb;
+}
+
+.redirect-modal-disclaimer {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.redirect-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.redirect-btn-cancel {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.redirect-btn-cancel:hover {
+    background: #f3f4f6;
+    color: #1a1a2e;
+    border-color: #d1d5db;
+}
+
+.redirect-btn-continue {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    background: var(--gradient-purple);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.redirect-btn-continue:hover {
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+    transform: translateY(-1px);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .sales-hero { padding: 120px 0 40px; }
@@ -453,4 +590,8 @@
     .pick-size { padding: 4px 8px; font-size: 0.68rem; }
     .pick-img-fallback-icon { width: 60px; height: 60px; font-size: 1.5rem; }
     .pick-img-fallback-text { font-size: 0.65rem; letter-spacing: 1.5px; }
+
+    .redirect-modal-content { padding: 28px 20px; }
+    .redirect-modal-actions { flex-direction: column; }
+    .redirect-btn-cancel, .redirect-btn-continue { width: 100%; }
 }
