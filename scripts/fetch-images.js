@@ -2,12 +2,13 @@
 /**
  * FASHION. — Bulletproof Image Fetcher
  * =====================================
- * 6 sources tried in order until one works:
+ * Sources tried in order until one works:
  *   0) Foot Locker CDN — predictable URL from SKU, no browser needed
+ *   0B) Patchright (undetected Chrome) — opens FL page, extracts real image
  *   A) sneaks-api (StockX/GOAT) — sneakers only, fast
- *   B) Playwright browser — opens product page, extracts real image URL
+ *   B) Patchright browser — opens any product page, extracts real image URL
  *   C) Google Images search — finds product image by name
- *   D) Playwright screenshot — screenshots the product image element
+ *   D) Patchright screenshot — screenshots the product image element
  *   E) fallback-images.json — manual backup URLs
  *
  * Usage:
@@ -28,10 +29,10 @@ const PICKS_PATH = path.join(__dirname, '..', 'data', 'picks.json');
 const FALLBACK_PATH = path.join(__dirname, '..', 'data', 'fallback-images.json');
 const IMAGES_DIR = path.join(__dirname, '..', 'images', 'picks');
 const REPORT_PATH = path.join(__dirname, '..', 'data', 'image-report.json');
+const BROWSER_DATA_DIR = path.join(__dirname, '..', '.browser-data');
 
 // ===== CONFIG =====
 const TIMEOUT = 30000;
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
 // ===== CLI =====
 const args = process.argv.slice(2);
@@ -40,6 +41,11 @@ const FORCE = args.includes('--force');
 const LOCAL_ONLY = args.includes('--local');
 
 function log(msg) { if (VERBOSE) console.log(`    [v] ${msg}`); }
+
+// ===== RANDOM DELAY (human-like) =====
+function randomDelay(min = 1000, max = 3000) {
+  return new Promise(r => setTimeout(r, min + Math.random() * (max - min)));
+}
 
 // ===== CLOUDINARY =====
 let cloudinary = null;
@@ -87,7 +93,7 @@ function fetchBuffer(url, timeout = TIMEOUT) {
   return new Promise((resolve, reject) => {
     const parsed = new URL(url);
     const client = parsed.protocol === 'https:' ? https : http;
-    const req = client.get(url, { timeout, headers: { 'User-Agent': USER_AGENT } }, (res) => {
+    const req = client.get(url, { timeout, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' } }, (res) => {
       if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
         return fetchBuffer(new URL(res.headers.location, url).href, timeout).then(resolve).catch(reject);
       }
@@ -109,23 +115,11 @@ function slugify(s) {
 // ===========================================================
 // FOOT LOCKER PLACEHOLDER DETECTION
 // ===========================================================
-// FL serves a shoe box SVG/PNG placeholder when the real image
-// is unavailable. Known characteristics:
-//   - Exactly 333321 bytes (PNG)
-//   - Contains a simple line-art shoe box
-//   - Always the same file regardless of SKU
-//
-// We detect it by:
-//   1. Exact byte size match (most reliable)
-//   2. Size range check (within 5KB of known size)
-//   3. PNG header + small dimensions check
-// ===========================================================
-const FL_PLACEHOLDER_SIZES = [333321]; // known exact sizes of the box placeholder
+const FL_PLACEHOLDER_SIZES = [333321];
 
 function isFootLockerPlaceholder(buffer) {
   if (!buffer || buffer.length < 1000) return true;
 
-  // Check exact known placeholder sizes
   for (const size of FL_PLACEHOLDER_SIZES) {
     if (buffer.length === size) {
       log(`⚠️  Detected FL placeholder (exact match: ${buffer.length} bytes)`);
@@ -133,24 +127,165 @@ function isFootLockerPlaceholder(buffer) {
     }
   }
 
-  // Check range: the box placeholder is always ~330-340KB
-  // Real product photos from FL CDN are usually different sizes
   if (buffer.length >= 330000 && buffer.length <= 340000) {
-    // Additional check: read PNG header for dimensions
-    // PNG IHDR chunk starts at byte 16, width at 16-19, height at 20-23
-    if (buffer[0] === 0x89 && buffer[1] === 0x50) { // PNG magic
-      const width = buffer.readUInt32BE(16);
-      const height = buffer.readUInt32BE(20);
-      // The placeholder is typically 763x538 or similar FL CDN sizes
-      // but so are real images. If size matches range AND all FL products
-      // from the same session have the same size, it's the placeholder.
-      log(`⚠️  Suspicious FL image: ${buffer.length} bytes, ${width}x${height}`);
-      // For safety, reject anything in the exact placeholder size range
+    if (buffer[0] === 0x89 && buffer[1] === 0x50) {
+      log(`⚠️  Suspicious FL image: ${buffer.length} bytes — rejecting`);
       return true;
     }
   }
 
   return false;
+}
+
+// ===========================================================
+// GENERIC IMAGE VALIDATION
+// ===========================================================
+function isValidImage(buffer) {
+  if (!buffer || buffer.length < 5000) return false;
+  // Check it's a real image (PNG or JPEG magic bytes)
+  const isPNG = buffer[0] === 0x89 && buffer[1] === 0x50;
+  const isJPEG = buffer[0] === 0xFF && buffer[1] === 0xD8;
+  const isWEBP = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
+  if (!isPNG && !isJPEG && !isWEBP) return false;
+  return true;
+}
+
+// ===========================================================
+// PATCHRIGHT BROWSER (undetected Chrome — used for ALL sites)
+// ===========================================================
+let _patchrightCtx = null;
+
+async function getPatchrightContext() {
+  if (_patchrightCtx) return _patchrightCtx;
+  try {
+    const { chromium } = require('patchright');
+    fs.mkdirSync(BROWSER_DATA_DIR, { recursive: true });
+    _patchrightCtx = await chromium.launchPersistentContext(BROWSER_DATA_DIR, {
+      channel: 'chrome',
+      headless: false,
+      viewport: null,
+      args: ['--disable-blink-features=AutomationControlled'],
+    });
+    log('Patchright persistent context launched (real Chrome)');
+    return _patchrightCtx;
+  } catch (e) {
+    log(`Patchright launch failed: ${e.message}`);
+    // Fallback: try without persistent context
+    try {
+      const { chromium } = require('patchright');
+      _patchrightCtx = await chromium.launchPersistentContext('', {
+        channel: 'chrome',
+        headless: false,
+        viewport: null,
+      });
+      log('Patchright launched (fallback, no persistence)');
+      return _patchrightCtx;
+    } catch (e2) {
+      log(`Patchright fallback also failed: ${e2.message}`);
+      return null;
+    }
+  }
+}
+
+// ===========================================================
+// IMAGE EXTRACTION FROM ANY PAGE (shared logic)
+// ===========================================================
+async function extractImageFromPage(page, pick) {
+  // Strategy 1: og:image meta tag
+  let imageUrl = await page.evaluate(() => {
+    const og = document.querySelector('meta[property="og:image"]');
+    if (og) {
+      const src = og.getAttribute('content');
+      if (src && src.startsWith('http')) return src;
+    }
+    return null;
+  });
+  if (imageUrl) { log(`Found og:image: ${imageUrl}`); return imageUrl; }
+
+  // Strategy 2: Product image selectors
+  imageUrl = await page.evaluate(() => {
+    const selectors = [
+      '#ProductImages img',
+      '[class*="ProductImages"] img',
+      '[class*="product-image"] img',
+      '[class*="ProductCarousel"] img',
+      '[class*="carousel"] img',
+      'img[data-testid="product-image"]',
+      'img[data-testid="main-image"]',
+      'picture source[type="image/webp"]',
+      '.product-image img',
+      '[class*="ProductImage"] img',
+      '[class*="gallery"] img',
+      '[class*="Gallery"] img',
+      '[class*="pdp"] img',
+      '.slick-slide img',
+      '[data-testid*="image"] img',
+      'picture img',
+      'img[srcset]',
+      'main img',
+    ];
+
+    for (const sel of selectors) {
+      const els = document.querySelectorAll(sel);
+      for (const el of els) {
+        let src;
+        if (el.tagName === 'SOURCE') {
+          const srcset = el.getAttribute('srcset');
+          if (srcset) src = srcset.split(',')[0].trim().split(' ')[0];
+        } else {
+          src = el.getAttribute('src') || el.getAttribute('data-src');
+          if (!src) {
+            const srcset = el.getAttribute('srcset');
+            if (srcset) {
+              const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
+              src = urls[urls.length - 1] || urls[0];
+            }
+          }
+        }
+        if (!src || !src.startsWith('http')) continue;
+        if (src.includes('logo') || src.includes('svg') || src.includes('icon') || src.includes('flag')) continue;
+        if (src.includes('placeholder') || src.includes('no-image')) continue;
+        return src;
+      }
+    }
+
+    // Strategy 3: Any large image
+    const allImgs = [...document.querySelectorAll('img')];
+    for (const img of allImgs) {
+      const src = img.src || img.getAttribute('data-src');
+      if (!src || !src.startsWith('http')) continue;
+      if (src.includes('logo') || src.includes('svg') || src.includes('icon') || src.includes('flag')) continue;
+      if (img.naturalWidth > 200 || img.width > 200 || src.includes('media') || src.includes('product') || src.includes('catalog')) {
+        return src;
+      }
+    }
+
+    return null;
+  });
+
+  if (imageUrl) { log(`Found product image: ${imageUrl}`); return imageUrl; }
+
+  // Strategy 4: Regex in page source (for lazy-loaded images)
+  const content = await page.content();
+  const mediaPatterns = [
+    /https?:\/\/images\.footlocker\.com\/is\/image\/[^"'\s\)]+/gi,
+    /https?:\/\/media\.endclothing\.com[^"'\s\)]+/gi,
+    /https?:\/\/[^"'\s\)]+\.(?:jpg|jpeg|png|webp)(?:\?[^"'\s\)]*)?/gi,
+  ];
+  for (const pattern of mediaPatterns) {
+    const matches = content.match(pattern);
+    if (matches && matches.length > 0) {
+      const good = matches.find(u =>
+        !u.includes('logo') && !u.includes('icon') && !u.includes('svg') &&
+        !u.includes('flag') && !u.includes('pixel') && !u.includes('tracking') &&
+        (u.includes('product') || u.includes('media') || u.includes('catalog') ||
+         u.includes('image/FLEU') || u.includes('image/EBFL') || u.includes('w_') || u.includes('800'))
+      );
+      if (good) { log(`Found in HTML source: ${good}`); return good; }
+    }
+  }
+
+  return null;
 }
 
 // =============================================================
@@ -160,7 +295,6 @@ async function source0_FootLockerCDN(pick) {
   if (!pick.url || !pick.url.includes('footlocker')) return null;
   log('Source 0: Foot Locker CDN...');
 
-  // Extract SKU from URL like /314217525204.html
   const m = pick.url.match(/(\d{10,15})\.html/);
   if (!m) {
     const m2 = pick.url.match(/[\/\-](\d{10,15})(?:\?|$)/);
@@ -170,8 +304,6 @@ async function source0_FootLockerCDN(pick) {
     var sku = m[1];
   }
 
-  // FL CDN is public — no auth needed
-  // Try FLEU (Europe) first, then EBFL2 (global)
   const cdnUrls = [
     `https://images.footlocker.com/is/image/FLEU/${sku}?wid=763&hei=538&fmt=png-alpha`,
     `https://images.footlocker.com/is/image/EBFL2/${sku}?wid=763&hei=538&fmt=png-alpha`,
@@ -181,9 +313,12 @@ async function source0_FootLockerCDN(pick) {
     try {
       const buffer = await fetchBuffer(cdnUrl, 10000);
       if (buffer && buffer.length > 5000) {
-        // ===== PLACEHOLDER CHECK =====
         if (isFootLockerPlaceholder(buffer)) {
           console.log(`  ⚠️  FL CDN returned shoe box placeholder — skipping`);
+          continue;
+        }
+        if (!isValidImage(buffer)) {
+          log('FL CDN returned non-image data — skipping');
           continue;
         }
         log(`✓ Source 0 found: ${cdnUrl} (${Math.round(buffer.length / 1024)}KB)`);
@@ -198,113 +333,53 @@ async function source0_FootLockerCDN(pick) {
 }
 
 // =============================================================
-// SOURCE 0B: Foot Locker Patchright — grab real image from page
+// SOURCE 0B: Patchright — open product page as real Chrome
+//            Works for Foot Locker AND any other site
 // =============================================================
-let _patchrightBrowser = null;
+async function source0B_PatchrightPage(pick) {
+  if (!pick.url) return null;
+  log('Source 0B: Patchright (undetected Chrome)...');
 
-async function getPatchrightBrowser() {
-  if (_patchrightBrowser) return _patchrightBrowser;
-  try {
-    const { chromium } = require('patchright');
-    _patchrightBrowser = await chromium.launch({ headless: false });
-    return _patchrightBrowser;
-  } catch (e) {
-    log(`Patchright launch failed: ${e.message}`);
-    return null;
-  }
-}
-
-async function source0B_FootLockerPage(pick) {
-  if (!pick.url || !pick.url.includes('footlocker')) return null;
-  log('Source 0B: Foot Locker page (Patchright)...');
-
-  const browser = await getPatchrightBrowser();
-  if (!browser) return null;
+  const ctx = await getPatchrightContext();
+  if (!ctx) return null;
 
   let page;
   try {
-    page = await browser.newPage();
-    await page.setViewportSize({ width: 1280, height: 900 });
+    page = await ctx.newPage();
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(8000);
 
-    // Dismiss cookie popup
+    // Human-like: random wait, scroll a bit
+    await randomDelay(3000, 6000);
+
+    // Dismiss cookie popups (common on EU sites)
     try {
-      const cookieBtn = await page.$('#onetrust-accept-btn-handler');
-      if (cookieBtn) { await cookieBtn.click(); await page.waitForTimeout(1500); }
+      const cookieSelectors = ['#onetrust-accept-btn-handler', '[id*="cookie"] button', '[class*="cookie"] button', 'button[data-testid="accept-cookies"]'];
+      for (const sel of cookieSelectors) {
+        const btn = await page.$(sel);
+        if (btn) { await btn.click(); await randomDelay(800, 1500); break; }
+      }
     } catch (e) {}
 
-    // Try to get real product image from the page carousel
-    const imageUrl = await page.evaluate(() => {
-      // Strategy 1: Look for the main product image in the carousel/gallery
-      const carouselSelectors = [
-        '#ProductImages img',
-        '[class*="ProductImages"] img',
-        '[class*="product-image"] img',
-        '[class*="ProductCarousel"] img',
-        '[class*="carousel"] img',
-        '.slick-slide img',
-        '[data-testid*="image"] img',
-        'picture source[type="image/webp"]',
-        'picture img',
-      ];
+    // Scroll down slightly to trigger lazy-loaded images
+    await page.evaluate(() => window.scrollBy(0, 300));
+    await randomDelay(1500, 3000);
 
-      for (const sel of carouselSelectors) {
-        const els = document.querySelectorAll(sel);
-        for (const el of els) {
-          let src;
-          if (el.tagName === 'SOURCE') {
-            src = el.getAttribute('srcset');
-            if (src) src = src.split(',')[0].trim().split(' ')[0];
-          } else {
-            src = el.getAttribute('src') || el.getAttribute('data-src');
-          }
-          if (!src || !src.startsWith('http')) continue;
-          // Skip tiny images, logos, icons
-          if (src.includes('logo') || src.includes('svg') || src.includes('icon')) continue;
-          // Skip the shoe box placeholder URL pattern
-          if (src.includes('placeholder') || src.includes('no-image')) continue;
-          // Must be from FL CDN or a real image source
-          if (src.includes('images.footlocker.com') || src.includes('media.') || src.includes('scene7')) {
-            return src;
-          }
-        }
-      }
-
-      // Strategy 2: Find any large product image
-      const allImgs = [...document.querySelectorAll('img')];
-      for (const img of allImgs) {
-        const src = img.src;
-        if (!src || !src.startsWith('http')) continue;
-        if (src.includes('logo') || src.includes('svg') || src.includes('icon') || src.includes('flag')) continue;
-        if (img.naturalWidth > 200 && img.naturalHeight > 200) {
-          if (src.includes('footlocker') || src.includes('scene7')) return src;
-        }
-      }
-
-      // Strategy 3: og:image as last resort
-      const og = document.querySelector('meta[property="og:image"]');
-      if (og) {
-        const src = og.getAttribute('content');
-        if (src && src.startsWith('http')) return src;
-      }
-
-      return null;
-    });
-
+    const imageUrl = await extractImageFromPage(page, pick);
     await page.close();
 
     if (imageUrl) {
-      // Download and validate it's not the placeholder
+      // Download and validate
       try {
-        const buffer = await fetchBuffer(imageUrl, 10000);
-        if (buffer && buffer.length > 5000 && !isFootLockerPlaceholder(buffer)) {
-          log(`✓ Source 0B found real image: ${imageUrl}`);
+        const buffer = await fetchBuffer(imageUrl, 15000);
+        if (buffer && isValidImage(buffer) && !isFootLockerPlaceholder(buffer)) {
+          log(`✓ Source 0B found real image: ${imageUrl} (${Math.round(buffer.length / 1024)}KB)`);
           return { url: imageUrl, buffer };
         }
-        log('Source 0B: Image from page was still the placeholder');
+        log('Source 0B: Downloaded image failed validation');
       } catch (e) {
         log(`Source 0B: Download failed: ${e.message}`);
+        // Return the URL anyway — saveImage will try to download it
+        return imageUrl;
       }
     }
   } catch (e) {
@@ -329,20 +404,29 @@ async function sourceA_SneaksAPI(pick) {
     const SneaksAPI = require('sneaks-api');
     const sneaks = new SneaksAPI();
 
-    const products = await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('Sneaks timeout')), 15000);
-      sneaks.getProducts(pick.styleCode, 1, (err, products) => {
-        clearTimeout(timer);
-        if (err) reject(err); else resolve(products);
-      });
-    });
+    // Try style code first, then product name
+    const searchTerms = [pick.styleCode, `${pick.brand} ${pick.name}`];
 
-    if (products && products.length > 0) {
-      const p = products[0];
-      const img = p.thumbnail || p.image?.original || p.image?.small;
-      if (img && img.startsWith('http')) {
-        log(`✓ Source A found: ${img}`);
-        return img;
+    for (const term of searchTerms) {
+      try {
+        const products = await new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error('Sneaks timeout')), 15000);
+          sneaks.getProducts(term, 3, (err, products) => {
+            clearTimeout(timer);
+            if (err) reject(err); else resolve(products);
+          });
+        });
+
+        if (products && products.length > 0) {
+          const p = products[0];
+          const img = p.thumbnail || p.image?.original || p.image?.small;
+          if (img && img.startsWith('http')) {
+            log(`✓ Source A found: ${img}`);
+            return img;
+          }
+        }
+      } catch (e) {
+        log(`Source A attempt with "${term}" failed: ${e.message}`);
       }
     }
   } catch (e) {
@@ -352,113 +436,28 @@ async function sourceA_SneaksAPI(pick) {
 }
 
 // =============================================================
-// SOURCE B: Playwright — open product page, extract real image
+// SOURCE B: Patchright — open product page (non-FL fallback)
+//           Now uses Patchright instead of Playwright
 // =============================================================
-let _browser = null;
+async function sourceB_Patchright(pick) {
+  log('Source B: Patchright browser...');
 
-async function getBrowser() {
-  if (_browser) return _browser;
-  try {
-    const { chromium } = require('playwright');
-    _browser = await chromium.launch({ headless: true });
-    log('Playwright browser launched');
-    return _browser;
-  } catch (e) {
-    log(`Playwright launch failed: ${e.message}`);
-    return null;
-  }
-}
-
-async function sourceB_Playwright(pick) {
-  // Skip Foot Locker — Kasada blocks Playwright
-  if (pick.url && pick.url.includes('footlocker')) {
-    log('Source B: Skipping FL (Kasada blocks Playwright)');
-    return null;
-  }
-
-  log('Source B: Playwright browser...');
-  const browser = await getBrowser();
-  if (!browser) return null;
+  const ctx = await getPatchrightContext();
+  if (!ctx) return null;
 
   let page;
   try {
-    page = await browser.newPage();
-    await page.setViewportSize({ width: 1280, height: 900 });
-
+    page = await ctx.newPage();
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
-    await page.waitForTimeout(3000);
+    await randomDelay(2000, 4000);
 
-    let imageUrl = await page.evaluate(() => {
-      const og = document.querySelector('meta[property="og:image"]');
-      if (og) return og.getAttribute('content');
-      return null;
-    });
-
-    if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found og:image: ${imageUrl}`);
-      await page.close();
-      return imageUrl;
-    }
-
-    imageUrl = await page.evaluate(() => {
-      const selectors = [
-        'img[data-testid="product-image"]', 'img[data-testid="main-image"]',
-        'picture source[type="image/webp"]', '.product-image img',
-        '[class*="ProductImage"] img', '[class*="product-image"] img',
-        '[class*="gallery"] img', '[class*="Gallery"] img',
-        '[class*="pdp"] img', 'img[srcset]', 'main img',
-      ];
-
-      for (const sel of selectors) {
-        const el = document.querySelector(sel);
-        if (el) {
-          if (el.tagName === 'SOURCE') {
-            const srcset = el.getAttribute('srcset');
-            if (srcset) {
-              const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
-              const best = urls[urls.length - 1] || urls[0];
-              if (best && best.startsWith('http')) return best;
-            }
-          }
-          const src = el.getAttribute('src') || el.getAttribute('data-src');
-          if (src && src.startsWith('http') && !src.includes('placeholder') && !src.includes('logo') && !src.includes('svg')) return src;
-          const srcset = el.getAttribute('srcset');
-          if (srcset) {
-            const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
-            const best = urls[urls.length - 1] || urls[0];
-            if (best && best.startsWith('http')) return best;
-          }
-        }
-      }
-
-      const allImgs = [...document.querySelectorAll('img')];
-      for (const img of allImgs) {
-        const src = img.src || img.getAttribute('data-src');
-        if (src && src.startsWith('http') && !src.includes('logo') && !src.includes('svg') && !src.includes('icon') && !src.includes('flag')) {
-          if (img.naturalWidth > 200 || img.width > 200 || src.includes('media') || src.includes('product') || src.includes('catalog')) return src;
-        }
-      }
-      return null;
-    });
-
-    if (imageUrl && imageUrl.startsWith('http')) {
-      log(`✓ Source B found product image: ${imageUrl}`);
-      await page.close();
-      return imageUrl;
-    }
-
-    log('Source B: No image in DOM');
-    const content = await page.content();
-    const mediaMatch = content.match(/https?:\/\/media\.endclothing\.com[^"'\s\)]+/gi);
-    if (mediaMatch && mediaMatch.length > 0) {
-      const productImg = mediaMatch.find(u => u.includes('prodmedia') || u.includes('catalog') || u.includes('w_') || u.includes('800'));
-      const img = productImg || mediaMatch[0];
-      log(`✓ Source B found in HTML: ${img}`);
-      await page.close();
-      return img;
-    }
-
+    const imageUrl = await extractImageFromPage(page, pick);
     await page.close();
+
+    if (imageUrl && imageUrl.startsWith('http')) {
+      log(`✓ Source B found: ${imageUrl}`);
+      return imageUrl;
+    }
   } catch (e) {
     log(`Source B failed: ${e.message}`);
     if (page) try { await page.close(); } catch {}
@@ -467,20 +466,20 @@ async function sourceB_Playwright(pick) {
 }
 
 // =============================================================
-// SOURCE C: Google Images search
+// SOURCE C: Google Images search (via Patchright)
 // =============================================================
 async function sourceC_GoogleImages(pick) {
   log('Source C: Google Images search...');
   try {
-    const browser = await getBrowser();
-    if (!browser) return null;
+    const ctx = await getPatchrightContext();
+    if (!ctx) return null;
 
-    const page = await browser.newPage();
-    const query = encodeURIComponent(`${pick.brand} ${pick.name} ${pick.styleCode} product photo`);
+    const page = await ctx.newPage();
+    const query = encodeURIComponent(`${pick.brand} ${pick.name} product photo`);
     const url = `https://www.google.com/search?q=${query}&tbm=isch&safe=active`;
 
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
-    await page.waitForTimeout(2000);
+    await randomDelay(1500, 3000);
 
     const imageUrl = await page.evaluate(() => {
       const imgs = [...document.querySelectorAll('img')];
@@ -509,27 +508,30 @@ async function sourceC_GoogleImages(pick) {
 }
 
 // =============================================================
-// SOURCE D: Playwright screenshot
+// SOURCE D: Patchright screenshot (works for ALL sites now)
 // =============================================================
 async function sourceD_Screenshot(pick) {
-  // Skip Foot Locker — Kasada blocks Playwright
-  if (pick.url && pick.url.includes('footlocker')) {
-    log('Source D: Skipping FL (Kasada blocks Playwright)');
-    return null;
-  }
-
-  log('Source D: Playwright screenshot...');
-  const browser = await getBrowser();
-  if (!browser) return null;
+  log('Source D: Patchright screenshot...');
+  const ctx = await getPatchrightContext();
+  if (!ctx) return null;
 
   let page;
   try {
-    page = await browser.newPage();
-    await page.setViewportSize({ width: 1280, height: 900 });
+    page = await ctx.newPage();
     await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
-    await page.waitForTimeout(4000);
+    await randomDelay(3000, 5000);
+
+    // Dismiss cookies
+    try {
+      const cookieSelectors = ['#onetrust-accept-btn-handler', '[id*="cookie"] button', '[class*="cookie"] button'];
+      for (const sel of cookieSelectors) {
+        const btn = await page.$(sel);
+        if (btn) { await btn.click(); await randomDelay(800, 1500); break; }
+      }
+    } catch (e) {}
 
     const selectors = [
+      '#ProductImages img',
       'img[data-testid="product-image"]', 'img[data-testid="main-image"]',
       '.product-image img', '[class*="ProductImage"] img',
       '[class*="product-image"] img', '[class*="gallery"] img:first-child',
@@ -547,12 +549,20 @@ async function sourceD_Screenshot(pick) {
             await el.screenshot({ path: filepath });
             log(`✓ Source D screenshot saved: ${filepath}`);
             await page.close();
+            // Validate the screenshot isn't tiny/broken
+            const buf = fs.readFileSync(filepath);
+            if (buf.length < 5000) {
+              log('Source D: Screenshot too small, skipping');
+              fs.unlinkSync(filepath);
+              continue;
+            }
             return { localFile: filepath, filename };
           }
         }
       } catch {}
     }
 
+    // Last resort: crop the page
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const filepath = path.join(IMAGES_DIR, filename);
     await page.screenshot({ path: filepath, clip: { x: 0, y: 0, width: 640, height: 640 } });
@@ -574,7 +584,7 @@ function sourceE_Fallback(pick) {
   if (!fs.existsSync(FALLBACK_PATH)) { log('No fallback file found'); return null; }
   try {
     const fallbacks = JSON.parse(fs.readFileSync(FALLBACK_PATH, 'utf-8'));
-    const entry = fallbacks[pick.styleCode] || fallbacks[pick.id] || fallbacks[pick.name];
+    const entry = fallbacks[pick.styleCode] || fallbacks[String(pick.id)] || fallbacks[pick.name];
     if (entry) { log(`✓ Source E found fallback: ${entry}`); return entry; }
   } catch (e) { log(`Source E failed: ${e.message}`); }
   return null;
@@ -582,7 +592,6 @@ function sourceE_Fallback(pick) {
 
 // ===== SAVE IMAGE =====
 async function saveImage(pick, imageResult, filename) {
-  // If it's a local screenshot (from Source D)
   if (imageResult && typeof imageResult === 'object' && imageResult.localFile) {
     if (CLOUD_ENABLED) {
       const cdnUrl = await uploadToCloudinary(imageResult.localFile, imageResult.filename);
@@ -591,19 +600,21 @@ async function saveImage(pick, imageResult, filename) {
     return `images/picks/${imageResult.filename}`;
   }
 
-  // If it's an FL CDN result with pre-downloaded buffer
   if (imageResult && typeof imageResult === 'object' && imageResult.buffer) {
+    // Final validation before uploading
+    if (isFootLockerPlaceholder(imageResult.buffer)) {
+      console.log('  ⚠️  Blocked shoe-box placeholder from being uploaded');
+      return null;
+    }
     if (CLOUD_ENABLED) {
       const cdnUrl = await uploadToCloudinary(imageResult.buffer, filename);
       if (cdnUrl) return cdnUrl;
     }
-    // Save locally
     const localPath = path.join(IMAGES_DIR, filename);
     fs.writeFileSync(localPath, imageResult.buffer);
     return `images/picks/${filename}`;
   }
 
-  // It's a URL string — download it
   const imageUrl = imageResult;
 
   if (CLOUD_ENABLED) {
@@ -612,16 +623,24 @@ async function saveImage(pick, imageResult, filename) {
     try {
       const buffer = await fetchBuffer(imageUrl);
       if (buffer && buffer.length > 1000) {
+        // Validate before upload
+        if (isFootLockerPlaceholder(buffer)) {
+          console.log('  ⚠️  Blocked shoe-box placeholder from being uploaded');
+          return null;
+        }
         const cdnUrl2 = await uploadToCloudinary(buffer, filename);
         if (cdnUrl2) return cdnUrl2;
       }
     } catch {}
   }
 
-  // Save locally
   try {
     const buffer = await fetchBuffer(imageUrl);
     if (buffer && buffer.length > 1000) {
+      if (isFootLockerPlaceholder(buffer)) {
+        console.log('  ⚠️  Blocked shoe-box placeholder from being saved');
+        return null;
+      }
       const localPath = path.join(IMAGES_DIR, filename);
       fs.writeFileSync(localPath, buffer);
       return `images/picks/${filename}`;
@@ -654,7 +673,6 @@ async function main() {
     const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const item = { id: pick.id, name: pick.name, source: '', status: '' };
 
-    // Skip if already on Cloudinary
     if (!FORCE && pick.image && pick.image.includes('res.cloudinary.com')) {
       console.log('  ☁️  Already on Cloudinary ✅');
       item.status = 'skipped'; item.source = 'cloudinary';
@@ -665,15 +683,17 @@ async function main() {
     let sourceName = '';
 
     // ========== SOURCE 0: Foot Locker CDN ==========
-    console.log('  [0] Foot Locker CDN...');
-    imageResult = await source0_FootLockerCDN(pick);
-    if (imageResult) { sourceName = 'fl-cdn'; }
+    if (pick.url && pick.url.includes('footlocker')) {
+      console.log('  [0] Foot Locker CDN...');
+      imageResult = await source0_FootLockerCDN(pick);
+      if (imageResult) { sourceName = 'fl-cdn'; }
+    }
 
-    // ========== SOURCE 0B: Foot Locker Page (Patchright) ==========
-    if (!imageResult && pick.url && pick.url.includes('footlocker')) {
-      console.log('  [0B] Foot Locker page (Patchright)...');
-      imageResult = await source0B_FootLockerPage(pick);
-      if (imageResult) { sourceName = 'fl-patchright'; }
+    // ========== SOURCE 0B: Patchright (any site, undetected Chrome) ==========
+    if (!imageResult) {
+      console.log('  [0B] Patchright (undetected Chrome)...');
+      imageResult = await source0B_PatchrightPage(pick);
+      if (imageResult) { sourceName = 'patchright'; }
     }
 
     // ========== SOURCE A ==========
@@ -685,9 +705,9 @@ async function main() {
 
     // ========== SOURCE B ==========
     if (!imageResult) {
-      console.log('  [B] Playwright browser...');
-      imageResult = await sourceB_Playwright(pick);
-      if (imageResult) { sourceName = 'playwright'; }
+      console.log('  [B] Patchright browser (retry)...');
+      imageResult = await sourceB_Patchright(pick);
+      if (imageResult) { sourceName = 'patchright-b'; }
     }
 
     // ========== SOURCE C ==========
@@ -699,7 +719,7 @@ async function main() {
 
     // ========== SOURCE D ==========
     if (!imageResult) {
-      console.log('  [D] Playwright screenshot...');
+      console.log('  [D] Patchright screenshot...');
       imageResult = await sourceD_Screenshot(pick);
       if (imageResult) { sourceName = 'screenshot'; }
     }
@@ -722,8 +742,8 @@ async function main() {
         item.status = 'success'; item.source = sourceName;
         report.success++;
       } else {
-        console.log('  ❌ Found image but failed to save');
-        item.status = 'save-failed'; item.source = sourceName;
+        console.log('  ❌ Found image but failed validation (placeholder or broken)');
+        item.status = 'blocked-placeholder'; item.source = sourceName;
         report.failed++;
       }
     } else {
@@ -735,8 +755,11 @@ async function main() {
     report.items.push(item);
   }
 
-  if (_browser) { await _browser.close(); log('Browser closed'); }
-  if (_patchrightBrowser) { await _patchrightBrowser.close(); log('Patchright closed'); }
+  // Close browser
+  if (_patchrightCtx) {
+    try { await _patchrightCtx.close(); } catch {}
+    log('Patchright closed');
+  }
 
   fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
   console.log('\n💾 Updated picks.json');
@@ -758,7 +781,7 @@ async function main() {
     console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
     console.log('  {');
     for (const item of report.items) {
-      if (item.status === 'failed' || item.status === 'save-failed') {
+      if (item.status === 'failed' || item.status === 'save-failed' || item.status === 'blocked-placeholder') {
         const pick = picks.find(p => p.id === item.id);
         console.log(`    "${pick.styleCode}": "https://example.com/image.jpg",`);
       }
