@@ -1,9 +1,15 @@
 {
   "name": "fashion-sales",
-  "version": "1.0.0",
-  "description": "FASHION. — Curated sales dashboard",
+  "version": "2.0.0",
+  "description": "FASHION. — Curated sales dashboard with automated scraping pipeline",
   "private": true,
   "scripts": {
+    "add": "node scripts/add-pick.js",
+    "queue": "node scripts/process-queue.js",
+    "queue:verbose": "node scripts/process-queue.js --verbose",
+    "queue:dry": "node scripts/process-queue.js --dry-run",
+    "remove": "node scripts/remove-pick.js",
+    "list": "node scripts/remove-pick.js --list",
     "fetch-images": "node scripts/fetch-images.js",
     "fetch-images:dry": "node scripts/fetch-images.js --dry-run",
     "fetch-images:force": "node scripts/fetch-images.js --force --verbose",
