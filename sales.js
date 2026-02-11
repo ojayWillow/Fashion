@@ -41,6 +41,23 @@ window.addEventListener('scroll', () => {
     lastScroll = s;
 });
 
+// ===== IMAGE FALLBACK HANDLER =====
+function handleImageError(imgEl, brandName) {
+    const wrapper = imgEl.parentElement;
+    imgEl.style.display = 'none';
+
+    // Don't add fallback twice
+    if (wrapper.querySelector('.pick-img-fallback')) return;
+
+    const fallback = document.createElement('div');
+    fallback.className = 'pick-img-fallback';
+    fallback.innerHTML = `
+        <div class="pick-img-fallback-icon">${brandName ? brandName.charAt(0).toUpperCase() : '?'}</div>
+        <div class="pick-img-fallback-text">Image Unavailable</div>
+    `;
+    wrapper.appendChild(fallback);
+}
+
 // ===== CURATED PICKS =====
 async function loadPicks() {
     try {
@@ -62,16 +79,25 @@ function renderPicks(picks) {
         card.className = 'pick-card';
         card.style.animationDelay = `${i * 0.08}s`;
 
+        // Dead link badge
+        const deadLinkBadge = pick._linkDead
+            ? '<span class="pick-card-dead-link" title="This product may no longer be available">⚠ Link Expired</span>'
+            : '';
+
         const sizesHTML = pick.sizes && pick.sizes.length
             ? `<div class="pick-card-sizes-label">EU Sizes</div>
                <div class="pick-card-sizes">${pick.sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
             : '';
 
+        // Escape brand name for use in onerror attribute
+        const escapedBrand = (pick.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
         card.innerHTML = `
             <div class="pick-card-image">
-                <img src="${pick.image}" alt="${pick.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400/130d20/a855f7?text=No+Image'">
+                <img src="${pick.image}" alt="${pick.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">
                 <span class="pick-card-discount">${pick.discount}</span>
                 <span class="pick-card-store">${pick.storeFlag} ${pick.store}</span>
+                ${deadLinkBadge}
             </div>
             <div class="pick-card-body">
                 <div class="pick-card-brand">${pick.brand}</div>
@@ -83,7 +109,9 @@ function renderPicks(picks) {
                 </div>
                 ${sizesHTML}
                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
-                <button class="pick-card-cta" onclick="window.open('${pick.url}','_blank')">Shop Now →</button>
+                <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="window.open('${pick.url}','_blank')"`}>
+                    ${pick._linkDead ? 'Unavailable' : 'Shop Now →'}
+                </button>
             </div>
         `;
         addHoverCursor(card);
