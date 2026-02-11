@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * FASHION. — Automated Image Fetcher + Cloudinary Uploader
- * ==========================================================
- * 5-SOURCE IMAGE PIPELINE:
- *   1. END. Clothing media CDN
- *   2. GOAT sneaker database (by style code)
- *   3. Cloudinary remote fetch from original URL (Nike/NB CDN)
- *   4. Scrape og:image from store product page
- *   5. Construct alternative Nike URLs from style code
+ * FASHION. — Bulletproof Image Fetcher
+ * =====================================
+ * 5 sources tried in order until one works:
+ *   A) sneaks-api (StockX/GOAT) — sneakers only, fast
+ *   B) Playwright browser — opens END. page, extracts real image URL
+ *   C) Google Images search — finds product image by name
+ *   D) Playwright screenshot — screenshots the product image element
+ *   E) fallback-images.json — manual backup URLs
  *
  * Usage:
  *   node scripts/fetch-images.js
- *   node scripts/fetch-images.js --dry-run
- *   node scripts/fetch-images.js --force --verbose
+ *   node scripts/fetch-images.js --verbose
+ *   node scripts/fetch-images.js --force
  */
 
 require('dotenv').config();
@@ -22,66 +22,73 @@ const https = require('https');
 const http = require('http');
 const { URL } = require('url');
 
-// ===== CONFIG =====
-const PICKS_JSON_PATH = path.join(__dirname, '..', 'data', 'picks.json');
+// ===== PATHS =====
+const PICKS_PATH = path.join(__dirname, '..', 'data', 'picks.json');
+const FALLBACK_PATH = path.join(__dirname, '..', 'data', 'fallback-images.json');
 const IMAGES_DIR = path.join(__dirname, '..', 'images', 'picks');
-const TIMEOUT_MS = 20000;
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-const CLOUDINARY_FOLDER = 'picks';
+const REPORT_PATH = path.join(__dirname, '..', 'data', 'image-report.json');
 
-// ===== CLI FLAGS =====
+// ===== CONFIG =====
+const TIMEOUT = 30000;
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
+
+// ===== CLI =====
 const args = process.argv.slice(2);
-const DRY_RUN = args.includes('--dry-run');
-const FORCE = args.includes('--force');
 const VERBOSE = args.includes('--verbose');
+const FORCE = args.includes('--force');
 const LOCAL_ONLY = args.includes('--local');
 
-// ===== CLOUDINARY SETUP =====
+function log(msg) { if (VERBOSE) console.log(`    [v] ${msg}`); }
+
+// ===== CLOUDINARY =====
 let cloudinary = null;
 let CLOUD_ENABLED = false;
 let CLOUD_NAME = '';
 
 function initCloudinary() {
-  if (LOCAL_ONLY) { console.log('📁 Local-only mode\n'); return; }
-
+  if (LOCAL_ONLY) return;
   const url = process.env.CLOUDINARY_URL;
-  if (!url || url.includes('your_')) {
-    console.log('⚠️  Cloudinary not configured — falling back to local\n');
-    return;
-  }
-
-  const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
-  if (!match) { console.log('⚠️  Invalid CLOUDINARY_URL\n'); return; }
-
+  if (!url || url.includes('your_')) return;
+  const m = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
+  if (!m) return;
   try {
-    const [, apiKey, apiSecret, cloudName] = match;
-    CLOUD_NAME = cloudName;
     cloudinary = require('cloudinary').v2;
-    cloudinary.config({ cloud_name: cloudName, api_key: apiKey, api_secret: apiSecret, secure: true });
-    CLOUD_ENABLED = true;
-    console.log(`☁️  Cloudinary → ${cloudName}\n`);
-  } catch (err) {
-    console.log(`⚠️  Cloudinary init failed: ${err.message}\n`);
-  }
+    cloudinary.config({ cloud_name: m[3], api_key: m[1], api_secret: m[2], secure: true });
+    CLOUD_NAME = m[3]; CLOUD_ENABLED = true;
+    console.log(`  ☁️  Cloudinary → ${m[3]}`);
+  } catch (e) { console.log(`  ⚠️  Cloudinary init failed: ${e.message}`); }
 }
 
-// ===== HTTP HELPERS =====
-function log(msg) { if (VERBOSE) console.log(`  [v] ${msg}`); }
+async function uploadToCloudinary(source, filename) {
+  if (!CLOUD_ENABLED) return null;
+  const publicId = `picks/${path.parse(filename).name}`;
+  try {
+    let result;
+    if (Buffer.isBuffer(source)) {
+      result = await new Promise((resolve, reject) => {
+        const s = cloudinary.uploader.upload_stream(
+          { public_id: publicId, overwrite: true, resource_type: 'image' },
+          (e, r) => e ? reject(e) : resolve(r)
+        );
+        s.end(source);
+      });
+    } else {
+      result = await cloudinary.uploader.upload(source, {
+        public_id: publicId, overwrite: true, resource_type: 'image'
+      });
+    }
+    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
+  } catch (e) { log(`Cloudinary upload failed: ${e.message}`); return null; }
+}
 
-function fetchUrl(url, options = {}) {
+// ===== HTTP HELPER =====
+function fetchBuffer(url, timeout = TIMEOUT) {
   return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === 'https:' ? https : http;
-    const maxRedirects = options.maxRedirects || 5;
-
-    const req = client.get(url, {
-      timeout: options.timeout || TIMEOUT_MS,
-      headers: { 'User-Agent': USER_AGENT, 'Accept': options.accept || '*/*', ...options.headers }
-    }, (res) => {
+    const parsed = new URL(url);
+    const client = parsed.protocol === 'https:' ? https : http;
+    const req = client.get(url, { timeout, headers: { 'User-Agent': USER_AGENT } }, (res) => {
       if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
-        if (maxRedirects <= 0) return reject(new Error('Too many redirects'));
-        const redir = new URL(res.headers.location, url).href;
-        return fetchUrl(redir, { ...options, maxRedirects: maxRedirects - 1 }).then(resolve).catch(reject);
+        return fetchBuffer(new URL(res.headers.location, url).href, timeout).then(resolve).catch(reject);
       }
       if (res.statusCode !== 200) { res.resume(); return reject(new Error(`HTTP ${res.statusCode}`)); }
       const chunks = [];
@@ -94,257 +101,363 @@ function fetchUrl(url, options = {}) {
   });
 }
 
-async function checkUrlAlive(url) {
+function slugify(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60);
+}
+
+// =============================================================
+// SOURCE A: sneaks-api (StockX/GOAT image URLs for sneakers)
+// =============================================================
+async function sourceA_SneaksAPI(pick) {
+  if (!pick.tags || !pick.tags.some(t => t.toLowerCase() === 'sneakers')) {
+    log('Source A: Not a sneaker, skipping');
+    return null;
+  }
+  log('Source A: sneaks-api lookup...');
+
   try {
-    const parsedUrl = new URL(url);
-    const client = parsedUrl.protocol === 'https:' ? https : http;
-    return new Promise((resolve) => {
-      const req = client.request(url, { method: 'HEAD', timeout: TIMEOUT_MS, headers: { 'User-Agent': USER_AGENT } }, (res) => {
-        if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location) {
-          res.resume();
-          return checkUrlAlive(new URL(res.headers.location, url).href).then(resolve);
-        }
-        res.resume();
-        resolve({ alive: res.statusCode >= 200 && res.statusCode < 400, status: res.statusCode });
+    const SneaksAPI = require('sneaks-api');
+    const sneaks = new SneaksAPI();
+
+    const products = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Sneaks timeout')), 15000);
+      sneaks.getProducts(pick.styleCode, 1, (err, products) => {
+        clearTimeout(timer);
+        if (err) reject(err); else resolve(products);
       });
-      req.on('timeout', () => { req.destroy(); resolve({ alive: false, status: 'timeout' }); });
-      req.on('error', () => resolve({ alive: false, status: 'error' }));
-      req.end();
     });
-  } catch { return { alive: false, status: 'invalid-url' }; }
-}
 
-function slugify(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60);
-}
-
-// ===== CLOUDINARY UPLOAD =====
-async function uploadToCloudinary(source, filename) {
-  if (!CLOUD_ENABLED) return null;
-  try {
-    const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
-
-    let result;
-    if (Buffer.isBuffer(source)) {
-      result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { public_id: publicId, overwrite: true, resource_type: 'image' },
-          (err, res) => { if (err) reject(err); else resolve(res); }
-        );
-        stream.end(source);
-      });
-    } else {
-      // source is a URL string — Cloudinary fetches it from their servers
-      result = await cloudinary.uploader.upload(source, {
-        public_id: publicId, overwrite: true, resource_type: 'image',
-      });
+    if (products && products.length > 0) {
+      const p = products[0];
+      const img = p.thumbnail || p.image?.original || p.image?.small;
+      if (img && img.startsWith('http')) {
+        log(`✓ Source A found: ${img}`);
+        return img;
+      }
     }
+  } catch (e) {
+    log(`Source A failed: ${e.message}`);
+  }
+  return null;
+}
 
-    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
-  } catch (err) {
-    log(`Cloudinary upload failed: ${err.message}`);
+// =============================================================
+// SOURCE B: Playwright — open product page, extract real image
+// =============================================================
+let _browser = null;
+
+async function getBrowser() {
+  if (_browser) return _browser;
+  try {
+    const { chromium } = require('playwright');
+    _browser = await chromium.launch({ headless: true });
+    log('Playwright browser launched');
+    return _browser;
+  } catch (e) {
+    log(`Playwright launch failed: ${e.message}`);
     return null;
   }
 }
 
-// =========================================================
-// SOURCE 1: END. Clothing Media CDN
-// =========================================================
-async function tryEndClothing(pick) {
-  log('Source 1: END. Clothing media CDN');
+async function sourceB_Playwright(pick) {
+  log('Source B: Playwright browser...');
+  const browser = await getBrowser();
+  if (!browser) return null;
 
-  // Extract slug from END. URL: /gb/air-jordan-5-retro-og-sneaker-hq7978-101.html
+  let page;
   try {
-    const endUrl = new URL(pick.url);
-    const pathParts = endUrl.pathname.split('/');
-    const pageName = pathParts[pathParts.length - 1].replace('.html', '');
-    
-    // END. uses media.endclothing.com with the product slug
-    const candidates = [
-      `https://media.endclothing.com/media/f_auto,q_auto:eco,w_800/prodmedia/media/catalog/product/${pageName}_1.jpg`,
-      `https://media.endclothing.com/media/f_auto,q_auto:eco,w_800/prodmedia/media/catalog/product/${pick.styleCode}_1.jpg`,
-      `https://media.endclothing.com/media/f_auto,q_auto:eco,w_800/prodmedia/media/catalog/product/${pick.styleCode.toLowerCase()}_1.jpg`,
+    page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 900 });
+
+    // Go to the END. product page
+    await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+
+    // Wait for any product image to render
+    await page.waitForTimeout(3000);
+
+    // Strategy 1: Look for og:image meta tag (rendered by JS)
+    let imageUrl = await page.evaluate(() => {
+      const og = document.querySelector('meta[property="og:image"]');
+      if (og) return og.getAttribute('content');
+      return null;
+    });
+
+    if (imageUrl && imageUrl.startsWith('http')) {
+      log(`✓ Source B found og:image: ${imageUrl}`);
+      await page.close();
+      return imageUrl;
+    }
+
+    // Strategy 2: Find the main product image element
+    imageUrl = await page.evaluate(() => {
+      // END. uses various selectors for product images
+      const selectors = [
+        'img[data-testid="product-image"]',
+        'img[data-testid="main-image"]',
+        'picture source[type="image/webp"]',
+        '.product-image img',
+        '[class*="ProductImage"] img',
+        '[class*="product-image"] img',
+        '[class*="gallery"] img',
+        '[class*="Gallery"] img',
+        '[class*="pdp"] img',
+        'img[srcset]',
+        'main img',
+      ];
+
+      for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el) {
+          // For <source> elements, get srcset
+          if (el.tagName === 'SOURCE') {
+            const srcset = el.getAttribute('srcset');
+            if (srcset) {
+              // Get highest resolution from srcset
+              const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
+              const best = urls[urls.length - 1] || urls[0];
+              if (best && best.startsWith('http')) return best;
+            }
+          }
+          // For <img> elements
+          const src = el.getAttribute('src') || el.getAttribute('data-src');
+          if (src && src.startsWith('http') && !src.includes('placeholder') && !src.includes('logo') && !src.includes('svg')) {
+            return src;
+          }
+          const srcset = el.getAttribute('srcset');
+          if (srcset) {
+            const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
+            const best = urls[urls.length - 1] || urls[0];
+            if (best && best.startsWith('http')) return best;
+          }
+        }
+      }
+
+      // Strategy 3: Find ANY large image on the page
+      const allImgs = [...document.querySelectorAll('img')];
+      for (const img of allImgs) {
+        const src = img.src || img.getAttribute('data-src');
+        if (src && src.startsWith('http') && !src.includes('logo') && !src.includes('svg') && !src.includes('icon') && !src.includes('flag')) {
+          // Check if it's likely a product image (large enough)
+          if (img.naturalWidth > 200 || img.width > 200 || src.includes('media') || src.includes('product') || src.includes('catalog')) {
+            return src;
+          }
+        }
+      }
+
+      return null;
+    });
+
+    if (imageUrl && imageUrl.startsWith('http')) {
+      log(`✓ Source B found product image: ${imageUrl}`);
+      await page.close();
+      return imageUrl;
+    }
+
+    // Strategy 3: Check network requests for image URLs
+    // Sometimes the images are loaded via API calls
+    log('Source B: No image in DOM, checking page content...');
+    const content = await page.content();
+
+    // Look for media.endclothing.com URLs in the rendered HTML
+    const mediaMatch = content.match(/https?:\/\/media\.endclothing\.com[^"'\s\)]+/gi);
+    if (mediaMatch && mediaMatch.length > 0) {
+      // Filter for product images, not icons
+      const productImg = mediaMatch.find(u => u.includes('prodmedia') || u.includes('catalog') || u.includes('w_') || u.includes('800'));
+      const img = productImg || mediaMatch[0];
+      log(`✓ Source B found in HTML: ${img}`);
+      await page.close();
+      return img;
+    }
+
+    await page.close();
+  } catch (e) {
+    log(`Source B failed: ${e.message}`);
+    if (page) try { await page.close(); } catch {}
+  }
+  return null;
+}
+
+// =============================================================
+// SOURCE C: Google Images search (no API key needed)
+// =============================================================
+async function sourceC_GoogleImages(pick) {
+  log('Source C: Google Images search...');
+
+  try {
+    const browser = await getBrowser();
+    if (!browser) return null;
+
+    const page = await browser.newPage();
+    const query = encodeURIComponent(`${pick.brand} ${pick.name} ${pick.styleCode} product photo`);
+    const url = `https://www.google.com/search?q=${query}&tbm=isch&safe=active`;
+
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+    await page.waitForTimeout(2000);
+
+    // Extract image URLs from Google Images results
+    const imageUrl = await page.evaluate(() => {
+      // Google Images stores original URLs in data attributes or in script tags
+      const imgs = [...document.querySelectorAll('img')];
+      for (const img of imgs) {
+        const src = img.src;
+        // Skip Google's own assets, base64 thumbnails, and tiny images
+        if (src && src.startsWith('http') && !src.includes('google.com') && !src.includes('gstatic') && !src.startsWith('data:') && img.width > 80) {
+          return src;
+        }
+      }
+
+      // Try to find URLs in the page's script data
+      const scripts = document.querySelectorAll('script');
+      for (const script of scripts) {
+        const text = script.textContent;
+        if (!text) continue;
+        // Look for image URLs in the metadata
+        const matches = text.match(/https?:\/\/[^"'\s]+\.(?:jpg|jpeg|png|webp)/gi);
+        if (matches) {
+          for (const m of matches) {
+            if (!m.includes('google') && !m.includes('gstatic') && !m.includes('googleapis')) {
+              return m;
+            }
+          }
+        }
+      }
+      return null;
+    });
+
+    await page.close();
+
+    if (imageUrl) {
+      log(`✓ Source C found: ${imageUrl}`);
+      return imageUrl;
+    }
+  } catch (e) {
+    log(`Source C failed: ${e.message}`);
+  }
+  return null;
+}
+
+// =============================================================
+// SOURCE D: Playwright screenshot of product image
+// =============================================================
+async function sourceD_Screenshot(pick) {
+  log('Source D: Playwright screenshot...');
+  const browser = await getBrowser();
+  if (!browser) return null;
+
+  let page;
+  try {
+    page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(pick.url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+    await page.waitForTimeout(4000);
+
+    // Try to find and screenshot just the product image
+    const selectors = [
+      'img[data-testid="product-image"]',
+      'img[data-testid="main-image"]',
+      '.product-image img',
+      '[class*="ProductImage"] img',
+      '[class*="product-image"] img',
+      '[class*="gallery"] img:first-child',
+      '[class*="Gallery"] img:first-child',
+      'main img',
     ];
 
-    for (const url of candidates) {
-      log(`Trying: ${url}`);
-      const check = await checkUrlAlive(url);
-      if (check.alive) {
-        log(`✓ Found at END.`);
-        return url;
-      }
-    }
-  } catch (e) {
-    log(`END. source failed: ${e.message}`);
-  }
-  return null;
-}
-
-// =========================================================
-// SOURCE 2: GOAT sneaker database
-// =========================================================
-async function tryGoat(pick) {
-  log('Source 2: GOAT sneaker database');
-  if (!pick.styleCode) { log('No style code, skipping GOAT'); return null; }
-
-  try {
-    // GOAT's Algolia-powered search API
-    const searchQuery = encodeURIComponent(pick.styleCode.replace('-', ' '));
-    const goatSearchUrl = `https://2fwotdvm2o-dsn.algolia.net/1/indexes/product_variants_v2/query`;
-    
-    const postData = JSON.stringify({
-      params: `query=${searchQuery}&hitsPerPage=1`
-    });
-
-    const result = await new Promise((resolve, reject) => {
-      const req = https.request(goatSearchUrl, {
-        method: 'POST',
-        timeout: TIMEOUT_MS,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Algolia-Application-Id': '2FWOTDVM2O',
-          'X-Algolia-API-Key': 'ac96c6e3c0512ada84a85662fed37294',
-          'User-Agent': USER_AGENT,
+    for (const sel of selectors) {
+      try {
+        const el = await page.$(sel);
+        if (el) {
+          const box = await el.boundingBox();
+          if (box && box.width > 100 && box.height > 100) {
+            const filename = `${pick.id}-${slugify(pick.name)}.png`;
+            const filepath = path.join(IMAGES_DIR, filename);
+            await el.screenshot({ path: filepath });
+            log(`✓ Source D screenshot saved: ${filepath}`);
+            await page.close();
+            return { localFile: filepath, filename };
+          }
         }
-      }, (res) => {
-        const chunks = [];
-        res.on('data', c => chunks.push(c));
-        res.on('end', () => {
-          try { resolve(JSON.parse(Buffer.concat(chunks).toString())); }
-          catch { reject(new Error('JSON parse failed')); }
-        });
-        res.on('error', reject);
-      });
-      req.on('timeout', () => { req.destroy(); reject(new Error('Timeout')); });
-      req.on('error', reject);
-      req.write(postData);
-      req.end();
-    });
-
-    if (result.hits && result.hits.length > 0) {
-      const hit = result.hits[0];
-      const imageUrl = hit.main_picture_url || hit.original_picture_url || hit.grid_picture_url;
-      if (imageUrl) {
-        // Get highest quality version
-        const hqUrl = imageUrl.replace(/\/\d+\/attachments/, '/1000/attachments');
-        log(`✓ Found on GOAT: ${hqUrl}`);
-        return hqUrl;
-      }
+      } catch {}
     }
+
+    // Fallback: screenshot the top-left area (usually the product image)
+    const filename = `${pick.id}-${slugify(pick.name)}.png`;
+    const filepath = path.join(IMAGES_DIR, filename);
+    await page.screenshot({
+      path: filepath,
+      clip: { x: 0, y: 0, width: 640, height: 640 }
+    });
+    log(`✓ Source D page screenshot saved: ${filepath}`);
+    await page.close();
+    return { localFile: filepath, filename };
   } catch (e) {
-    log(`GOAT search failed: ${e.message}`);
+    log(`Source D failed: ${e.message}`);
+    if (page) try { await page.close(); } catch {}
   }
   return null;
 }
 
-// =========================================================
-// SOURCE 3: Cloudinary remote fetch from original URL
-// =========================================================
-async function tryCloudinaryFetch(pick, filename) {
-  log('Source 3: Cloudinary remote fetch from original URL');
-  if (!CLOUD_ENABLED) return null;
-
-  const imageUrl = pick._originalImage || pick.image;
-  if (!imageUrl || imageUrl.includes('res.cloudinary.com')) return null;
-
-  try {
-    const cdnUrl = await uploadToCloudinary(imageUrl, filename);
-    if (cdnUrl) { log(`✓ Cloudinary fetched from original URL`); }
-    return cdnUrl;
-  } catch (e) {
-    log(`Cloudinary fetch failed: ${e.message}`);
+// =============================================================
+// SOURCE E: Manual fallback URLs
+// =============================================================
+function sourceE_Fallback(pick) {
+  log('Source E: Checking fallback-images.json...');
+  if (!fs.existsSync(FALLBACK_PATH)) {
+    log('No fallback file found');
     return null;
   }
-}
-
-// =========================================================
-// SOURCE 4: Scrape og:image from product page
-// =========================================================
-async function tryOgImage(pick) {
-  log('Source 4: Scraping og:image from product page');
-
   try {
-    const html = (await fetchUrl(pick.url, { accept: 'text/html' })).toString('utf-8');
-
-    // Try og:image
-    const ogMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
-      || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
-    if (ogMatch && ogMatch[1]) { log(`✓ Found og:image: ${ogMatch[1]}`); return ogMatch[1]; }
-
-    // Try twitter:image
-    const twMatch = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
-      || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
-    if (twMatch && twMatch[1]) { log(`✓ Found twitter:image`); return twMatch[1]; }
-
-    // Try JSON-LD
-    const jsonLdMatch = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
-    if (jsonLdMatch) {
-      for (const block of jsonLdMatch) {
-        try {
-          const jsonStr = block.replace(/<script[^>]*>/i, '').replace(/<\/script>/i, '');
-          const data = JSON.parse(jsonStr);
-          if (data.image) {
-            const img = Array.isArray(data.image) ? data.image[0] : (typeof data.image === 'object' ? data.image.url : data.image);
-            if (img) { log(`✓ Found JSON-LD image`); return img; }
-          }
-        } catch {}
-      }
+    const fallbacks = JSON.parse(fs.readFileSync(FALLBACK_PATH, 'utf-8'));
+    const entry = fallbacks[pick.styleCode] || fallbacks[pick.id] || fallbacks[pick.name];
+    if (entry) {
+      log(`✓ Source E found fallback: ${entry}`);
+      return entry;
     }
-
-    // Try any high-res product image in the HTML
-    const imgMatches = html.match(/https?:\/\/media\.endclothing\.com[^"'\s]+/gi);
-    if (imgMatches && imgMatches.length > 0) {
-      log(`✓ Found END media URL in HTML`);
-      return imgMatches[0];
-    }
-
   } catch (e) {
-    log(`Page scrape failed: ${e.message}`);
+    log(`Source E failed: ${e.message}`);
   }
   return null;
 }
 
-// =========================================================
-// SOURCE 5: Construct Nike URLs from style code
-// =========================================================
-async function tryNikeStyleCode(pick) {
-  log('Source 5: Nike style code URL patterns');
-  if (!pick.styleCode) return null;
-
-  // Nike has multiple URL patterns based on style code
-  const code = pick.styleCode;
-  const codeLower = code.toLowerCase();
-  const codeNoDash = code.replace('-', '_');
-
-  const candidates = [
-    // Nike SNKRS-style direct URLs
-    `https://secure-images.nike.com/is/image/DotCom/${code}`,
-    `https://secure-images.nike.com/is/image/DotCom/${codeNoDash}`,
-    // Nike product imagery service
-    `https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/${codeLower}.png`,
-    // scene7 (Nike's image service)
-    `https://images.nike.com/is/image/DotCom/${code}_A_PREM?wid=800`,
-    `https://images.nike.com/is/image/DotCom/${codeNoDash}_A_PREM?wid=800`,
-  ];
-
-  // For New Balance
-  if (pick.brand === 'New Balance' || pick.brand?.includes('New Balance')) {
-    const nbCode = pick.styleCode.toLowerCase();
-    candidates.push(
-      `https://nb.scene7.com/is/image/NB/${nbCode}_nb_02_i?$dw_detail_main_lg$`,
-      `https://nb.scene7.com/is/image/NB/${nbCode}_nb_02_i?$pdpflexf2$&wid=800&hei=800`,
-    );
+// ===== SAVE IMAGE =====
+async function saveImage(pick, imageResult, filename) {
+  // If it's already a local screenshot (from Source D)
+  if (imageResult && typeof imageResult === 'object' && imageResult.localFile) {
+    if (CLOUD_ENABLED) {
+      const cdnUrl = await uploadToCloudinary(imageResult.localFile, imageResult.filename);
+      if (cdnUrl) return cdnUrl;
+    }
+    return `images/picks/${imageResult.filename}`;
   }
 
-  for (const url of candidates) {
-    log(`Trying: ${url}`);
+  // It's a URL — download it
+  const imageUrl = imageResult;
+
+  if (CLOUD_ENABLED) {
+    // Try uploading URL directly to Cloudinary
+    const cdnUrl = await uploadToCloudinary(imageUrl, filename);
+    if (cdnUrl) return cdnUrl;
+
+    // If that failed, download buffer then upload
     try {
-      const check = await checkUrlAlive(url);
-      if (check.alive) {
-        log(`✓ Found at Nike/NB: ${url}`);
-        return url;
+      const buffer = await fetchBuffer(imageUrl);
+      if (buffer && buffer.length > 1000) {
+        const cdnUrl2 = await uploadToCloudinary(buffer, filename);
+        if (cdnUrl2) return cdnUrl2;
       }
     } catch {}
+  }
+
+  // Save locally
+  try {
+    const buffer = await fetchBuffer(imageUrl);
+    if (buffer && buffer.length > 1000) {
+      const localPath = path.join(IMAGES_DIR, filename);
+      fs.writeFileSync(localPath, buffer);
+      return `images/picks/${filename}`;
+    }
+  } catch (e) {
+    log(`Local save failed: ${e.message}`);
   }
 
   return null;
@@ -352,190 +465,131 @@ async function tryNikeStyleCode(pick) {
 
 // ===== MAIN =====
 async function main() {
-  console.log('\n🔍 FASHION. Image Fetcher (5-source pipeline)\n' + '='.repeat(50));
-  if (DRY_RUN) console.log('📋 DRY RUN\n');
+  console.log('\n🔥 FASHION. Bulletproof Image Fetcher');
+  console.log('=' .repeat(50));
 
   initCloudinary();
-  console.log(`Storage: ${CLOUD_ENABLED ? '☁️  Cloudinary' : '📁 Local'}\n`);
+  fs.mkdirSync(IMAGES_DIR, { recursive: true });
 
-  if (!fs.existsSync(PICKS_JSON_PATH)) {
+  if (!fs.existsSync(PICKS_PATH)) {
     console.error('❌ picks.json not found'); process.exit(1);
   }
-  const picksData = JSON.parse(fs.readFileSync(PICKS_JSON_PATH, 'utf-8'));
+
+  const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
   const picks = picksData.picks;
-  console.log(`📦 ${picks.length} picks to process\n`);
+  console.log(`\n📦 ${picks.length} items to process\n`);
 
-  if (!DRY_RUN) fs.mkdirSync(IMAGES_DIR, { recursive: true });
-
-  const report = { total: picks.length, uploaded: 0, skipped: 0, failed: 0, linksAlive: 0, linksDead: 0, items: [] };
+  const report = { total: picks.length, success: 0, failed: 0, items: [] };
 
   for (const pick of picks) {
     console.log(`\n[${pick.id}/${picks.length}] ${pick.brand} — ${pick.name}`);
+    const filename = `${pick.id}-${slugify(pick.name)}.png`;
     const item = { id: pick.id, name: pick.name, source: '', status: '' };
 
-    // --- Check product link ---
-    const linkCheck = await checkUrlAlive(pick.url);
-    if (linkCheck.alive) {
-      console.log(`  🔗 Product page ✅`);
-      report.linksAlive++;
-      if (pick._linkDead) delete pick._linkDead;
-    } else {
-      console.log(`  🔗 Product page ❌ (${linkCheck.status})`);
-      report.linksDead++;
-      if (!DRY_RUN) pick._linkDead = true;
-    }
-
-    // --- Already on Cloudinary? ---
-    const slug = slugify(pick.name);
-    const filename = `${pick.id}-${slug}.png`;
-    const alreadyDone = CLOUD_ENABLED && pick.image && pick.image.includes('res.cloudinary.com');
-
-    if (alreadyDone && !FORCE) {
-      console.log(`  ☁️  Already on Cloudinary ✅`);
-      item.status = 'skipped'; report.skipped++;
+    // Skip if already on Cloudinary
+    if (!FORCE && pick.image && pick.image.includes('res.cloudinary.com')) {
+      console.log('  ☁️  Already on Cloudinary ✅');
+      item.status = 'skipped'; item.source = 'cloudinary';
       report.items.push(item); continue;
     }
 
-    if (DRY_RUN) {
-      console.log(`  📋 Would process`); report.items.push(item); continue;
-    }
-
-    // ===== TRY ALL 5 SOURCES =====
-    let imageSource = null;
+    let imageResult = null;
     let sourceName = '';
 
-    // Source 1: END. Clothing CDN
-    console.log(`  [1/5] END. Clothing CDN...`);
-    imageSource = await tryEndClothing(pick);
-    if (imageSource) { sourceName = 'END. CDN'; }
+    // ========== SOURCE A ==========
+    console.log('  [A] sneaks-api...');
+    imageResult = await sourceA_SneaksAPI(pick);
+    if (imageResult) { sourceName = 'sneaks-api'; }
 
-    // Source 2: GOAT
-    if (!imageSource) {
-      console.log(`  [2/5] GOAT database...`);
-      imageSource = await tryGoat(pick);
-      if (imageSource) { sourceName = 'GOAT'; }
+    // ========== SOURCE B ==========
+    if (!imageResult) {
+      console.log('  [B] Playwright browser...');
+      imageResult = await sourceB_Playwright(pick);
+      if (imageResult) { sourceName = 'playwright'; }
     }
 
-    // Source 3: Cloudinary remote fetch from original URL
-    if (!imageSource && CLOUD_ENABLED) {
-      console.log(`  [3/5] Cloudinary remote fetch...`);
-      const directCdn = await tryCloudinaryFetch(pick, filename);
-      if (directCdn) {
-        // This already returns a Cloudinary CDN URL, so we're done
-        console.log(`  ✅ ${directCdn} (via Cloudinary fetch)`);
-        pick._originalImage = pick._originalImage || pick.image;
-        pick.image = directCdn;
-        item.source = 'Cloudinary fetch'; item.status = 'uploaded';
-        report.uploaded++; report.items.push(item); continue;
-      }
+    // ========== SOURCE C ==========
+    if (!imageResult) {
+      console.log('  [C] Google Images...');
+      imageResult = await sourceC_GoogleImages(pick);
+      if (imageResult) { sourceName = 'google-images'; }
     }
 
-    // Source 4: og:image from store page
-    if (!imageSource && linkCheck.alive) {
-      console.log(`  [4/5] Scraping product page...`);
-      imageSource = await tryOgImage(pick);
-      if (imageSource) { sourceName = 'og:image'; }
+    // ========== SOURCE D ==========
+    if (!imageResult) {
+      console.log('  [D] Playwright screenshot...');
+      imageResult = await sourceD_Screenshot(pick);
+      if (imageResult) { sourceName = 'screenshot'; }
     }
 
-    // Source 5: Nike/NB style code URLs
-    if (!imageSource) {
-      console.log(`  [5/5] Nike/NB direct URLs...`);
-      imageSource = await tryNikeStyleCode(pick);
-      if (imageSource) { sourceName = 'Nike/NB direct'; }
+    // ========== SOURCE E ==========
+    if (!imageResult) {
+      console.log('  [E] Fallback file...');
+      imageResult = sourceE_Fallback(pick);
+      if (imageResult) { sourceName = 'fallback'; }
     }
 
-    // ===== UPLOAD RESULT =====
-    if (imageSource) {
+    // ========== SAVE ==========
+    if (imageResult) {
       console.log(`  📸 Found via: ${sourceName}`);
-
-      if (CLOUD_ENABLED) {
-        console.log(`  ☁️  Uploading to Cloudinary...`);
-        const cdnUrl = await uploadToCloudinary(imageSource, filename);
-        if (cdnUrl) {
-          console.log(`  ✅ ${cdnUrl}`);
-          pick._originalImage = pick._originalImage || pick.image;
-          pick.image = cdnUrl;
-          item.source = sourceName; item.status = 'uploaded';
-          report.uploaded++;
-        } else {
-          // Cloudinary upload failed — try downloading and saving locally
-          console.log(`  ⚠️  Cloudinary upload failed, trying local save...`);
-          try {
-            const buffer = await fetchUrl(imageSource);
-            if (buffer && buffer.length > 1000) {
-              const localPath = path.join(IMAGES_DIR, filename);
-              fs.writeFileSync(localPath, buffer);
-              pick._originalImage = pick._originalImage || pick.image;
-              pick.image = `images/picks/${filename}`;
-              console.log(`  ✅ Saved locally: ${pick.image}`);
-              item.source = sourceName; item.status = 'local';
-              report.uploaded++;
-            } else {
-              throw new Error('Image too small');
-            }
-          } catch (e) {
-            console.log(`  ❌ All uploads failed`);
-            item.source = sourceName; item.status = 'failed'; report.failed++;
-          }
-        }
+      const saved = await saveImage(pick, imageResult, filename);
+      if (saved) {
+        pick._originalImage = pick._originalImage || pick.image;
+        pick.image = saved;
+        console.log(`  ✅ ${saved}`);
+        item.status = 'success'; item.source = sourceName;
+        report.success++;
       } else {
-        // Local-only mode
-        try {
-          const buffer = await fetchUrl(imageSource);
-          const localPath = path.join(IMAGES_DIR, filename);
-          fs.writeFileSync(localPath, buffer);
-          pick._originalImage = pick._originalImage || pick.image;
-          pick.image = `images/picks/${filename}`;
-          console.log(`  ✅ ${pick.image}`);
-          item.source = sourceName; item.status = 'local';
-          report.uploaded++;
-        } catch (e) {
-          console.log(`  ❌ Download failed: ${e.message}`);
-          item.status = 'failed'; report.failed++;
-        }
+        console.log('  ❌ Found image but failed to save');
+        item.status = 'save-failed'; item.source = sourceName;
+        report.failed++;
       }
     } else {
-      console.log(`  ❌ No image found from any source`);
-      item.status = 'failed'; report.failed++;
+      console.log('  ❌ No image found from any source');
+      item.status = 'failed'; item.source = 'none';
+      report.failed++;
     }
 
     report.items.push(item);
   }
 
-  // Save
-  if (!DRY_RUN) {
-    fs.writeFileSync(PICKS_JSON_PATH, JSON.stringify(picksData, null, 2) + '\n');
-    console.log('\n💾 Updated picks.json');
+  // Cleanup
+  if (_browser) {
+    await _browser.close();
+    log('Browser closed');
   }
+
+  // Save picks.json
+  fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
+  console.log('\n💾 Updated picks.json');
 
   // Report
   console.log('\n' + '='.repeat(50));
-  console.log('📊 REPORT');
+  console.log('📊 RESULTS');
   console.log('='.repeat(50));
-  console.log(`Total:          ${report.total}`);
-  console.log(`✅ Uploaded:     ${report.uploaded}`);
-  console.log(`⏭️  Skipped:      ${report.skipped}`);
-  console.log(`❌ Failed:       ${report.failed}`);
-  console.log(`Links alive:    ${report.linksAlive}`);
-  console.log(`Links dead:     ${report.linksDead}`);
+  console.log(`Total:      ${report.total}`);
+  console.log(`✅ Success: ${report.success}`);
+  console.log(`❌ Failed:  ${report.failed}`);
   console.log('='.repeat(50));
 
-  // Detail per item
-  console.log('\nDetails:');
   for (const item of report.items) {
-    const icon = item.status === 'uploaded' ? '✅' : item.status === 'skipped' ? '⏭️' : item.status === 'local' ? '📁' : '❌';
-    console.log(`  ${icon} #${item.id} ${item.name} → ${item.source || item.status}`);
+    const icon = item.status === 'success' ? '✅' : item.status === 'skipped' ? '⏭️' : '❌';
+    console.log(`  ${icon} #${item.id} ${item.name} → ${item.source}`);
   }
 
   if (report.failed > 0) {
-    console.log('\n⚠️  Failed items need manual image URLs in picks.json');
+    console.log('\n⚠️  For failed items, add manual URLs to data/fallback-images.json:');
+    console.log('  {');
+    for (const item of report.items) {
+      if (item.status === 'failed' || item.status === 'save-failed') {
+        const pick = picks.find(p => p.id === item.id);
+        console.log(`    "${pick.styleCode}": "https://example.com/image.jpg",`);
+      }
+    }
+    console.log('  }');
   }
 
-  const reportPath = path.join(__dirname, '..', 'data', 'image-report.json');
-  if (!DRY_RUN) {
-    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
-  }
-
+  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
   console.log('\n✨ Done!\n');
 }
 

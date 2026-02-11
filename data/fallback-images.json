@@ -1,0 +1,4 @@
+{
+  "_comment": "Manual fallback image URLs. Key = style code, value = direct image URL. Used as Source E when all automated sources fail.",
+  "EXAMPLE-001": "https://example.com/image.jpg"
+}
