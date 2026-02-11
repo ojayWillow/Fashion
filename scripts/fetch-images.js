@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 /**
- * FASHION. — Automated Image Fetcher + Cloudflare R2 Uploader
- * =============================================================
+ * FASHION. — Automated Image Fetcher + Cloudinary Uploader
+ * ==========================================================
  * Reads picks.json, validates product URLs, downloads images,
- * uploads them to Cloudflare R2, and updates picks.json with CDN URLs.
+ * uploads them to Cloudinary, and updates picks.json with CDN URLs.
  *
- * Falls back to local storage if R2 is not configured.
+ * Falls back to local storage if Cloudinary is not configured.
  *
  * Usage:
  *   node scripts/fetch-images.js
  *
  * Options:
  *   --dry-run     Check URLs without downloading/uploading
- *   --force       Re-process even if image already on R2
- *   --local       Skip R2, save locally only
+ *   --force       Re-process even if image already on Cloudinary
+ *   --local       Skip Cloudinary, save locally only
  *   --verbose     Show detailed logs
  */
 
@@ -29,7 +29,7 @@ const PICKS_JSON_PATH = path.join(__dirname, '..', 'data', 'picks.json');
 const IMAGES_DIR = path.join(__dirname, '..', 'images', 'picks');
 const TIMEOUT_MS = 15000;
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-const R2_FOLDER = 'picks'; // folder prefix inside the R2 bucket
+const CLOUDINARY_FOLDER = 'picks';
 
 // ===== CLI FLAGS =====
 const args = process.argv.slice(2);
@@ -38,77 +38,88 @@ const FORCE = args.includes('--force');
 const VERBOSE = args.includes('--verbose');
 const LOCAL_ONLY = args.includes('--local');
 
-// ===== R2 SETUP =====
-let r2Client = null;
-let R2_ENABLED = false;
-let R2_PUBLIC_URL = '';
+// ===== CLOUDINARY SETUP =====
+let cloudinary = null;
+let CLOUD_ENABLED = false;
+let CLOUD_NAME = '';
 
-async function initR2() {
+function initCloudinary() {
   if (LOCAL_ONLY) {
     console.log('📁 Local-only mode (--local flag)\n');
     return;
   }
 
-  const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME } = process.env;
-  R2_PUBLIC_URL = (process.env.R2_PUBLIC_URL || '').replace(/\/$/, '');
+  const url = process.env.CLOUDINARY_URL;
+  if (!url || url.includes('your_')) {
+    console.log('⚠️  Cloudinary not configured — falling back to local storage');
+    console.log('   Copy .env.example to .env and paste your CLOUDINARY_URL\n');
+    return;
+  }
 
-  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET_NAME || !R2_PUBLIC_URL) {
-    console.log('⚠️  R2 not configured — falling back to local storage');
-    console.log('   Copy .env.example to .env and fill in your Cloudflare R2 credentials\n');
+  const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
+  if (!match) {
+    console.log('⚠️  Invalid CLOUDINARY_URL format — falling back to local\n');
     return;
   }
 
   try {
-    const { S3Client } = require('@aws-sdk/client-s3');
-    r2Client = new S3Client({
-      region: 'auto',
-      endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId: R2_ACCESS_KEY_ID,
-        secretAccessKey: R2_SECRET_ACCESS_KEY,
-      },
+    const [, apiKey, apiSecret, cloudName] = match;
+    CLOUD_NAME = cloudName;
+    cloudinary = require('cloudinary').v2;
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+      secure: true
     });
-    R2_ENABLED = true;
-    console.log(`☁️  R2 connected → ${R2_PUBLIC_URL}`);
-    console.log(`   Bucket: ${R2_BUCKET_NAME} | Folder: ${R2_FOLDER}/\n`);
+    CLOUD_ENABLED = true;
+    console.log(`☁️  Cloudinary connected → ${cloudName}`);
+    console.log(`   CDN: https://res.cloudinary.com/${cloudName}/image/upload/${CLOUDINARY_FOLDER}/\n`);
   } catch (err) {
-    console.log(`⚠️  R2 init failed: ${err.message} — falling back to local\n`);
+    console.log(`⚠️  Cloudinary init failed: ${err.message} — falling back to local\n`);
   }
 }
 
-async function uploadToR2(buffer, filename, contentType) {
-  if (!R2_ENABLED) return null;
+async function uploadToCloudinary(buffer, filename) {
+  if (!CLOUD_ENABLED) return null;
 
   try {
-    const { PutObjectCommand } = require('@aws-sdk/client-s3');
-    const key = `${R2_FOLDER}/${filename}`;
+    // Remove extension for the public_id
+    const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
 
-    await r2Client.send(new PutObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME,
-      Key: key,
-      Body: buffer,
-      ContentType: contentType,
-      CacheControl: 'public, max-age=31536000, immutable',
-    }));
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          public_id: publicId,
+          overwrite: true,
+          resource_type: 'image',
+          // Auto-optimize: Cloudinary serves best format + quality per browser
+          transformation: [{ quality: 'auto', fetch_format: 'auto' }]
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(buffer);
+    });
 
-    const publicUrl = `${R2_PUBLIC_URL}/${key}`;
-    log(`Uploaded to R2: ${publicUrl}`);
-    return publicUrl;
+    // Build a clean CDN URL with auto-format and auto-quality
+    const cdnUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
+    log(`Uploaded to Cloudinary: ${cdnUrl}`);
+    return cdnUrl;
   } catch (err) {
-    log(`R2 upload failed: ${err.message}`);
+    log(`Cloudinary upload failed: ${err.message}`);
     return null;
   }
 }
 
-async function checkR2Exists(filename) {
-  if (!R2_ENABLED) return false;
+async function checkCloudinaryExists(filename) {
+  if (!CLOUD_ENABLED) return false;
 
   try {
-    const { HeadObjectCommand } = require('@aws-sdk/client-s3');
-    await r2Client.send(new HeadObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME,
-      Key: `${R2_FOLDER}/${filename}`,
-    }));
+    const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
+    await cloudinary.api.resource(publicId);
     return true;
   } catch {
     return false;
@@ -130,12 +141,7 @@ function getExtFromUrl(url) {
     const ext = path.extname(pathname).toLowerCase().split('?')[0];
     if (['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'].includes(ext)) return ext;
   } catch {}
-  return '.png'; // default
-}
-
-function getMimeType(ext) {
-  const types = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.gif': 'image/gif', '.avif': 'image/avif' };
-  return types[ext] || 'image/jpeg';
+  return '.png';
 }
 
 function log(msg) { if (VERBOSE) console.log(`  [verbose] ${msg}`); }
@@ -165,8 +171,6 @@ function fetchUrl(url, options = {}) {
         res.resume();
         return reject(new Error(`HTTP ${res.statusCode}`));
       }
-
-      if (options.stream) return resolve(res);
 
       const chunks = [];
       res.on('data', chunk => chunks.push(chunk));
@@ -254,13 +258,13 @@ async function downloadBuffer(imageUrl) {
 
 // ===== MAIN =====
 async function main() {
-  console.log('\n🔍 FASHION. Image Fetcher + R2 Uploader\n' + '='.repeat(45));
+  console.log('\n🔍 FASHION. Image Fetcher + Cloudinary\n' + '='.repeat(45));
   if (DRY_RUN) console.log('📋 DRY RUN — no files will be modified\n');
 
-  // Initialize R2
-  await initR2();
+  // Initialize Cloudinary
+  initCloudinary();
 
-  const storageMode = R2_ENABLED ? '☁️  Cloudflare R2' : '📁 Local';
+  const storageMode = CLOUD_ENABLED ? '☁️  Cloudinary' : '📁 Local';
   console.log(`Storage: ${storageMode}\n`);
 
   // Load picks
@@ -272,14 +276,14 @@ async function main() {
   const picks = picksData.picks;
   console.log(`📦 Found ${picks.length} picks to process\n`);
 
-  // Ensure local images directory exists (for fallback or local mode)
+  // Ensure local images directory exists (for fallback)
   if (!DRY_RUN) {
     fs.mkdirSync(IMAGES_DIR, { recursive: true });
   }
 
   const report = {
     total: picks.length,
-    storageMode: R2_ENABLED ? 'cloudflare-r2' : 'local',
+    storageMode: CLOUD_ENABLED ? 'cloudinary' : 'local',
     imagesUploaded: 0,
     imagesSkipped: 0,
     imagesFailed: 0,
@@ -312,15 +316,14 @@ async function main() {
     const slug = slugify(pick.name);
     const ext = getExtFromUrl(pick._originalImage || pick.image);
     const filename = `${pick.id}-${slug}${ext}`;
-    const mimeType = getMimeType(ext);
 
     // --- 3. Check if already processed ---
-    const alreadyOnR2 = R2_ENABLED && pick.image && pick.image.startsWith(R2_PUBLIC_URL);
+    const alreadyOnCloud = CLOUD_ENABLED && pick.image && pick.image.includes('res.cloudinary.com');
     const localPath = path.join(IMAGES_DIR, filename);
-    const alreadyLocal = !R2_ENABLED && fs.existsSync(localPath);
+    const alreadyLocal = !CLOUD_ENABLED && fs.existsSync(localPath);
 
-    if ((alreadyOnR2 || alreadyLocal) && !FORCE) {
-      const where = alreadyOnR2 ? 'R2' : 'local';
+    if ((alreadyOnCloud || alreadyLocal) && !FORCE) {
+      const where = alreadyOnCloud ? 'Cloudinary' : 'local';
       console.log(`  📁 Already on ${where}, skipping (use --force to re-process)`);
       itemReport.imageStatus = `already-${where}`;
       report.imagesSkipped++;
@@ -328,18 +331,19 @@ async function main() {
       continue;
     }
 
-    // Check if it exists on R2 even if picks.json isn't updated yet
-    if (R2_ENABLED && !FORCE && !alreadyOnR2) {
-      const existsOnR2 = await checkR2Exists(filename);
-      if (existsOnR2) {
-        const cdnUrl = `${R2_PUBLIC_URL}/${R2_FOLDER}/${filename}`;
-        console.log(`  ☁️  Found on R2, updating picks.json`);
+    // Check if exists on Cloudinary even if picks.json isn't updated yet
+    if (CLOUD_ENABLED && !FORCE && !alreadyOnCloud) {
+      const exists = await checkCloudinaryExists(filename);
+      if (exists) {
+        const publicId = `${CLOUDINARY_FOLDER}/${path.parse(filename).name}`;
+        const cdnUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${publicId}`;
+        console.log(`  ☁️  Found on Cloudinary, updating picks.json`);
         if (!DRY_RUN) {
           pick._originalImage = pick._originalImage || pick.image;
           pick.image = cdnUrl;
         }
-        itemReport.imageStatus = 'already-r2';
-        itemReport.actions.push('updated URL to R2');
+        itemReport.imageStatus = 'already-cloudinary';
+        itemReport.actions.push('updated URL to Cloudinary');
         report.imagesSkipped++;
         report.items.push(itemReport);
         continue;
@@ -347,7 +351,7 @@ async function main() {
     }
 
     if (DRY_RUN) {
-      console.log(`  📋 Would download and ${R2_ENABLED ? 'upload to R2' : 'save locally'}`);
+      console.log(`  📋 Would download and ${CLOUD_ENABLED ? 'upload to Cloudinary' : 'save locally'}`);
       report.items.push(itemReport);
       continue;
     }
@@ -378,25 +382,24 @@ async function main() {
       continue;
     }
 
-    // --- 5. Upload to R2 or save locally ---
-    if (R2_ENABLED) {
-      console.log(`  ☁️  Uploading to R2... (${(buffer.length / 1024).toFixed(0)} KB)`);
-      const cdnUrl = await uploadToR2(buffer, filename, mimeType);
+    // --- 5. Upload to Cloudinary or save locally ---
+    if (CLOUD_ENABLED) {
+      console.log(`  ☁️  Uploading to Cloudinary... (${(buffer.length / 1024).toFixed(0)} KB)`);
+      const cdnUrl = await uploadToCloudinary(buffer, filename);
       if (cdnUrl) {
         console.log(`  ✅ ${cdnUrl}`);
         pick._originalImage = pick._originalImage || pick.image;
         pick.image = cdnUrl;
-        itemReport.imageStatus = 'uploaded-r2';
-        itemReport.actions.push('uploaded to R2');
+        itemReport.imageStatus = 'uploaded-cloudinary';
+        itemReport.actions.push('uploaded to Cloudinary');
         report.imagesUploaded++;
       } else {
-        // Fallback to local if R2 upload fails
-        console.log(`  ⚠️  R2 upload failed, saving locally instead`);
+        console.log(`  ⚠️  Upload failed, saving locally instead`);
         fs.writeFileSync(localPath, buffer);
         pick._originalImage = pick._originalImage || pick.image;
         pick.image = `images/picks/${filename}`;
         itemReport.imageStatus = 'local-fallback';
-        itemReport.actions.push('saved locally (R2 failed)');
+        itemReport.actions.push('saved locally (upload failed)');
         report.imagesUploaded++;
       }
     } else {
