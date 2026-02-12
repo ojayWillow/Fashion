@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FASHION. Catalog — Browse all products by category, brand, store, and size. Sneakers, hoodies, jackets and more.">
+    <title>FASHION. — Catalog</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="sales.css">
+    <link rel="stylesheet" href="catalog.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <nav class="floating-dock" id="floatingDock">
+        <div class="dock-container">
+            <a href="index.html" class="dock-logo">FASHION<span class="accent">.</span></a>
+            <div class="dock-divider"></div>
+            <a href="index.html" class="dock-item" data-tooltip="Home"><div class="dock-icon">🏠</div></a>
+            <a href="index.html#drops" class="dock-item" data-tooltip="Drops"><div class="dock-icon">🔥</div></a>
+            <a href="sales.html" class="dock-item" data-tooltip="Sales"><div class="dock-icon">💰</div></a>
+            <a href="catalog.html" class="dock-item dock-active" data-tooltip="Catalog"><div class="dock-icon">🛍️</div></a>
+            <a href="index.html#partners" class="dock-item" data-tooltip="Partners"><div class="dock-icon">🌍</div></a>
+            <a href="index.html#brands" class="dock-item" data-tooltip="Brands"><div class="dock-icon">💎</div></a>
+            <a href="index.html#about" class="dock-item" data-tooltip="About"><div class="dock-icon">✦</div></a>
+        </div>
+    </nav>
+
+    <!-- Catalog Hero -->
+    <header class="sales-hero catalog-hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-glow hero-glow-1"></div>
+        <div class="hero-glow hero-glow-2"></div>
+        <div class="container">
+            <div class="sales-hero-content">
+                <div class="hero-badge" id="heroBadge">🛍️ LOADING...</div>
+                <h1 class="hero-title"><span class="title-static">PRODUCT</span> <span class="gradient-text">CATALOG</span></h1>
+                <p class="hero-subtitle">Every product from every store. Filter by category, brand, size — click straight through to buy.</p>
+                <div class="sales-search-wrap">
+                    <div class="sales-search">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="catalogSearch" placeholder="Search products... (e.g. Jordan 5, New Balance 1906R)" autocomplete="off">
+                        <span class="search-count" id="resultCount">0 products</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Bar + Sort -->
+    <section class="catalog-toolbar">
+        <div class="container">
+            <div class="toolbar-inner">
+                <button class="filter-toggle" id="filterToggle">☰ Filters</button>
+                <div class="catalog-chips" id="activeChips"></div>
+                <div class="toolbar-right">
+                    <button class="chip-clear" id="clearAll" style="display:none;">✕ Clear all</button>
+                    <select class="catalog-sort" id="catalogSort">
+                        <option value="newest">Newest first</option>
+                        <option value="price-asc">Price: low → high</option>
+                        <option value="price-desc">Price: high → low</option>
+                        <option value="discount">Biggest discount</option>
+                        <option value="name">Name A–Z</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="catalog-main">
+        <div class="container catalog-layout">
+
+            <!-- Sidebar Filters -->
+            <aside class="catalog-sidebar" id="catalogSidebar">
+                <div class="sidebar-header">
+                    <h3>Filters</h3>
+                    <button class="sidebar-close" id="sidebarClose">✕</button>
+                </div>
+
+                <div class="filter-group">
+                    <h4 class="filter-group-title" data-toggle="cat">Category <span class="filter-arrow">▾</span></h4>
+                    <div class="filter-group-body" id="filterCategory"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h4 class="filter-group-title" data-toggle="brand">Brand <span class="filter-arrow">▾</span></h4>
+                    <div class="filter-group-body" id="filterBrand"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h4 class="filter-group-title" data-toggle="store">Store <span class="filter-arrow">▾</span></h4>
+                    <div class="filter-group-body" id="filterStore"></div>
+                </div>
+
+                <div class="filter-group">
+                    <h4 class="filter-group-title" data-toggle="size">Size <span class="filter-arrow">▾</span></h4>
+                    <div class="filter-group-body filter-sizes" id="filterSize"></div>
+                </div>
+            </aside>
+
+            <!-- Sidebar Backdrop (mobile) -->
+            <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+            <!-- Product Grid -->
+            <div class="catalog-grid-wrap">
+                <div class="catalog-grid" id="catalogGrid"></div>
+                <div class="no-results" id="noResults" style="display:none;">
+                    <span class="no-results-icon">🔍</span>
+                    <h3>No products found</h3>
+                    <p>Try a different search term or adjust your filters</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Redirect Screen (same as sales) -->
+    <div class="redirect-screen" id="redirectScreen">
+        <div class="redirect-screen-content">
+            <div class="redirect-logo">FASHION.</div>
+            <div class="redirect-spinner"><div class="redirect-spinner-ring"></div></div>
+            <p class="redirect-heading">Taking you to</p>
+            <p class="redirect-store" id="redirectStore"></p>
+            <p class="redirect-domain" id="redirectDomain"></p>
+            <div class="redirect-progress-bar"><div class="redirect-progress-fill" id="redirectProgress"></div></div>
+            <p class="redirect-notice">You're leaving FASHION. — we don't control external sites.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="logo">FASHION<span class="accent">.</span></p>
+            <p>Curating the world's best sneaker & streetwear deals — updated weekly.</p>
+            <p class="copyright">© 2026 FASHION. Built for the culture.</p>
+        </div>
+    </footer>
+
+    <script src="catalog.js"></script>
+</body>
+</html>
