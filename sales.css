@@ -38,6 +38,83 @@
     gap: 28px;
 }
 
+/* ===== PICKS FILTER PILLS ===== */
+.picks-filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.picks-pill {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.picks-pill:hover {
+    background: #f3f4f6;
+    color: #1a1a2e;
+    border-color: #d1d5db;
+}
+
+.picks-pill.active {
+    background: var(--gradient-purple);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(168,85,247,0.3);
+}
+
+.pill-count {
+    font-size: 0.68rem;
+    opacity: 0.7;
+    margin-left: 4px;
+}
+
+.picks-pill.active .pill-count {
+    opacity: 0.9;
+}
+
+/* ===== CATALOG CTA ===== */
+.picks-catalog-cta {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.btn-catalog-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #7c3aed;
+    text-decoration: none;
+    padding: 14px 32px;
+    border: 2px solid rgba(168, 85, 247, 0.2);
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-catalog-link:hover {
+    background: rgba(168, 85, 247, 0.06);
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.15);
+    transform: translateY(-2px);
+}
+
 /* ===== PRODUCT CARD — Clean White ===== */
 .pick-card {
     background: #ffffff;
@@ -889,6 +966,10 @@
     /* Preview images */
     .store-card-preview { flex-direction: column; align-items: flex-start; gap: 8px; }
     .store-card-badges { flex-wrap: wrap; }
+
+    /* Pick pills */
+    .picks-filter-pills { gap: 6px; }
+    .picks-pill { padding: 6px 14px; font-size: 0.72rem; }
 }
 
 @media (max-width: 480px) {

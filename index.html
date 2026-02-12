@@ -21,6 +21,7 @@
             <a href="#" class="dock-item" data-tooltip="Home"><div class="dock-icon">🏠</div></a>
             <a href="#drops" class="dock-item" data-tooltip="Drops"><div class="dock-icon">🔥</div></a>
             <a href="sales.html" class="dock-item" data-tooltip="Sales"><div class="dock-icon">💰</div></a>
+            <a href="catalog.html" class="dock-item" data-tooltip="Catalog"><div class="dock-icon">🛍️</div></a>
             <a href="#partners" class="dock-item" data-tooltip="Partners"><div class="dock-icon">🌍</div></a>
             <a href="#brands" class="dock-item" data-tooltip="Brands"><div class="dock-icon">💎</div></a>
             <a href="#about" class="dock-item" data-tooltip="About"><div class="dock-icon">✦</div></a>
@@ -49,7 +50,7 @@
             <p class="hero-subtitle">Curated luxury sneakers & high-end streetwear sales from the world's most iconic stores. Your gateway to exclusive drops and limited collections.</p>
             <div class="hero-cta">
                 <a href="#drops" class="btn btn-glow">Explore Drops →</a>
-                <a href="sales.html" class="btn btn-ghost">Browse All Sales</a>
+                <a href="catalog.html" class="btn btn-ghost">Browse Catalog</a>
             </div>
             <div class="hero-stats">
                 <div class="stat"><span class="stat-num">69</span><span class="stat-label">Partner Stores</span></div>
@@ -74,18 +75,17 @@
         </div>
     </section>
 
-    <!-- Featured Drops -->
+    <!-- Featured Drops (Dynamic) -->
     <section id="drops" class="section section-alt">
         <div class="container">
-            <h2 class="section-title">THIS WEEK'S <span class="gradient-text">DROPS</span></h2>
-            <p class="section-subtitle">Hover over a card to experience the 3D perspective effect</p>
-            <div class="drops-grid">
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Up to 50% Off</div><div class="drop-icon">🔵</div><h3>Zalando</h3><p class="drop-region">🇩🇪 Germany</p><p>Sneaker clearance across 2,000+ brands — Nike, adidas, New Balance, Puma & more.</p><a href="https://www.zalando.com/men-shoes-sneakers/" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Up to 70% Off</div><div class="drop-icon">⚡</div><h3>ASOS</h3><p class="drop-region">🇬🇧 United Kingdom</p><p>Massive streetwear sale — 850+ brands including The North Face, Carhartt WIP, Nike & Jordan.</p><a href="https://www.asos.com/men/sale/" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Up to 60% Off</div><div class="drop-icon">🏴</div><h3>END. Clothing</h3><p class="drop-region">🇬🇧 United Kingdom</p><p>Premium streetwear & sneakers — Stone Island, Off-White, Stüssy & exclusive collaborations.</p><a href="https://www.endclothing.com/gb/sale" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Up to 80% Off</div><div class="drop-icon">👑</div><h3>SSENSE</h3><p class="drop-region">🌍 Global</p><p>High-fashion meets street — Balenciaga, Rick Owens, Fear of God at steep discounts.</p><a href="https://www.ssense.com/en-gb/men/sale" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Below Retail</div><div class="drop-icon">✅</div><h3>StockX</h3><p class="drop-region">🌍 Global</p><p>Authenticated sneakers, streetwear & collectibles. Deadstock guaranteed.</p><a href="https://stockx.com/sneakers" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
-                <div class="card-3d" data-tilt><div class="card-3d-inner"><div class="card-3d-shine"></div><div class="drop-badge">Up to 50% Off</div><div class="drop-icon">💎</div><h3>Farfetch</h3><p class="drop-region">🌍 Global</p><p>Luxury sneakers & streetwear from 700+ boutiques — Gucci, Prada, Golden Goose.</p><a href="https://www.farfetch.com/shopping/men/shoes-2/items.aspx" target="_blank" class="btn btn-outline card-3d-float">Shop →</a></div></div>
+            <h2 class="section-title">LATEST <span class="gradient-text">DROPS</span></h2>
+            <p class="section-subtitle">Fresh picks from our curated stores — updated as we find them</p>
+            <div class="drops-grid" id="dropsGrid">
+                <!-- Loaded dynamically from picks.json -->
+            </div>
+            <div class="drops-cta">
+                <a href="catalog.html" class="btn btn-glow">Browse Full Catalog →</a>
+                <a href="sales.html" class="btn btn-ghost">View All Sales</a>
             </div>
         </div>
     </section>

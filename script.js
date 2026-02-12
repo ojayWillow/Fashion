@@ -28,6 +28,11 @@ hoverables.forEach(el => {
     el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
 });
 
+function addHoverCursor(el) {
+    el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+}
+
 // ===== Text Flip Animation =====
 const textFlipWrapper = document.getElementById('textFlipWrapper');
 const flipWords = textFlipWrapper.querySelectorAll('.text-flip-word');
@@ -66,24 +71,80 @@ banners.forEach(banner => {
 });
 
 // ===== 3D Card Tilt Effect =====
-const tiltCards = document.querySelectorAll('.card-3d');
-tiltCards.forEach(card => {
-    const inner = card.querySelector('.card-3d-inner');
-    const shine = card.querySelector('.card-3d-shine');
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        inner.style.transform = `rotateX(${((y - centerY) / centerY) * -12}deg) rotateY(${((x - centerX) / centerX) * 12}deg)`;
-        shine.style.setProperty('--shine-x', (x / rect.width) * 100 + '%');
-        shine.style.setProperty('--shine-y', (y / rect.height) * 100 + '%');
+function initTiltCards() {
+    const tiltCards = document.querySelectorAll('.card-3d');
+    tiltCards.forEach(card => {
+        const inner = card.querySelector('.card-3d-inner');
+        const shine = card.querySelector('.card-3d-shine');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            inner.style.transform = `rotateX(${((y - centerY) / centerY) * -12}deg) rotateY(${((x - centerX) / centerX) * 12}deg)`;
+            shine.style.setProperty('--shine-x', (x / rect.width) * 100 + '%');
+            shine.style.setProperty('--shine-y', (y / rect.height) * 100 + '%');
+        });
+        card.addEventListener('mouseleave', () => {
+            inner.style.transform = 'rotateX(0) rotateY(0)';
+        });
+        addHoverCursor(card);
     });
-    card.addEventListener('mouseleave', () => {
-        inner.style.transform = 'rotateX(0) rotateY(0)';
-    });
-});
+}
+initTiltCards();
+
+// ===== LATEST DROPS (from picks.json) =====
+async function loadDrops() {
+    const grid = document.getElementById('dropsGrid');
+    if (!grid) return;
+
+    try {
+        const res = await fetch('data/picks.json');
+        const data = await res.json();
+
+        // Latest 6 picks (highest ID = newest)
+        const latest = [...data.picks]
+            .filter(p => !p._linkDead)
+            .sort((a, b) => b.id - a.id)
+            .slice(0, 6);
+
+        if (latest.length === 0) return;
+
+        grid.innerHTML = latest.map((pick, i) => {
+            const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
+            return `
+                <div class="card-3d" data-tilt>
+                    <div class="card-3d-inner">
+                        <div class="card-3d-shine"></div>
+                        <div class="drop-badge">${pick.discount || 'Sale'}</div>
+                        <div class="drop-product-img">
+                            <img src="${pick.image}" alt="${pick.name}" loading="lazy"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="drop-img-fallback" style="display:none;">${pick.brand ? pick.brand.charAt(0) : '?'}</div>
+                        </div>
+                        <div class="drop-card-brand">${pick.brand || ''}</div>
+                        <h3>${pick.name}</h3>
+                        <p class="drop-region">${pick.storeFlag || '\ud83c\udff7\ufe0f'} ${pick.store}</p>
+                        <div class="drop-card-pricing">
+                            <span class="drop-price-sale">${pick.salePrice || ''}</span>
+                            <span class="drop-price-retail">${pick.retailPrice || ''}</span>
+                        </div>
+                        <a href="${pick.url}" target="_blank" rel="noopener" class="btn btn-outline card-3d-float">Shop →</a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Re-init tilt on new cards
+        initTiltCards();
+
+    } catch (e) {
+        console.error('Error loading drops:', e);
+    }
+}
+
+loadDrops();
 
 // ===== PARTNERS — Floating Marquee =====
 async function loadPartners() {
@@ -147,8 +208,7 @@ function buildMarquee(stores) {
             pill.addEventListener('click', () => {
                 window.open(store.url, '_blank');
             });
-            pill.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
-            pill.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+            addHoverCursor(pill);
             row.appendChild(pill);
         });
 
