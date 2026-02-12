@@ -6,8 +6,7 @@
       "name": "Major Marketplaces",
       "icon": "🔵",
       "stores": [
-        {"name": "Zalando", "country": "Germany", "flag": "🇩🇪", "url": "https://www.zalando.com", "saleUrl": "https://www.zalando.com/campaigns/winter-sale/", "description": "Europe's largest online fashion platform.", "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands", "lat": 52.52, "lng": 13.405},
-        {"name": "Boozt", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.boozt.com/eu/en", "saleUrl": "https://www.boozt.com/eu/en/sale", "description": "Premium Scandinavian fashion.", "currentDeal": "Mid-season sale — up to 60% off", "lat": 55.605, "lng": 13.0038}
+        {"name": "Zalando", "country": "Germany", "flag": "🇩🇪", "url": "https://www.zalando.com", "saleUrl": "https://www.zalando.com/campaigns/winter-sale/", "description": "Europe's largest online fashion platform.", "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands", "lat": 52.52, "lng": 13.405}
       ]
     },
     {
@@ -16,10 +15,7 @@
       "stores": [
         {"name": "Hugo Boss", "country": "Germany", "flag": "🇩🇪", "url": "https://www.hugoboss.com", "saleUrl": "https://www.hugoboss.com/sale/", "description": "BOSS and HUGO lines.", "currentDeal": "Sale — up to 50% off", "lat": 48.6921, "lng": 9.0108},
         {"name": "G-Star RAW", "country": "Netherlands", "flag": "🇳🇱", "url": "https://www.g-star.com", "saleUrl": "https://www.g-star.com/en_gb/sale", "description": "Dutch denim innovation.", "currentDeal": "Up to 50% off sale", "lat": 52.3676, "lng": 4.9041},
-        {"name": "JD Sports", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.jdsports.com", "saleUrl": "https://www.jdsports.com/sale/", "description": "Leading sportswear retailer.", "currentDeal": "Sale — sportswear deals", "lat": 53.4808, "lng": -2.2426},
-        {"name": "COS", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.cos.com", "saleUrl": "https://www.cos.com/en/women/sale.html", "description": "Minimalist design, higher quality.", "currentDeal": "Sale — up to 50% off", "lat": 59.3293, "lng": 18.0686},
-        {"name": "Massimo Dutti", "country": "Spain", "flag": "🇪🇸", "url": "https://www.massimodutti.com", "saleUrl": "https://www.massimodutti.com/gb/sale-woman-702", "description": "Premium casual and formalwear.", "currentDeal": "Winter sale — up to 40% off", "lat": 43.3623, "lng": -8.4115},
-        {"name": "C&A", "country": "Germany", "flag": "🇩🇪", "url": "https://www.c-and-a.com", "saleUrl": "https://www.c-and-a.com/eu/en/shop/sale", "description": "Affordable everyday basics.", "currentDeal": "Sale — everyday low prices", "lat": 51.2277, "lng": 6.7735}
+        {"name": "JD Sports", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.jdsports.com", "saleUrl": "https://www.jdsports.com/sale/", "description": "Leading sportswear retailer.", "currentDeal": "Sale — sportswear deals", "lat": 53.4808, "lng": -2.2426}
       ]
     },
     {
@@ -27,7 +23,6 @@
       "icon": "✨",
       "stores": [
         {"name": "MR PORTER", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.mrporter.com", "saleUrl": "https://www.mrporter.com/en-gb/mens/sale", "description": "Premium menswear.", "currentDeal": "Men's sale — luxury menswear", "lat": 51.5074, "lng": -0.1278},
-        {"name": "YOOX", "country": "Italy", "flag": "🇮🇹", "url": "https://www.yoox.com", "saleUrl": "https://www.yoox.com/gb/women/shoponline", "description": "Off-season designer pieces.", "currentDeal": "Extra 20% off sale items", "lat": 44.4949, "lng": 11.3426},
         {"name": "24S", "country": "France", "flag": "🇫🇷", "url": "https://www.24s.com", "saleUrl": "https://www.24s.com/en-gb/sale", "description": "LVMH's own online store.", "currentDeal": "LVMH sale — exclusive access", "lat": 48.8566, "lng": 2.3522},
         {"name": "SSENSE", "country": "Canada", "flag": "🇨🇦", "url": "https://www.ssense.com", "saleUrl": "https://www.ssense.com/en-gb/sale", "description": "Montreal-based luxury & streetwear.", "currentDeal": "Legendary sale — up to 70% off", "lat": 45.5017, "lng": -73.5673}
       ]
