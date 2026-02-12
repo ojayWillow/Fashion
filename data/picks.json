@@ -318,7 +318,17 @@
         "New Balance",
         "Sale"
       ],
-      "sizes": [],
+      "sizes": [
+        "40",
+        "40.5",
+        "41.5",
+        "42",
+        "42.5",
+        "43",
+        "44",
+        "44.5",
+        "45"
+      ],
       "_originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/11-new-balance-1906r-black"
     },
     {
@@ -793,7 +803,11 @@
         "Jordan",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "2C",
+        "3C",
+        "4C"
+      ]
     },
     {
       "id": 102,
@@ -1048,7 +1062,9 @@
         "WAWA",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "OS"
+      ]
     },
     {
       "id": 112,
@@ -1069,7 +1085,10 @@
         "Jordan",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "10.5C",
+        "11.5C"
+      ]
     },
     {
       "id": 113,
@@ -1112,27 +1131,15 @@
         "Jordan",
         "Sale"
       ],
-      "sizes": []
-    },
-    {
-      "id": 115,
-      "name": "Puma Palermo - 396463-50",
-      "brand": "Puma",
-      "styleCode": "",
-      "colorway": "",
-      "retailPrice": "€90",
-      "salePrice": "€45",
-      "discount": "-50%",
-      "store": "SNS (Sneakersnstuff)",
-      "storeFlag": "🇸🇪",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/115-puma-palermo-396463-50",
-      "url": "https://www.sneakersnstuff.com/en-eu/products/puma-palermo-396463-50",
-      "description": "Straight from the archives, the classic PUMA Palermo returns in a brand-new \"Vine-Clementine\" colorway, fusing its iconic design with fresh colors and signature PUMA detailing. Crafted with a plush su",
-      "tags": [
-        "Puma",
-        "Sale"
-      ],
-      "sizes": []
+      "sizes": [
+        "11C",
+        "12C",
+        "12.5C",
+        "13C",
+        "13.5C",
+        "1.5Y",
+        "2Y"
+      ]
     },
     {
       "id": 116,
@@ -1884,7 +1891,11 @@
         "Butter Goods",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "W28",
+        "W30",
+        "W32"
+      ]
     },
     {
       "id": 143,
@@ -1904,7 +1915,10 @@
         "Butter Goods",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "W28",
+        "W32"
+      ]
     },
     {
       "id": 144,
@@ -2539,7 +2553,13 @@
         "Jordan",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "2C",
+        "5C",
+        "6C",
+        "7C",
+        "8C"
+      ]
     },
     {
       "id": 167,
@@ -2558,7 +2578,11 @@
       "tags": [
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "6",
+        "6.5",
+        "7.5"
+      ]
     },
     {
       "id": 168,
@@ -2609,7 +2633,9 @@
         "Nike",
         "Sale"
       ],
-      "sizes": []
+      "sizes": [
+        "W12"
+      ]
     },
     {
       "id": 170,
