@@ -347,33 +347,33 @@
     "sneakersnstuff.com": {
       "name": "SNS (Sneakersnstuff)",
       "renderMode": "playwright",
-      "waitTime": 3000,
+      "waitTime": 5000,
       "imageSelectors": [
         "meta[property='og:image']",
-        "[class*='product-gallery'] img",
-        "[class*='ProductImage'] img",
-        "picture img"
+        ".product-view img",
+        "main img"
       ],
       "priceSelectors": [
-        "[class*='sale-price']",
-        "[class*='SalePrice']",
+        ".product-view__price .price__current",
+        ".price__current",
         "meta[property='product:sale_price:amount']"
       ],
       "retailPriceSelectors": [
-        "[class*='original-price']",
-        "[class*='ComparePrice']",
+        ".product-view__price .price__original",
+        ".price__original",
         "meta[property='product:price:amount']"
       ],
       "nameSelectors": [
         "meta[property='og:title']",
-        "[class*='product-title']",
+        ".product-view__header h1",
         "h1"
       ],
       "sizeSelectors": [
-        "[class*='size-selector'] button",
-        "select[name='size'] option"
+        ".variant-picker button",
+        ".product-form select option",
+        "[class*='variant'] button"
       ],
-      "imageUrlPattern": "sneakersnstuff.com"
+      "imageUrlPattern": "sneakersnstuff.com/cdn/shop"
     },
 
     "hm.com": {

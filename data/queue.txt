@@ -1,18 +1,1 @@
-# FASHION. — Product Queue
-# ========================
-# Paste product URLs here, one per line.
-# Then run: node scripts/process-queue.js
-#
-# Lines starting with # are comments (ignored).
-# Blank lines are ignored.
-#
-# Examples:
-# https://www.footlocker.nl/nl/product/~/314217367904.html
-# https://www.endclothing.com/gb/some-product-12345.html
-# https://www.zalando.com/nike-something-abc123.html
-#
-# After processing, URLs move to data/queue-done.txt
-# ========================
-
-
 

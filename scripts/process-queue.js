@@ -367,8 +367,15 @@ function detectTags(name, brand) {
 }
 
 // =====================================================================
-// FOOT LOCKER — Patchright (bypasses Kasada)
+// PATCHRIGHT BROWSER — for Cloudflare/Kasada-protected stores
 // =====================================================================
+
+// Domains that need Patchright (non-headless) to bypass bot protection
+const PATCHRIGHT_DOMAINS = ['footlocker', 'sneakersnstuff'];
+
+function needsPatchright(domain) {
+  return PATCHRIGHT_DOMAINS.some(d => domain.includes(d));
+}
 
 function isFootLocker(domain) { return domain.includes('footlocker'); }
 
@@ -576,16 +583,27 @@ async function getBrowser() {
   return _browser;
 }
 
-async function scrapeGeneric(url, config) {
-  const browser = await getBrowser();
+async function scrapeGeneric(url, config, usePatchright) {
+  let browser;
+  if (usePatchright) {
+    log('\u2192 Using Patchright (Cloudflare bypass)');
+    browser = await getPatchrightBrowser();
+  } else {
+    browser = await getBrowser();
+  }
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
+
+  if (!usePatchright) {
+    await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
+  }
 
   try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
   catch (e) { log(`Page load timeout for ${url}, continuing...`); }
 
-  await page.waitForTimeout(config.waitTime || 4000);
+  // Patchright needs longer wait for Cloudflare challenge to resolve
+  const waitTime = usePatchright ? Math.max(config.waitTime || 5000, 7000) : (config.waitTime || 4000);
+  await page.waitForTimeout(waitTime);
 
   try {
     const cookieSelectors = [
@@ -599,7 +617,7 @@ async function scrapeGeneric(url, config) {
   } catch (e) {}
 
   const data = await page.evaluate((config) => {
-    const result = { name: '', image: '', salePrice: '', retailPrice: '', sizes: [], description: '', colorway: '', styleCode: '' };
+    const result = { name: '', image: '', salePrice: '', retailPrice: '', sizes: [], description: '', colorway: '', styleCode: '', brand: '' };
 
     function trySelectors(selectors) {
       for (const sel of selectors) {
@@ -632,20 +650,91 @@ async function scrapeGeneric(url, config) {
     result.salePrice = trySelectors(config.priceSelectors);
     result.retailPrice = trySelectors(config.retailPriceSelectors);
 
-    if (!result.salePrice || !result.retailPrice) {
-      try {
-        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
-        for (const script of scripts) {
-          const d = JSON.parse(script.textContent);
-          const offers = d.offers || (d['@graph'] && d['@graph'].find(g => g.offers))?.offers;
+    // === JSON-LD extraction (Shopify ProductGroup + standard Product) ===
+    try {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      for (const script of scripts) {
+        let d;
+        try { d = JSON.parse(script.textContent); } catch(e) { continue; }
+
+        // Shopify ProductGroup with hasVariant (SNS, etc.)
+        if (d['@type'] === 'ProductGroup' && d.hasVariant) {
+          if (!result.name || result.name === document.location.hostname) {
+            const vName = d.hasVariant[0] && d.hasVariant[0].name ? d.hasVariant[0].name : '';
+            result.name = vName.replace(/\s*-\s*(XXS|XS|S|M|L|XL|XXL|2XL|3XL|XXXL|\d{1,2}(\.5)?)\s*$/i, '').trim();
+          }
+          if (!result.name && d.name) result.name = d.name;
+          if (d.brand && d.brand.name) result.brand = d.brand.name;
+          if (!result.image && d.hasVariant[0] && d.hasVariant[0].image) result.image = d.hasVariant[0].image;
+
+          const variants = d.hasVariant;
+          const inStock = variants.filter(v =>
+            v.offers && v.offers.availability && v.offers.availability.includes('InStock')
+          );
+          const allV = variants.filter(v => v.offers);
+
+          // Extract sizes from SKU (e.g. 'JV7479-XS' -> 'XS') or variant name
+          const getSize = (v) => {
+            if (v.sku) {
+              const parts = v.sku.split('-');
+              if (parts.length > 1) return parts[parts.length - 1];
+            }
+            if (v.name) {
+              const m = v.name.match(/\s-\s(.+)$/);
+              if (m) return m[1].trim();
+            }
+            return '';
+          };
+
+          if (result.sizes.length === 0) {
+            result.sizes = inStock.map(getSize).filter(s => s);
+          }
+
+          // Prices: sale from JSON-LD variant, retail from CSS strikethrough
+          const pv = inStock[0] || allV[0];
+          if (pv && pv.offers) {
+            if (!result.salePrice && pv.offers.price) {
+              result.salePrice = String(pv.offers.price);
+            }
+          }
+          if (!result.retailPrice) {
+            const origEl = document.querySelector('.product-view__price .price__original') ||
+                           document.querySelector('.price__original') ||
+                           document.querySelector('[class*="price"] s');
+            if (origEl) {
+              const t = origEl.textContent.trim().replace(/[^\d.,]/g, '').replace(',', '.');
+              if (t) result.retailPrice = t;
+            }
+          }
+          continue;
+        }
+
+        // Standard Product type
+        if (d['@type'] === 'Product') {
+          if (!result.name && d.name) result.name = d.name;
+          if (d.brand) result.brand = typeof d.brand === 'string' ? d.brand : (d.brand.name || '');
+          const offers = d.offers;
           if (offers) {
             const offer = Array.isArray(offers) ? offers[0] : offers;
             if (!result.salePrice && offer.price) result.salePrice = String(offer.price);
             if (!result.retailPrice && offer.highPrice) result.retailPrice = String(offer.highPrice);
           }
         }
-      } catch (e) {}
-    }
+
+        // Check @graph
+        if (d['@graph']) {
+          for (const node of d['@graph']) {
+            if (node['@type'] === 'Product' || node['@type'] === 'ProductGroup') {
+              if (node.offers) {
+                const offer = Array.isArray(node.offers) ? node.offers[0] : node.offers;
+                if (!result.salePrice && offer.price) result.salePrice = String(offer.price);
+                if (!result.retailPrice && offer.highPrice) result.retailPrice = String(offer.highPrice);
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {}
 
     const unavailablePatterns = /crossed|disabled|unavailable|sold.?out|oos|inactive|out.?of.?stock/i;
     const productArea = document.querySelector('main') || document.querySelector('[class*="pdp"]') || document;
@@ -687,8 +776,12 @@ async function scrapePage(url, config) {
     log('\u2192 Foot Locker (Patchright + Kasada bypass)');
     return await scrapeFootLocker(url);
   }
+  if (needsPatchright(domain)) {
+    log('\u2192 Patchright (Cloudflare bypass)');
+    return await scrapeGeneric(url, config, true);
+  }
   log('\u2192 Generic Playwright scraping');
-  return await scrapeGeneric(url, config);
+  return await scrapeGeneric(url, config, false);
 }
 
 // ===== READ QUEUE =====
