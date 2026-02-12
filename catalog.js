@@ -1,7 +1,7 @@
 /**
  * FASHION. — Catalog Page
  * ========================
- * Loads inventory data, renders product grid with filters.
+ * Loads inventory data + picks, renders product grid with filters.
  * Reuses pick-card markup from sales page for consistency.
  */
 
@@ -31,28 +31,73 @@
   // ===== LOAD DATA =====
   async function loadData() {
     try {
-      const indexResp = await fetch('data/catalog-index.json');
-      const index = await indexResp.json();
-
       const products = [];
-      for (const store of index.stores) {
-        try {
-          const resp = await fetch(`data/inventory/${store.file}`);
-          const data = await resp.json();
-          if (data.products) {
-            for (const p of data.products) {
-              p._store = data.store;
-              p._storeFlag = data.storeFlag;
+      const storeSet = new Set();
+
+      // 1. Load inventory files (primary source)
+      try {
+        const indexResp = await fetch('data/catalog-index.json');
+        const index = await indexResp.json();
+
+        for (const store of index.stores) {
+          try {
+            const resp = await fetch(`data/inventory/${store.file}`);
+            const data = await resp.json();
+            if (data.products) {
+              for (const p of data.products) {
+                p._store = data.store;
+                p._storeFlag = data.storeFlag;
+                p._source = 'inventory';
+                products.push(p);
+                storeSet.add(data.store);
+              }
+            }
+          } catch (e) {
+            console.warn(`Could not load ${store.file}:`, e);
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load catalog-index.json:', e);
+      }
+
+      // 2. Load picks.json (supplementary source)
+      try {
+        const picksResp = await fetch('data/picks.json');
+        const picksData = await picksResp.json();
+
+        if (picksData.picks) {
+          for (const p of picksData.picks) {
+            // Normalize field names to match catalog format
+            p._store = p._store || p.store || 'Unknown';
+            p._storeFlag = p._storeFlag || p.storeFlag || '🏷️';
+            p._source = 'picks';
+
+            // Infer category from tags if not set
+            if (!p.category) {
+              const tags = (p.tags || []).map(t => t.toLowerCase());
+              if (tags.includes('sneakers')) p.category = 'sneakers';
+              else if (tags.includes('hoodie') || tags.includes('jacket') || tags.includes('clothing')) p.category = 'clothing';
+              else if (tags.includes('shorts')) p.category = 'clothing';
+              else if (tags.includes('kids')) p.category = 'kids';
+              else p.category = 'sneakers'; // default for this dataset
+            }
+
+            // Avoid duplicates — skip if same styleCode already in inventory
+            const isDupe = products.some(existing =>
+              existing.styleCode && p.styleCode && existing.styleCode === p.styleCode
+            );
+            if (!isDupe) {
               products.push(p);
+              storeSet.add(p._store);
             }
           }
-        } catch (e) {
-          console.warn(`Could not load ${store.file}:`, e);
         }
+      } catch (e) {
+        console.warn('Could not load picks.json:', e);
       }
 
       allProducts = products;
-      heroBadge.textContent = `🛍️ ${allProducts.length} PRODUCTS — ${index.stores.length} STORES`;
+      heroBadge.textContent = `🛍️ ${allProducts.length} PRODUCTS — ${storeSet.size} STORES`;
 
       buildFilters();
       applyFilters();
@@ -210,7 +255,7 @@
     filtered.sort((a, b) => {
       switch (sortMode) {
         case 'newest':
-          return (b.addedDate || '').localeCompare(a.addedDate || '');
+          return (b.addedDate || b.id || '').toString().localeCompare((a.addedDate || a.id || '').toString());
         case 'price-asc':
           return priceNum(a.salePrice) - priceNum(b.salePrice);
         case 'price-desc':
@@ -286,7 +331,7 @@
         <div class="pick-card-body">
           ${p.brand ? `<div class="pick-card-brand">${esc(p.brand)}</div>` : ''}
           <div class="pick-card-name">${esc(p.name)}</div>
-          ${p.colorway ? `<div class="pick-card-colorway">${esc(p.colorway)}</div>` : ''}
+          ${p.colorway && !p.colorway.includes('Kies een') ? `<div class="pick-card-colorway">${esc(p.colorway)}</div>` : ''}
           <div class="pick-card-pricing">
             ${p.salePrice ? `<span class="pick-price-sale">${esc(p.salePrice)}</span>` : ''}
             ${p.retailPrice && p.retailPrice !== p.salePrice ? `<span class="pick-price-retail">${esc(p.retailPrice)}</span>` : ''}
