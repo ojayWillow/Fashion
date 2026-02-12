@@ -107,14 +107,26 @@ function detectCurrency(domain) {
 }
 
 function isValidSize(text) {
-  if (!text || text.length > 12) return false;
+  if (!text || text.length > 15) return false;
   const t = text.trim();
-  if (/^\d{2}(\.5)?$/.test(t)) {
-    const n = parseFloat(t);
-    if (n >= 35 && n <= 52) return true;
+  // EU sizes (bare or prefixed)
+  if (/^(EU\s?)?\d{2}(\.5)?$/i.test(t)) {
+    const n = parseFloat(t.replace(/^EU\s?/i, ''));
+    if (n >= 16 && n <= 52) return true;
   }
+  // US/UK sizes (bare or prefixed)
   if (/^(US|UK)?\s?\d{1,2}(\.5)?$/i.test(t)) return true;
+  // Letter sizes
   if (/^(XXS|XS|S|M|L|XL|XXL|2XL|3XL|XXXL)$/i.test(t)) return true;
+  // Waist sizes
+  if (/^W\d{2,3}$/i.test(t)) return true;
+  // One-size
+  if (/^OS$/i.test(t)) return true;
+  // Kids sizes (2C, 5C, 1.5Y, etc.)
+  if (/^\d{1,2}(\.5)?(C|Y)$/i.test(t)) return true;
+  // Women's sizes (W12, etc.)
+  if (/^W\d{1,2}(\.5)?$/i.test(t)) return true;
+  // Bare numbers (24-52 range)
   if (/^\d{2}$/.test(t)) {
     const n = parseInt(t);
     if (n >= 24 && n <= 52) return true;
@@ -122,12 +134,148 @@ function isValidSize(text) {
   return false;
 }
 
+// ================================================================
+// SIZE NORMALIZATION — converts all sizes to unified EU format
+// ================================================================
+
+const US_M_TO_EU = {
+  3.5: 35.5, 4: 36, 4.5: 36.5, 5: 37.5, 5.5: 38,
+  6: 38.5, 6.5: 39, 7: 40, 7.5: 40.5, 8: 41,
+  8.5: 42, 9: 42.5, 9.5: 43, 10: 44, 10.5: 44.5,
+  11: 45, 11.5: 45.5, 12: 46, 12.5: 47, 13: 47.5,
+  14: 48.5, 15: 49.5
+};
+
+const UK_M_TO_EU = {
+  3: 35.5, 3.5: 36, 4: 36.5, 4.5: 37.5, 5: 38,
+  5.5: 38.5, 6: 39, 6.5: 40, 7: 40.5, 7.5: 41,
+  8: 42, 8.5: 42.5, 9: 43, 9.5: 44, 10: 44.5,
+  10.5: 45, 11: 45.5, 11.5: 46, 12: 47, 12.5: 47.5,
+  13: 48.5, 14: 49.5
+};
+
+const US_W_TO_EU = {
+  5: 35.5, 5.5: 36, 6: 36.5, 6.5: 37.5, 7: 38,
+  7.5: 38.5, 8: 39, 8.5: 40, 9: 40.5, 9.5: 41,
+  10: 42, 10.5: 42.5, 11: 43, 11.5: 44, 12: 44.5
+};
+
+const US_KIDS_TO_EU = {
+  '1C': 16, '1.5C': 16.5, '2C': 17, '2.5C': 18, '3C': 18.5,
+  '3.5C': 19, '4C': 19.5, '4.5C': 20, '5C': 21, '5.5C': 21.5,
+  '6C': 22, '6.5C': 22.5, '7C': 23.5, '7.5C': 24, '8C': 25,
+  '8.5C': 25.5, '9C': 26, '9.5C': 26.5, '10C': 27, '10.5C': 27.5,
+  '11C': 28, '11.5C': 28.5, '12C': 29.5, '12.5C': 30, '13C': 31,
+  '13.5C': 31.5,
+  '1Y': 32, '1.5Y': 33, '2Y': 33.5, '2.5Y': 34, '3Y': 35,
+  '3.5Y': 35.5, '4Y': 36, '4.5Y': 36.5, '5Y': 37.5, '5.5Y': 38,
+  '6Y': 38.5, '6.5Y': 39, '7Y': 40
+};
+
+const SIZE_PASSTHROUGH = new Set([
+  'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '2XL', '3XL', 'OS'
+]);
+
+function isWomensProduct(name) {
+  const n = (name || '').toLowerCase();
+  return n.includes('wmns') || n.includes('women') || n.includes('wmn');
+}
+
+function isKidsProduct(name, tags) {
+  const n = (name || '').toLowerCase();
+  const tagsLower = (tags || []).map(t => t.toLowerCase());
+  return n.includes('(td)') || n.includes('(ps)') || n.includes('(gs)') ||
+         n.includes('baby') || n.includes('toddler') || n.includes('kids') ||
+         tagsLower.includes('kids');
+}
+
+function getSizeSystem(storeName) {
+  const s = (storeName || '').toLowerCase();
+  if (s.includes('end'))        return 'END';   // UK or EU prefix
+  if (s.includes('foot locker')) return 'FL';    // bare EU
+  if (s.includes('sns') || s.includes('sneakersnstuff')) return 'SNS'; // bare US
+  return 'UNKNOWN';
+}
+
+function normalizeSize(raw, storeName, productName, tags) {
+  const s = raw.trim();
+  const upper = s.toUpperCase();
+
+  // Pass-through: letter sizes, one-size
+  if (SIZE_PASSTHROUGH.has(upper)) return s;
+
+  // Waist sizes (W28, W30, W32)
+  if (/^W\d+/i.test(s)) return s;
+
+  const system = getSizeSystem(storeName);
+  const womens = isWomensProduct(productName);
+  const kids = isKidsProduct(productName, tags);
+
+  // Kids sizes with C/Y suffix
+  const kidsMatch = s.match(/^(\d+\.?\d*)(C|Y)$/i);
+  if (kidsMatch) {
+    const key = kidsMatch[1] + kidsMatch[2].toUpperCase();
+    const eu = US_KIDS_TO_EU[key];
+    return eu ? 'EU ' + eu : s;
+  }
+
+  // Already has "EU" prefix
+  const euMatch = s.match(/^EU\s+(\d+\.?\d*)$/i);
+  if (euMatch) return 'EU ' + parseFloat(euMatch[1]);
+
+  // Has "UK" prefix
+  const ukMatch = s.match(/^UK\s+(\d+\.?\d*)(C|Y)?$/i);
+  if (ukMatch) {
+    const num = parseFloat(ukMatch[1]);
+    const suffix = ukMatch[2] ? ukMatch[2].toUpperCase() : '';
+    if (suffix) {
+      const key = ukMatch[1] + suffix;
+      const eu = US_KIDS_TO_EU[key];
+      return eu ? 'EU ' + eu : s;
+    }
+    const eu = UK_M_TO_EU[num];
+    if (eu) return 'EU ' + eu;
+    return 'EU ' + (Math.round((num + 33.5) * 2) / 2);
+  }
+
+  // Bare number
+  const num = parseFloat(s);
+  if (!isNaN(num)) {
+    // Foot Locker -> already EU
+    if (system === 'FL') return 'EU ' + num;
+
+    // SNS -> US sizes
+    if (system === 'SNS') {
+      if (womens) {
+        const eu = US_W_TO_EU[num];
+        return eu ? 'EU ' + eu : 'EU ' + (Math.round((num + 31) * 2) / 2);
+      }
+      if (kids) {
+        const key = num + 'Y';
+        const eu = US_KIDS_TO_EU[key];
+        if (eu) return 'EU ' + eu;
+      }
+      const eu = US_M_TO_EU[num];
+      return eu ? 'EU ' + eu : 'EU ' + (Math.round((num + 33) * 2) / 2);
+    }
+
+    // END bare number (rare) — assume EU if >= 35
+    if (num >= 35) return 'EU ' + num;
+  }
+
+  // Unrecognized — keep as-is
+  return s;
+}
+
+function normalizeSizes(sizes, storeName, productName, tags) {
+  return sizes.map(s => normalizeSize(s, storeName, productName, tags));
+}
+
 // ===== CATEGORY DETECTION =====
 function detectCategory(name, tags) {
   const lower = name.toLowerCase();
   const tagsLower = (tags || []).map(t => t.toLowerCase());
 
-  // Check explicit clothing types FIRST (unambiguous)
   const jacketWords = ['jacket', 'coat', 'parka', 'waxed'];
   const hoodieWords = ['hoodie', 'pullover fleece hoodie', 'sweatshirt'];
   const bootsWords = ['boot', '6 inch'];
@@ -136,20 +284,16 @@ function detectCategory(name, tags) {
   if (hoodieWords.some(w => lower.includes(w))) return 'hoodies';
   if (bootsWords.some(w => lower.includes(w))) return 'boots';
 
-  // Check tags — most reliable for sneakers
   if (tagsLower.includes('sneakers')) return 'sneakers';
 
-  // Sneaker model names
   const sneakerIndicators = ['retro', 'sneaker', 'air jordan', 'air max', 'dunk', 'air force',
     'spizike', 'aj1', '1906r', '1906', '1000', 'gel-quantum', 'xt-6',
     'superstar', 'lafrance', 'mb.04', 'mb04', 'air tn', 'low', 'mid', 'high'];
   if (sneakerIndicators.some(w => lower.includes(w))) return 'sneakers';
 
-  // Clothing shorts (not sneaker names with "shorts" in them)
   const shortsClothing = ['fleece short', 'jogger short', 'sweat short'];
   if (shortsClothing.some(w => lower.includes(w))) return 'shorts';
 
-  // Tag-based fallback
   const tagStr = tagsLower.join(' ');
   if (tagStr.includes('hoodie')) return 'hoodies';
   if (tagStr.includes('jacket')) return 'jackets';
@@ -207,7 +351,6 @@ function addToInventory(storeName, storeFlag, product) {
   let inventoryData = loadInventoryFile(slug);
 
   if (!inventoryData) {
-    // Create new store file
     inventoryData = {
       store: storeName,
       storeFlag: storeFlag,
@@ -230,7 +373,6 @@ function addToInventory(storeName, storeFlag, product) {
 function normalizeUrl(url) {
   try {
     const u = new URL(url);
-    // Remove tracking params, trailing slashes
     u.search = '';
     u.hash = '';
     return u.href.replace(/\/+$/, '').toLowerCase();
@@ -238,12 +380,10 @@ function normalizeUrl(url) {
 }
 
 function extractSkuFromUrl(url) {
-  // Foot Locker SKU: long number before .html
   const m1 = url.match(/(\d{10,15})\.html/);
   if (m1) return m1[1];
   const m2 = url.match(/[\/\-](\d{10,15})(?:\?|$)/);
   if (m2) return m2[1];
-  // END. style code in URL
   const m3 = url.match(/([a-zA-Z0-9]+-[a-zA-Z0-9]+)\.html/);
   if (m3) return m3[1].toLowerCase();
   return null;
@@ -253,7 +393,6 @@ function findDuplicate(url, existingPicks, inventoryProducts) {
   const normalizedNew = normalizeUrl(url);
   const skuNew = extractSkuFromUrl(url);
 
-  // Check picks.json
   for (const pick of existingPicks) {
     if (normalizeUrl(pick.url) === normalizedNew) return { source: 'picks', item: pick };
     if (skuNew && pick.url) {
@@ -263,7 +402,6 @@ function findDuplicate(url, existingPicks, inventoryProducts) {
     if (skuNew && pick.styleCode && pick.styleCode === skuNew) return { source: 'picks', item: pick };
   }
 
-  // Check inventory files
   for (const product of inventoryProducts) {
     if (normalizeUrl(product.url) === normalizedNew) return { source: 'inventory', item: product };
     if (skuNew && product.url) {
@@ -370,7 +508,6 @@ function detectTags(name, brand) {
 // PATCHRIGHT BROWSER — for Cloudflare/Kasada-protected stores
 // =====================================================================
 
-// Domains that need Patchright (non-headless) to bypass bot protection
 const PATCHRIGHT_DOMAINS = ['footlocker', 'sneakersnstuff'];
 
 function needsPatchright(domain) {
@@ -601,7 +738,6 @@ async function scrapeGeneric(url, config, usePatchright) {
   try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
   catch (e) { log(`Page load timeout for ${url}, continuing...`); }
 
-  // Patchright needs longer wait for Cloudflare challenge to resolve
   const waitTime = usePatchright ? Math.max(config.waitTime || 5000, 7000) : (config.waitTime || 4000);
   await page.waitForTimeout(waitTime);
 
@@ -650,14 +786,12 @@ async function scrapeGeneric(url, config, usePatchright) {
     result.salePrice = trySelectors(config.priceSelectors);
     result.retailPrice = trySelectors(config.retailPriceSelectors);
 
-    // === JSON-LD extraction (Shopify ProductGroup + standard Product) ===
     try {
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       for (const script of scripts) {
         let d;
         try { d = JSON.parse(script.textContent); } catch(e) { continue; }
 
-        // Shopify ProductGroup with hasVariant (SNS, etc.)
         if (d['@type'] === 'ProductGroup' && d.hasVariant) {
           if (!result.name || result.name === document.location.hostname) {
             const vName = d.hasVariant[0] && d.hasVariant[0].name ? d.hasVariant[0].name : '';
@@ -673,7 +807,6 @@ async function scrapeGeneric(url, config, usePatchright) {
           );
           const allV = variants.filter(v => v.offers);
 
-          // Extract sizes from SKU (e.g. 'JV7479-XS' -> 'XS') or variant name
           const getSize = (v) => {
             if (v.sku) {
               const parts = v.sku.split('-');
@@ -690,7 +823,6 @@ async function scrapeGeneric(url, config, usePatchright) {
             result.sizes = inStock.map(getSize).filter(s => s);
           }
 
-          // Prices: sale from JSON-LD variant, retail from CSS strikethrough
           const pv = inStock[0] || allV[0];
           if (pv && pv.offers) {
             if (!result.salePrice && pv.offers.price) {
@@ -709,7 +841,6 @@ async function scrapeGeneric(url, config, usePatchright) {
           continue;
         }
 
-        // Standard Product type
         if (d['@type'] === 'Product') {
           if (!result.name && d.name) result.name = d.name;
           if (d.brand) result.brand = typeof d.brand === 'string' ? d.brand : (d.brand.name || '');
@@ -721,7 +852,6 @@ async function scrapeGeneric(url, config, usePatchright) {
           }
         }
 
-        // Check @graph
         if (d['@graph']) {
           for (const node of d['@graph']) {
             if (node['@type'] === 'Product' || node['@type'] === 'ProductGroup') {
@@ -829,7 +959,6 @@ async function main() {
     console.log(`\n  [${i + 1}/${urls.length}] ${storeInfo.flag} ${storeInfo.name}`);
     console.log(`  ${url}`);
 
-    // ===== DUPLICATE CHECK (picks + inventory) =====
     const existing = findDuplicate(url, picksData.picks, inventoryProducts);
     if (existing) {
       const dupId = existing.item.id;
@@ -868,7 +997,9 @@ async function main() {
       const category = detectCategory(name, tags);
       const today = new Date().toISOString().split('T')[0];
 
-      // ===== BUILD PICKS ENTRY (backward compatible) =====
+      // ===== NORMALIZE SIZES TO EU =====
+      const normalizedSizes = normalizeSizes(validSizes, storeInfo.name, name, tags);
+
       const newPick = {
         id: nextPicksId, name, brand,
         styleCode: scraped.styleCode || '', colorway: scraped.colorway || '',
@@ -878,10 +1009,9 @@ async function main() {
         image: imageUrl, url,
         description: (scraped.description || '').substring(0, 200),
         tags,
-        sizes: validSizes,
+        sizes: normalizedSizes,
       };
 
-      // ===== BUILD INVENTORY ENTRY (new system) =====
       const newInventoryProduct = {
         id: invId,
         picksId: nextPicksId,
@@ -894,20 +1024,15 @@ async function main() {
         image: imageUrl, url,
         description: (scraped.description || '').substring(0, 200),
         tags,
-        sizes: validSizes,
+        sizes: normalizedSizes,
         addedDate: today,
         lastChecked: today,
         status: 'active'
       };
 
       if (!DRY_RUN) {
-        // Write to picks.json (backward compatible)
         picksData.picks.push(newPick);
-
-        // Write to inventory file (new system)
         addToInventory(storeInfo.name, storeInfo.flag, newInventoryProduct);
-
-        // Track for dupe detection within this run
         inventoryProducts.push(newInventoryProduct);
       }
 
@@ -917,9 +1042,9 @@ async function main() {
 
       console.log(`  \u2705 ${name}`);
       console.log(`     ${brand} | ${priceStr}`);
-      console.log(`     Category: ${category} | Sizes: ${validSizes.length > 0 ? validSizes.join(', ') : 'none found'}`);
+      console.log(`     Category: ${category} | Sizes: ${normalizedSizes.length > 0 ? normalizedSizes.join(', ') : 'none found'}`);
       if (scraped._totalSizes) {
-        console.log(`     Stock: ${validSizes.length} available, ${scraped._soldOut || 0} sold out of ${scraped._totalSizes} total`);
+        console.log(`     Stock: ${normalizedSizes.length} available, ${scraped._soldOut || 0} sold out of ${scraped._totalSizes} total`);
       }
       console.log(`     Image: ${newPick.image ? '\u2705' : '\u274c'}`);
       console.log(`     Color: ${newPick.colorway || '-'}`);
@@ -938,7 +1063,6 @@ async function main() {
     }
   }
 
-  // Close browsers
   if (_browser) { await _browser.close(); _browser = null; }
   if (_patchrightBrowser) { await _patchrightBrowser.close(); _patchrightBrowser = null; }
 
@@ -954,7 +1078,6 @@ async function main() {
     console.log('\n  \ud83d\udcbe Saved picks.json');
   }
 
-  // ===== REBUILD CATALOG INDEX =====
   if (!DRY_RUN && results.success > 0) {
     console.log('  \ud83d\udcca Rebuilding catalog index...');
     try {
