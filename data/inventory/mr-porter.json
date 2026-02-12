@@ -1,0 +1,74 @@
+{
+  "store": "MR PORTER",
+  "storeFlag": "🇬🇧",
+  "lastUpdated": "2026-02-12",
+  "totalProducts": 3,
+  "products": [
+    {
+      "id": "mr-porter-175",
+      "picksId": 175,
+      "name": "Access Denied",
+      "brand": "",
+      "category": "sneakers",
+      "styleCode": "",
+      "colorway": "",
+      "retailPrice": "",
+      "salePrice": "",
+      "discount": "0%",
+      "image": "",
+      "url": "https://www.mrporter.com/en-gb/",
+      "description": "",
+      "tags": [
+        "Sale"
+      ],
+      "sizes": [],
+      "addedDate": "2026-02-12",
+      "lastChecked": "2026-02-12",
+      "status": "active"
+    },
+    {
+      "id": "mr-porter-176",
+      "picksId": 176,
+      "name": "Access Denied",
+      "brand": "",
+      "category": "sneakers",
+      "styleCode": "",
+      "colorway": "",
+      "retailPrice": "",
+      "salePrice": "",
+      "discount": "0%",
+      "image": "",
+      "url": "https://www.mrporter.com/en-gb/mens/product/on/sport/running-shoes/plus-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-sneakers/1647597347333346",
+      "description": "",
+      "tags": [
+        "Sale"
+      ],
+      "sizes": [],
+      "addedDate": "2026-02-12",
+      "lastChecked": "2026-02-12",
+      "status": "active"
+    },
+    {
+      "id": "mr-porter-177",
+      "picksId": 177,
+      "name": "Access Denied",
+      "brand": "",
+      "category": "sneakers",
+      "styleCode": "",
+      "colorway": "",
+      "retailPrice": "",
+      "salePrice": "",
+      "discount": "0%",
+      "image": "",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-dn-rubber-trimmed-mesh-sneakers/1647597336438635",
+      "description": "",
+      "tags": [
+        "Sale"
+      ],
+      "sizes": [],
+      "addedDate": "2026-02-12",
+      "lastChecked": "2026-02-12",
+      "status": "active"
+    }
+  ]
+}
