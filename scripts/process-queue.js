@@ -367,8 +367,15 @@ function detectTags(name, brand) {
 }
 
 // =====================================================================
-// FOOT LOCKER — Patchright (bypasses Kasada)
+// PATCHRIGHT BROWSER — for Cloudflare/Kasada-protected stores
 // =====================================================================
+
+// Domains that need Patchright (non-headless) to bypass bot protection
+const PATCHRIGHT_DOMAINS = ['footlocker', 'sneakersnstuff'];
+
+function needsPatchright(domain) {
+  return PATCHRIGHT_DOMAINS.some(d => domain.includes(d));
+}
 
 function isFootLocker(domain) { return domain.includes('footlocker'); }
 
@@ -576,16 +583,27 @@ async function getBrowser() {
   return _browser;
 }
 
-async function scrapeGeneric(url, config) {
-  const browser = await getBrowser();
+async function scrapeGeneric(url, config, usePatchright) {
+  let browser;
+  if (usePatchright) {
+    log('\u2192 Using Patchright (Cloudflare bypass)');
+    browser = await getPatchrightBrowser();
+  } else {
+    browser = await getBrowser();
+  }
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
+
+  if (!usePatchright) {
+    await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9,nl;q=0.8' });
+  }
 
   try { await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 }); }
   catch (e) { log(`Page load timeout for ${url}, continuing...`); }
 
-  await page.waitForTimeout(config.waitTime || 4000);
+  // Patchright needs longer wait for Cloudflare challenge to resolve
+  const waitTime = usePatchright ? Math.max(config.waitTime || 5000, 7000) : (config.waitTime || 4000);
+  await page.waitForTimeout(waitTime);
 
   try {
     const cookieSelectors = [
@@ -758,8 +776,12 @@ async function scrapePage(url, config) {
     log('\u2192 Foot Locker (Patchright + Kasada bypass)');
     return await scrapeFootLocker(url);
   }
+  if (needsPatchright(domain)) {
+    log('\u2192 Patchright (Cloudflare bypass)');
+    return await scrapeGeneric(url, config, true);
+  }
   log('\u2192 Generic Playwright scraping');
-  return await scrapeGeneric(url, config);
+  return await scrapeGeneric(url, config, false);
 }
 
 // ===== READ QUEUE =====
