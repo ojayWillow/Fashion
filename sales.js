@@ -125,16 +125,86 @@ function handleImageError(imgEl, brandName) {
 
 // ===== CURATED PICKS =====
 let allPicks = [];
+let activePickFilter = 'all';
 
 async function loadPicks() {
     try {
         const res = await fetch('data/picks.json');
         const data = await res.json();
         allPicks = data.picks;
+        buildPickFilterPills();
         renderPicks(allPicks);
     } catch (e) {
         console.error('Error loading picks:', e);
     }
+}
+
+function buildPickFilterPills() {
+    const container = document.getElementById('picksFilterPills');
+    if (!container || allPicks.length === 0) return;
+
+    // Gather unique brands and categories
+    const brands = {};
+    const categories = { Sneakers: 0, Clothing: 0 };
+
+    allPicks.forEach(p => {
+        if (p.brand) brands[p.brand] = (brands[p.brand] || 0) + 1;
+        if (p.tags) {
+            if (p.tags.includes('Sneakers')) categories.Sneakers++;
+            if (p.tags.includes('Clothing')) categories.Clothing++;
+        }
+    });
+
+    // Build pills: All, category pills, then top brand pills
+    const pills = [{ label: '\u2726 All', value: 'all', count: allPicks.length }];
+
+    if (categories.Sneakers > 0) pills.push({ label: '\ud83d\udc5f Sneakers', value: 'tag:Sneakers', count: categories.Sneakers });
+    if (categories.Clothing > 0) pills.push({ label: '\ud83e\udde5 Clothing', value: 'tag:Clothing', count: categories.Clothing });
+
+    // Top brands (sorted by count, max 5)
+    const topBrands = Object.entries(brands)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    topBrands.forEach(([brand, count]) => {
+        pills.push({ label: brand, value: `brand:${brand}`, count });
+    });
+
+    container.innerHTML = pills.map(pill => `
+        <button class="picks-pill${pill.value === 'all' ? ' active' : ''}" data-filter="${pill.value}">
+            ${pill.label} <span class="pill-count">${pill.count}</span>
+        </button>
+    `).join('');
+
+    container.querySelectorAll('.picks-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+            activePickFilter = btn.dataset.filter;
+            container.querySelectorAll('.picks-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterAndRenderPicks();
+        });
+        addHoverCursor(btn);
+    });
+}
+
+function filterAndRenderPicks() {
+    if (activePickFilter === 'all') {
+        renderPicks(allPicks);
+        return;
+    }
+
+    let filtered;
+    if (activePickFilter.startsWith('tag:')) {
+        const tag = activePickFilter.replace('tag:', '');
+        filtered = allPicks.filter(p => p.tags && p.tags.includes(tag));
+    } else if (activePickFilter.startsWith('brand:')) {
+        const brand = activePickFilter.replace('brand:', '');
+        filtered = allPicks.filter(p => p.brand === brand);
+    } else {
+        filtered = allPicks;
+    }
+
+    renderPicks(filtered);
 }
 
 function getPicksByStore(storeName) {
@@ -143,7 +213,10 @@ function getPicksByStore(storeName) {
 
 function renderPicks(picks) {
     const grid = document.getElementById('picksGrid');
-    if (!grid || !picks.length) return;
+    if (!grid || !picks.length) {
+        if (grid) grid.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px 0;">No picks match this filter</p>';
+        return;
+    }
 
     grid.innerHTML = '';
     picks.forEach((pick, i) => {
@@ -152,7 +225,7 @@ function renderPicks(picks) {
         card.style.animationDelay = `${i * 0.08}s`;
 
         const deadLinkBadge = pick._linkDead
-            ? '<span class="pick-card-dead-link" title="This product may no longer be available">⚠ Link Expired</span>'
+            ? '<span class="pick-card-dead-link" title="This product may no longer be available">\u26a0 Link Expired</span>'
             : '';
 
         const sizesHTML = pick.sizes && pick.sizes.length
@@ -182,7 +255,7 @@ function renderPicks(picks) {
                 ${sizesHTML}
                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
                 <button class="pick-card-cta" ${pick._linkDead ? 'disabled title="Product no longer available"' : `onclick="redirectTo('${escapedUrl}', '${escapedStore}')"`}>
-                    ${pick._linkDead ? 'Unavailable' : 'Shop Now →'}
+                    ${pick._linkDead ? 'Unavailable' : 'Shop Now \u2192'}
                 </button>
             </div>
         `;
@@ -220,7 +293,7 @@ function showStoreDetail(store, picks) {
                 </div>
                 <div class="store-detail-actions">
                     <button class="store-detail-visit" onclick="redirectTo('${store.saleUrl}', '${escapedStoreName}')">
-                        Visit Store →
+                        Visit Store \u2192
                     </button>
                     <button class="store-detail-close" aria-label="Close">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -258,7 +331,7 @@ function showStoreDetail(store, picks) {
                                 ${sizesHTML}
                                 <div class="pick-card-tags">${pick.tags.map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
                                 <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStoreName}')">
-                                    Shop Now →
+                                    Shop Now \u2192
                                 </button>
                             </div>
                         </div>
@@ -404,11 +477,11 @@ function renderStores() {
                     <span class="store-card-category">${store.categoryIcon} ${store.category}</span>
                 </div>
             </div>
-            <div class="store-card-deal"><div class="deal-label">🔥 Current Deal</div><div class="deal-text">${store.deal}</div></div>
+            <div class="store-card-deal"><div class="deal-label">\ud83d\udd25 Current Deal</div><div class="deal-text">${store.deal}</div></div>
             <p class="store-card-desc">${store.description}</p>
             ${previewHTML}
             <div class="store-card-footer">
-                <span class="store-card-cta">${storePicks.length > 0 ? 'View Picks →' : 'Shop Sale →'}</span>
+                <span class="store-card-cta">${storePicks.length > 0 ? 'View Picks \u2192' : 'Shop Sale \u2192'}</span>
                 <span class="store-card-flag">${store.flag}</span>
             </div>
         `;
