@@ -599,7 +599,7 @@ async function scrapeGeneric(url, config) {
   } catch (e) {}
 
   const data = await page.evaluate((config) => {
-    const result = { name: '', image: '', salePrice: '', retailPrice: '', sizes: [], description: '', colorway: '', styleCode: '' };
+    const result = { name: '', image: '', salePrice: '', retailPrice: '', sizes: [], description: '', colorway: '', styleCode: '', brand: '' };
 
     function trySelectors(selectors) {
       for (const sel of selectors) {
@@ -632,20 +632,91 @@ async function scrapeGeneric(url, config) {
     result.salePrice = trySelectors(config.priceSelectors);
     result.retailPrice = trySelectors(config.retailPriceSelectors);
 
-    if (!result.salePrice || !result.retailPrice) {
-      try {
-        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
-        for (const script of scripts) {
-          const d = JSON.parse(script.textContent);
-          const offers = d.offers || (d['@graph'] && d['@graph'].find(g => g.offers))?.offers;
+    // === JSON-LD extraction (Shopify ProductGroup + standard Product) ===
+    try {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      for (const script of scripts) {
+        let d;
+        try { d = JSON.parse(script.textContent); } catch(e) { continue; }
+
+        // Shopify ProductGroup with hasVariant (SNS, etc.)
+        if (d['@type'] === 'ProductGroup' && d.hasVariant) {
+          if (!result.name || result.name === document.location.hostname) {
+            const vName = d.hasVariant[0] && d.hasVariant[0].name ? d.hasVariant[0].name : '';
+            result.name = vName.replace(/\s*-\s*(XXS|XS|S|M|L|XL|XXL|2XL|3XL|XXXL|\d{1,2}(\.5)?)\s*$/i, '').trim();
+          }
+          if (!result.name && d.name) result.name = d.name;
+          if (d.brand && d.brand.name) result.brand = d.brand.name;
+          if (!result.image && d.hasVariant[0] && d.hasVariant[0].image) result.image = d.hasVariant[0].image;
+
+          const variants = d.hasVariant;
+          const inStock = variants.filter(v =>
+            v.offers && v.offers.availability && v.offers.availability.includes('InStock')
+          );
+          const allV = variants.filter(v => v.offers);
+
+          // Extract sizes from SKU (e.g. 'JV7479-XS' -> 'XS') or variant name
+          const getSize = (v) => {
+            if (v.sku) {
+              const parts = v.sku.split('-');
+              if (parts.length > 1) return parts[parts.length - 1];
+            }
+            if (v.name) {
+              const m = v.name.match(/\s-\s(.+)$/);
+              if (m) return m[1].trim();
+            }
+            return '';
+          };
+
+          if (result.sizes.length === 0) {
+            result.sizes = inStock.map(getSize).filter(s => s);
+          }
+
+          // Prices: sale from JSON-LD variant, retail from CSS strikethrough
+          const pv = inStock[0] || allV[0];
+          if (pv && pv.offers) {
+            if (!result.salePrice && pv.offers.price) {
+              result.salePrice = String(pv.offers.price);
+            }
+          }
+          if (!result.retailPrice) {
+            const origEl = document.querySelector('.product-view__price .price__original') ||
+                           document.querySelector('.price__original') ||
+                           document.querySelector('[class*="price"] s');
+            if (origEl) {
+              const t = origEl.textContent.trim().replace(/[^\d.,]/g, '').replace(',', '.');
+              if (t) result.retailPrice = t;
+            }
+          }
+          continue;
+        }
+
+        // Standard Product type
+        if (d['@type'] === 'Product') {
+          if (!result.name && d.name) result.name = d.name;
+          if (d.brand) result.brand = typeof d.brand === 'string' ? d.brand : (d.brand.name || '');
+          const offers = d.offers;
           if (offers) {
             const offer = Array.isArray(offers) ? offers[0] : offers;
             if (!result.salePrice && offer.price) result.salePrice = String(offer.price);
             if (!result.retailPrice && offer.highPrice) result.retailPrice = String(offer.highPrice);
           }
         }
-      } catch (e) {}
-    }
+
+        // Check @graph
+        if (d['@graph']) {
+          for (const node of d['@graph']) {
+            if (node['@type'] === 'Product' || node['@type'] === 'ProductGroup') {
+              if (node.offers) {
+                const offer = Array.isArray(node.offers) ? node.offers[0] : node.offers;
+                if (!result.salePrice && offer.price) result.salePrice = String(offer.price);
+                if (!result.retailPrice && offer.highPrice) result.retailPrice = String(offer.highPrice);
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {}
 
     const unavailablePatterns = /crossed|disabled|unavailable|sold.?out|oos|inactive|out.?of.?stock/i;
     const productArea = document.querySelector('main') || document.querySelector('[class*="pdp"]') || document;
