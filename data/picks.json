@@ -2206,6 +2206,34 @@
         "Sale"
       ],
       "sizes": []
+    },
+    {
+      "id": 100,
+      "name": "Puma Wmns Speedcat Ballet Cow - 407787-01",
+      "brand": "Puma",
+      "styleCode": "",
+      "colorway": "",
+      "retailPrice": "€90",
+      "salePrice": "€68",
+      "discount": "-24%",
+      "store": "SNS (Sneakersnstuff)",
+      "storeFlag": "🇸🇪",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/100-puma-wmns-speedcat-ballet-cow-407787-01",
+      "url": "https://www.sneakersnstuff.com/products/puma-wmns-speedcat-ballet-cow-407787-01",
+      "description": "Inspired by the velocity of the racetrack, the Puma Wmns Speedcat Ballet Cow reinterprets the iconic Speedcat with a cow-skin inspired upper. The shoe features a low-profile silhouette, cutout Formstr",
+      "tags": [
+        "Puma",
+        "Sale"
+      ],
+      "sizes": [
+        "6.5",
+        "7",
+        "7.5",
+        "8",
+        "8.5",
+        "9",
+        "9.5"
+      ]
     }
   ]
 }
