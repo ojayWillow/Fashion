@@ -16,6 +16,11 @@
     padding: 14px 0;
 }
 
+/* Wider toolbar container */
+.catalog-toolbar .container {
+    max-width: 1600px;
+}
+
 .toolbar-inner {
     display: flex;
     align-items: center;
@@ -135,23 +140,28 @@
     min-height: 60vh;
 }
 
+/* Override the global .container max-width for catalog */
 .catalog-layout {
     display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 24px;
-    padding-top: 32px;
+    grid-template-columns: 190px 1fr;
+    gap: 20px;
+    padding-top: 28px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 /* ===== SIDEBAR ===== */
 .catalog-sidebar {
     position: sticky;
-    top: 80px;
+    top: 70px;
     align-self: start;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 90px);
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(168,85,247,0.2) transparent;
-    padding-right: 8px;
+    padding-right: 6px;
 }
 
 .catalog-sidebar::-webkit-scrollbar { width: 4px; }
@@ -162,12 +172,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .sidebar-header h3 {
     font-family: var(--font-heading);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: #1a1a2e;
     letter-spacing: 0.5px;
@@ -192,9 +202,9 @@
 
 /* Filter Groups */
 .filter-group {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    padding-bottom: 8px;
+    padding-bottom: 4px;
 }
 
 .filter-group:last-child { border-bottom: none; }
@@ -204,12 +214,12 @@
     align-items: center;
     justify-content: space-between;
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 700;
     color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    padding: 12px 0;
+    padding: 8px 0;
     cursor: pointer;
     transition: color 0.25s ease;
     user-select: none;
@@ -218,7 +228,7 @@
 .filter-group-title:hover { color: #6b7280; }
 
 .filter-arrow {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     transition: transform 0.3s ease;
 }
 
@@ -229,9 +239,9 @@
 .filter-group-body {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    padding-bottom: 8px;
-    max-height: 280px;
+    gap: 1px;
+    padding-bottom: 4px;
+    max-height: 240px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(168,85,247,0.15) transparent;
@@ -245,9 +255,9 @@
 .filter-option {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 7px 10px;
-    border-radius: 8px;
+    gap: 8px;
+    padding: 5px 6px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
@@ -260,16 +270,16 @@
 }
 
 .filter-checkbox {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
     border: 1.5px solid #d1d5db;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     transition: all 0.2s ease;
-    font-size: 0.6rem;
+    font-size: 0.5rem;
     color: transparent;
 }
 
@@ -280,14 +290,17 @@
 }
 
 .filter-label {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: #374151;
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .filter-count {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: #9ca3af;
 }
@@ -299,18 +312,18 @@
 .filter-sizes {
     flex-direction: row !important;
     flex-wrap: wrap;
-    gap: 6px !important;
+    gap: 4px !important;
 }
 
 .size-btn {
     font-family: var(--font-body);
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 600;
     color: #6b7280;
     background: #f3f4f6;
     border: 1px solid #e5e7eb;
-    padding: 6px 12px;
-    border-radius: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.25s ease;
     line-height: 1;
@@ -335,7 +348,7 @@
 .catalog-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: 12px;
 }
 
 /* ===== COMPACT CARD OVERRIDES FOR CATALOG ===== */
@@ -344,8 +357,8 @@
 }
 
 .catalog-grid .pick-card-image {
-    aspect-ratio: 4 / 3;
-    padding: 12px;
+    aspect-ratio: 1;
+    padding: 10px;
 }
 
 .catalog-grid .pick-card-body {
@@ -353,13 +366,13 @@
 }
 
 .catalog-grid .pick-card-brand {
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     letter-spacing: 1.2px;
     margin-bottom: 3px;
 }
 
 .catalog-grid .pick-card-name {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     margin-bottom: 3px;
     line-height: 1.25;
     display: -webkit-box;
@@ -369,37 +382,37 @@
 }
 
 .catalog-grid .pick-card-colorway {
-    font-size: 0.7rem;
-    margin-bottom: 10px;
+    font-size: 0.68rem;
+    margin-bottom: 8px;
 }
 
 .catalog-grid .pick-price-sale {
-    font-size: 1.05rem;
+    font-size: 1rem;
 }
 
 .catalog-grid .pick-price-retail {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
 }
 
 .catalog-grid .pick-card-pricing {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     gap: 8px;
 }
 
 .catalog-grid .pick-card-sizes-label {
-    font-size: 0.6rem;
-    margin-bottom: 5px;
+    font-size: 0.58rem;
+    margin-bottom: 4px;
 }
 
 .catalog-grid .pick-card-sizes {
-    margin-bottom: 10px;
-    gap: 4px;
+    margin-bottom: 8px;
+    gap: 3px;
 }
 
 .catalog-grid .pick-size {
-    font-size: 0.62rem;
-    padding: 3px 7px;
-    border-radius: 6px;
+    font-size: 0.58rem;
+    padding: 3px 6px;
+    border-radius: 5px;
 }
 
 .catalog-grid .pick-card-tags {
@@ -407,25 +420,23 @@
 }
 
 .catalog-grid .pick-card-cta {
-    font-size: 0.78rem;
-    padding: 9px 18px;
+    font-size: 0.76rem;
+    padding: 9px 16px;
 }
 
 .catalog-grid .pick-card-discount {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     padding: 4px 10px;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
 }
 
 .catalog-grid .pick-card-store {
-    font-size: 0.62rem;
-    padding: 3px 9px;
-    top: 10px;
-    left: 10px;
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    top: 8px;
+    left: 8px;
 }
-
-/* Reuse .pick-card from sales.css — no duplication */
 
 /* ===== SIDEBAR BACKDROP (mobile) ===== */
 .sidebar-backdrop {
@@ -443,7 +454,7 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 1280px) {
+@media (max-width: 1400px) {
     .catalog-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -487,23 +498,23 @@
 @media (max-width: 600px) {
     .catalog-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 8px;
     }
 
     .catalog-grid .pick-card-image {
-        padding: 8px;
+        padding: 6px;
     }
 
     .catalog-grid .pick-card-body {
-        padding: 10px 10px 12px;
+        padding: 8px 10px 10px;
     }
 
     .catalog-grid .pick-card-name {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
     }
 
     .catalog-grid .pick-price-sale {
-        font-size: 0.92rem;
+        font-size: 0.88rem;
     }
 
     .catalog-grid .pick-card-sizes {
