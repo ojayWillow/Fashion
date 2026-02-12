@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-10",
+  "lastUpdated": "2026-02-12",
   "weekLabel": "Week of Feb 10, 2026",
   "categories": [
     {
@@ -7,27 +7,7 @@
       "icon": "🔵",
       "stores": [
         {"name": "Zalando", "country": "Germany", "flag": "🇩🇪", "url": "https://www.zalando.com", "saleUrl": "https://www.zalando.com/campaigns/winter-sale/", "description": "Europe's largest online fashion platform.", "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands", "lat": 52.52, "lng": 13.405},
-        {"name": "ASOS", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.asos.com", "saleUrl": "https://www.asos.com/women/sale/", "description": "850+ brands for trend-focused shoppers.", "currentDeal": "Up to 70% off — extra discounts via the app", "lat": 51.5074, "lng": -0.1278},
-        {"name": "About You", "country": "Germany", "flag": "🇩🇪", "url": "https://www.aboutyou.com", "saleUrl": "https://www.aboutyou.com/your-sale", "description": "Personalized shopping platform.", "currentDeal": "Up to 70% off winter styles", "lat": 53.5511, "lng": 9.9937},
-        {"name": "Veepee", "country": "France", "flag": "🇫🇷", "url": "https://www.veepee.com", "saleUrl": "https://www.veepee.com", "description": "Leading flash-sales platform.", "currentDeal": "Daily flash sales — up to 70% off", "lat": 48.8566, "lng": 2.3522},
-        {"name": "Boozt", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.boozt.com", "saleUrl": "https://www.boozt.com/eu/en/sale", "description": "Premium Scandinavian fashion.", "currentDeal": "Mid-season sale — up to 60% off", "lat": 55.605, "lng": 13.0038}
-      ]
-    },
-    {
-      "name": "Fast Fashion & High Street",
-      "icon": "👗",
-      "stores": [
-        {"name": "Zara", "country": "Spain", "flag": "🇪🇸", "url": "https://www.zara.com", "saleUrl": "https://www.zara.com/ww/en/woman-sale-l1314.html", "description": "Global fast fashion leader.", "currentDeal": "Seasonal sale — up to 60% off", "lat": 43.3623, "lng": -8.4115},
-        {"name": "H&M", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.hm.com", "saleUrl": "https://www2.hm.com/en_gb/sale.html", "description": "Affordable style and designer collabs.", "currentDeal": "End of season — up to 60% off", "lat": 59.3293, "lng": 18.0686},
-        {"name": "Mango", "country": "Spain", "flag": "🇪🇸", "url": "https://www.mango.com", "saleUrl": "https://shop.mango.com/gb/women/sale", "description": "Spanish fashion chain.", "currentDeal": "Up to 50% off selected styles", "lat": 41.3874, "lng": 2.1686},
-        {"name": "COS", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.cos.com", "saleUrl": "https://www.cos.com/en/women/sale.html", "description": "Minimalist design, higher quality.", "currentDeal": "Sale — up to 50% off", "lat": 59.3293, "lng": 18.0686},
-        {"name": "Massimo Dutti", "country": "Spain", "flag": "🇪🇸", "url": "https://www.massimodutti.com", "saleUrl": "https://www.massimodutti.com/gb/sale-woman-702", "description": "Premium casual and formalwear.", "currentDeal": "Winter sale — up to 40% off", "lat": 43.3623, "lng": -8.4115},
-        {"name": "Primark", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.primark.com", "saleUrl": "https://www.primark.com", "description": "Ultra-affordable fashion chain.", "currentDeal": "In-store seasonal deals", "lat": 53.3498, "lng": -6.2603},
-        {"name": "C&A", "country": "Germany", "flag": "🇩🇪", "url": "https://www.c-and-a.com", "saleUrl": "https://www.c-and-a.com/eu/en/shop/sale", "description": "Affordable everyday basics.", "currentDeal": "Sale — everyday low prices", "lat": 51.2277, "lng": 6.7735},
-        {"name": "Reserved", "country": "Poland", "flag": "🇵🇱", "url": "https://www.reserved.com", "saleUrl": "https://www.reserved.com/en/en/sale", "description": "Fast-growing affordable fashion from Poland.", "currentDeal": "Sale — up to 50% off", "lat": 51.7592, "lng": 19.456},
-        {"name": "& Other Stories", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.stories.com", "saleUrl": "https://www.stories.com/en_gb/sale.html", "description": "Trend-driven with responsible sourcing.", "currentDeal": "Sale — up to 60% off", "lat": 59.3293, "lng": 18.0686},
-        {"name": "ARKET", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.arket.com", "saleUrl": "https://www.arket.com/en_gbp/sale.html", "description": "Nordic-inspired modern essentials.", "currentDeal": "Sale — modern essentials discounted", "lat": 59.3293, "lng": 18.0686},
-        {"name": "OVS", "country": "Italy", "flag": "🇮🇹", "url": "https://www.ovs.it", "saleUrl": "https://www.ovs.it/en_IT/sale", "description": "Italy's largest domestic fashion chain.", "currentDeal": "Seasonal sales", "lat": 45.4408, "lng": 12.3155}
+        {"name": "Boozt", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.boozt.com/eu/en", "saleUrl": "https://www.boozt.com/eu/en/sale", "description": "Premium Scandinavian fashion.", "currentDeal": "Mid-season sale — up to 60% off", "lat": 55.605, "lng": 13.0038}
       ]
     },
     {
@@ -36,35 +16,20 @@
       "stores": [
         {"name": "Hugo Boss", "country": "Germany", "flag": "🇩🇪", "url": "https://www.hugoboss.com", "saleUrl": "https://www.hugoboss.com/sale/", "description": "BOSS and HUGO lines.", "currentDeal": "Sale — up to 50% off", "lat": 48.6921, "lng": 9.0108},
         {"name": "G-Star RAW", "country": "Netherlands", "flag": "🇳🇱", "url": "https://www.g-star.com", "saleUrl": "https://www.g-star.com/en_gb/sale", "description": "Dutch denim innovation.", "currentDeal": "Up to 50% off sale", "lat": 52.3676, "lng": 4.9041},
-        {"name": "Marks & Spencer", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.marksandspencer.com", "saleUrl": "https://www.marksandspencer.com/l/offers", "description": "British institution.", "currentDeal": "Special offers", "lat": 51.5074, "lng": -0.1278},
         {"name": "JD Sports", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.jdsports.com", "saleUrl": "https://www.jdsports.com/sale/", "description": "Leading sportswear retailer.", "currentDeal": "Sale — sportswear deals", "lat": 53.4808, "lng": -2.2426},
-        {"name": "Decathlon", "country": "France", "flag": "🇫🇷", "url": "https://www.decathlon.com", "saleUrl": "https://www.decathlon.com/collections/sale", "description": "World's largest sporting goods retailer.", "currentDeal": "Sports sale", "lat": 50.6292, "lng": 3.0573},
-        {"name": "Bestseller", "country": "Denmark", "flag": "🇩🇰", "url": "https://www.bestseller.com", "saleUrl": "https://www.bestseller.com", "description": "Parent of Jack & Jones, Vero Moda.", "currentDeal": "Multi-brand sale events", "lat": 56.1629, "lng": 10.2039}
+        {"name": "COS", "country": "Sweden", "flag": "🇸🇪", "url": "https://www.cos.com", "saleUrl": "https://www.cos.com/en/women/sale.html", "description": "Minimalist design, higher quality.", "currentDeal": "Sale — up to 50% off", "lat": 59.3293, "lng": 18.0686},
+        {"name": "Massimo Dutti", "country": "Spain", "flag": "🇪🇸", "url": "https://www.massimodutti.com", "saleUrl": "https://www.massimodutti.com/gb/sale-woman-702", "description": "Premium casual and formalwear.", "currentDeal": "Winter sale — up to 40% off", "lat": 43.3623, "lng": -8.4115},
+        {"name": "C&A", "country": "Germany", "flag": "🇩🇪", "url": "https://www.c-and-a.com", "saleUrl": "https://www.c-and-a.com/eu/en/shop/sale", "description": "Affordable everyday basics.", "currentDeal": "Sale — everyday low prices", "lat": 51.2277, "lng": 6.7735}
       ]
     },
     {
       "name": "Luxury Platforms",
       "icon": "✨",
       "stores": [
-        {"name": "THE OUTNET", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.theoutnet.com", "saleUrl": "https://www.theoutnet.com/en-gb/shop/clothing", "description": "350+ luxury brands at permanent discount.", "currentDeal": "Up to 80% off designer fashion", "lat": 51.5074, "lng": -0.1278},
-        {"name": "Net-a-Porter", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.net-a-porter.com", "saleUrl": "https://www.net-a-porter.com/en-gb/shop/sale", "description": "Original luxury fashion e-commerce.", "currentDeal": "Seasonal sale — up to 50% off", "lat": 51.5074, "lng": -0.1278},
         {"name": "MR PORTER", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.mrporter.com", "saleUrl": "https://www.mrporter.com/en-gb/mens/sale", "description": "Premium menswear.", "currentDeal": "Men's sale — luxury menswear", "lat": 51.5074, "lng": -0.1278},
-        {"name": "Farfetch", "country": "Portugal", "flag": "🇵🇹", "url": "https://www.farfetch.com", "saleUrl": "https://www.farfetch.com/shopping/women/sale/items.aspx", "description": "1,300+ luxury boutiques worldwide.", "currentDeal": "Sale — up to 60% off", "lat": 41.1579, "lng": -8.6291},
-        {"name": "Mytheresa", "country": "Germany", "flag": "🇩🇪", "url": "https://www.mytheresa.com", "saleUrl": "https://www.mytheresa.com/en-gb/sale", "description": "Curated luxury, 250+ brands.", "currentDeal": "Sale — up to 70% off", "lat": 48.1351, "lng": 11.582},
         {"name": "YOOX", "country": "Italy", "flag": "🇮🇹", "url": "https://www.yoox.com", "saleUrl": "https://www.yoox.com/gb/women/shoponline", "description": "Off-season designer pieces.", "currentDeal": "Extra 20% off sale items", "lat": 44.4949, "lng": 11.3426},
-        {"name": "LuisaViaRoma", "country": "Italy", "flag": "🇮🇹", "url": "https://www.luisaviaroma.com", "saleUrl": "https://www.luisaviaroma.com/en-gb/sale", "description": "Florence-based, 600+ brands.", "currentDeal": "Sale + popup codes up to 50% off", "lat": 43.7696, "lng": 11.2558},
         {"name": "24S", "country": "France", "flag": "🇫🇷", "url": "https://www.24s.com", "saleUrl": "https://www.24s.com/en-gb/sale", "description": "LVMH's own online store.", "currentDeal": "LVMH sale — exclusive access", "lat": 48.8566, "lng": 2.3522},
         {"name": "SSENSE", "country": "Canada", "flag": "🇨🇦", "url": "https://www.ssense.com", "saleUrl": "https://www.ssense.com/en-gb/sale", "description": "Montreal-based luxury & streetwear.", "currentDeal": "Legendary sale — up to 70% off", "lat": 45.5017, "lng": -73.5673}
-      ]
-    },
-    {
-      "name": "Department Stores",
-      "icon": "🏬",
-      "stores": [
-        {"name": "Galeries Lafayette", "country": "France", "flag": "🇫🇷", "url": "https://www.galerieslafayette.com", "saleUrl": "https://www.galerieslafayette.com/c/soldes", "description": "Iconic French department store.", "currentDeal": "Soldes — French seasonal sales", "lat": 48.8738, "lng": 2.332},
-        {"name": "Selfridges", "country": "United Kingdom", "flag": "🇬🇧", "url": "https://www.selfridges.com", "saleUrl": "https://www.selfridges.com/GB/en/cat/sale/", "description": "London's premier luxury department store.", "currentDeal": "Sale — up to 50% off", "lat": 51.5142, "lng": -0.1529},
-        {"name": "El Corte Inglés", "country": "Spain", "flag": "🇪🇸", "url": "https://www.elcorteingles.es", "saleUrl": "https://www.elcorteingles.es/rebajas/", "description": "Europe's largest department store group.", "currentDeal": "Rebajas — major seasonal markdowns", "lat": 40.4168, "lng": -3.7038},
-        {"name": "Kiabi", "country": "France", "flag": "🇫🇷", "url": "https://www.kiabi.com", "saleUrl": "https://www.kiabi.com/soldes", "description": "French affordable family fashion.", "currentDeal": "Family fashion deals", "lat": 50.6292, "lng": 3.0573}
       ]
     },
     {
