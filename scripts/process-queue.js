@@ -4,6 +4,10 @@
  * =========================
  * One command to rule them all.
  *
+ * Scrapes product URLs from data/queue.txt, saves to:
+ *   1. data/inventory/{store-slug}.json  (new inventory system)
+ *   2. data/picks.json                   (backward compatible)
+ *
  * Usage:
  *   node scripts/process-queue.js
  *   node scripts/process-queue.js --verbose
@@ -23,6 +27,7 @@ const PICKS_PATH = path.join(__dirname, '..', 'data', 'picks.json');
 const STORES_PATH = path.join(__dirname, '..', 'data', 'stores.json');
 const CONFIGS_PATH = path.join(__dirname, '..', 'data', 'store-configs.json');
 const IMAGES_DIR = path.join(__dirname, '..', 'images', 'picks');
+const INVENTORY_DIR = path.join(__dirname, '..', 'data', 'inventory');
 
 // ===== CLI =====
 const args = process.argv.slice(2);
@@ -78,6 +83,10 @@ function slugify(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60);
 }
 
+function storeSlug(storeName) {
+  return storeName.toLowerCase().replace(/\./g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 function parsePrice(text) {
   if (!text) return null;
   const cleaned = text.toString().replace(/[^\d.,]/g, '').replace(',', '.');
@@ -113,6 +122,110 @@ function isValidSize(text) {
   return false;
 }
 
+// ===== CATEGORY DETECTION =====
+function detectCategory(name, tags) {
+  const lower = name.toLowerCase();
+  const tagsLower = (tags || []).map(t => t.toLowerCase());
+
+  // Check explicit clothing types FIRST (unambiguous)
+  const jacketWords = ['jacket', 'coat', 'parka', 'waxed'];
+  const hoodieWords = ['hoodie', 'pullover fleece hoodie', 'sweatshirt'];
+  const bootsWords = ['boot', '6 inch'];
+
+  if (jacketWords.some(w => lower.includes(w))) return 'jackets';
+  if (hoodieWords.some(w => lower.includes(w))) return 'hoodies';
+  if (bootsWords.some(w => lower.includes(w))) return 'boots';
+
+  // Check tags — most reliable for sneakers
+  if (tagsLower.includes('sneakers')) return 'sneakers';
+
+  // Sneaker model names
+  const sneakerIndicators = ['retro', 'sneaker', 'air jordan', 'air max', 'dunk', 'air force',
+    'spizike', 'aj1', '1906r', '1906', '1000', 'gel-quantum', 'xt-6',
+    'superstar', 'lafrance', 'mb.04', 'mb04', 'air tn', 'low', 'mid', 'high'];
+  if (sneakerIndicators.some(w => lower.includes(w))) return 'sneakers';
+
+  // Clothing shorts (not sneaker names with "shorts" in them)
+  const shortsClothing = ['fleece short', 'jogger short', 'sweat short'];
+  if (shortsClothing.some(w => lower.includes(w))) return 'shorts';
+
+  // Tag-based fallback
+  const tagStr = tagsLower.join(' ');
+  if (tagStr.includes('hoodie')) return 'hoodies';
+  if (tagStr.includes('jacket')) return 'jackets';
+  if (tagStr.includes('shorts')) return 'shorts';
+  if (tagStr.includes('clothing')) return 'clothing';
+
+  return 'sneakers';
+}
+
+// ===== INVENTORY HELPERS =====
+function loadInventoryFile(slug) {
+  const filePath = path.join(INVENTORY_DIR, `${slug}.json`);
+  if (fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  }
+  return null;
+}
+
+function saveInventoryFile(slug, data) {
+  fs.mkdirSync(INVENTORY_DIR, { recursive: true });
+  const filePath = path.join(INVENTORY_DIR, `${slug}.json`);
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n');
+}
+
+function getAllInventoryProducts() {
+  const allProducts = [];
+  if (!fs.existsSync(INVENTORY_DIR)) return allProducts;
+  const files = fs.readdirSync(INVENTORY_DIR).filter(f => f.endsWith('.json'));
+  for (const file of files) {
+    try {
+      const data = JSON.parse(fs.readFileSync(path.join(INVENTORY_DIR, file), 'utf-8'));
+      if (data.products) {
+        allProducts.push(...data.products);
+      }
+    } catch (e) { log(`Warning: could not read ${file}`); }
+  }
+  return allProducts;
+}
+
+function getNextInventoryNumber() {
+  const allProducts = getAllInventoryProducts();
+  let maxNum = 0;
+  for (const p of allProducts) {
+    const match = p.id.match(/(\d+)$/);
+    if (match) {
+      const num = parseInt(match[1]);
+      if (num > maxNum) maxNum = num;
+    }
+  }
+  return maxNum + 1;
+}
+
+function addToInventory(storeName, storeFlag, product) {
+  const slug = storeSlug(storeName);
+  let inventoryData = loadInventoryFile(slug);
+
+  if (!inventoryData) {
+    // Create new store file
+    inventoryData = {
+      store: storeName,
+      storeFlag: storeFlag,
+      lastUpdated: new Date().toISOString().split('T')[0],
+      totalProducts: 0,
+      products: []
+    };
+    log(`Creating new inventory file: ${slug}.json`);
+  }
+
+  inventoryData.products.push(product);
+  inventoryData.totalProducts = inventoryData.products.length;
+  inventoryData.lastUpdated = new Date().toISOString().split('T')[0];
+
+  saveInventoryFile(slug, inventoryData);
+  log(`Saved to inventory: ${slug}.json (${inventoryData.totalProducts} products)`);
+}
+
 // ===== DUPLICATE DETECTION =====
 function normalizeUrl(url) {
   try {
@@ -136,27 +249,30 @@ function extractSkuFromUrl(url) {
   return null;
 }
 
-function findDuplicate(url, existingPicks) {
+function findDuplicate(url, existingPicks, inventoryProducts) {
   const normalizedNew = normalizeUrl(url);
   const skuNew = extractSkuFromUrl(url);
 
+  // Check picks.json
   for (const pick of existingPicks) {
-    // Check 1: Exact URL match (after normalization)
-    if (normalizeUrl(pick.url) === normalizedNew) {
-      return pick;
-    }
-    // Check 2: Same SKU in URL (catches FL URL variations)
+    if (normalizeUrl(pick.url) === normalizedNew) return { source: 'picks', item: pick };
     if (skuNew && pick.url) {
       const skuExisting = extractSkuFromUrl(pick.url);
-      if (skuExisting && skuExisting === skuNew) {
-        return pick;
-      }
+      if (skuExisting && skuExisting === skuNew) return { source: 'picks', item: pick };
     }
-    // Check 3: Same styleCode (catches same product from different URL formats)
-    if (skuNew && pick.styleCode && pick.styleCode === skuNew) {
-      return pick;
-    }
+    if (skuNew && pick.styleCode && pick.styleCode === skuNew) return { source: 'picks', item: pick };
   }
+
+  // Check inventory files
+  for (const product of inventoryProducts) {
+    if (normalizeUrl(product.url) === normalizedNew) return { source: 'inventory', item: product };
+    if (skuNew && product.url) {
+      const skuExisting = extractSkuFromUrl(product.url);
+      if (skuExisting && skuExisting === skuNew) return { source: 'inventory', item: product };
+    }
+    if (skuNew && product.styleCode && product.styleCode === skuNew) return { source: 'inventory', item: product };
+  }
+
   return null;
 }
 
@@ -593,6 +709,7 @@ async function main() {
 
   initCloudinary();
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
+  fs.mkdirSync(INVENTORY_DIR, { recursive: true });
 
   const urls = readQueue();
   if (urls.length === 0) {
@@ -603,6 +720,9 @@ async function main() {
   console.log(`\n  \ud83d\udce6 ${urls.length} product${urls.length > 1 ? 's' : ''} in queue\n`);
 
   const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
+  const inventoryProducts = getAllInventoryProducts();
+  log(`Loaded ${picksData.picks.length} picks + ${inventoryProducts.length} inventory products for dupe check`);
+
   const results = { success: 0, failed: 0, skipped: 0, items: [] };
   const processedUrls = [];
 
@@ -616,12 +736,14 @@ async function main() {
     console.log(`\n  [${i + 1}/${urls.length}] ${storeInfo.flag} ${storeInfo.name}`);
     console.log(`  ${url}`);
 
-    // ===== DUPLICATE CHECK =====
-    const existing = findDuplicate(url, picksData.picks);
+    // ===== DUPLICATE CHECK (picks + inventory) =====
+    const existing = findDuplicate(url, picksData.picks, inventoryProducts);
     if (existing) {
-      console.log(`  \u23ed\ufe0f  SKIPPED \u2014 already exists as #${existing.id}: ${existing.name}`);
+      const dupId = existing.item.id;
+      const dupName = existing.item.name;
+      console.log(`  \u23ed\ufe0f  SKIPPED \u2014 already exists in ${existing.source} as ${dupId}: ${dupName}`);
       results.skipped++;
-      results.items.push({ url, name: existing.name, status: 'duplicate', id: existing.id });
+      results.items.push({ url, name: dupName, status: 'duplicate', id: dupId });
       processedUrls.push(url);
       continue;
     }
@@ -636,8 +758,11 @@ async function main() {
       const discount = (salePrice && retailPrice && retailPrice > salePrice)
         ? `-${Math.round((1 - salePrice / retailPrice) * 100)}%` : '0%';
 
-      const nextId = Math.max(...picksData.picks.map(p => p.id), 0) + 1;
-      const filename = `${nextId}-${slugify(name)}`;
+      const nextPicksId = Math.max(...picksData.picks.map(p => p.id), 0) + 1;
+      const nextInvNum = getNextInventoryNumber();
+      const filename = `${nextPicksId}-${slugify(name)}`;
+      const invSlug = storeSlug(storeInfo.name);
+      const invId = `${invSlug}-${String(nextInvNum).padStart(3, '0')}`;
 
       let imageUrl = scraped.image || '';
       if (imageUrl && CLOUD_ENABLED) {
@@ -646,20 +771,52 @@ async function main() {
       }
 
       const validSizes = (scraped.sizes || []).filter(s => isValidSize(s));
+      const tags = detectTags(name, brand);
+      const category = detectCategory(name, tags);
+      const today = new Date().toISOString().split('T')[0];
 
+      // ===== BUILD PICKS ENTRY (backward compatible) =====
       const newPick = {
-        id: nextId, name, brand,
+        id: nextPicksId, name, brand,
         styleCode: scraped.styleCode || '', colorway: scraped.colorway || '',
         retailPrice: retailPrice ? formatPrice(retailPrice, currency) : '',
         salePrice: salePrice ? formatPrice(salePrice, currency) : '',
         discount, store: storeInfo.name, storeFlag: storeInfo.flag,
         image: imageUrl, url,
         description: (scraped.description || '').substring(0, 200),
-        tags: detectTags(name, brand),
+        tags,
         sizes: validSizes,
       };
 
-      if (!DRY_RUN) picksData.picks.push(newPick);
+      // ===== BUILD INVENTORY ENTRY (new system) =====
+      const newInventoryProduct = {
+        id: invId,
+        picksId: nextPicksId,
+        name, brand, category,
+        styleCode: scraped.styleCode || '',
+        colorway: scraped.colorway || '',
+        retailPrice: retailPrice ? formatPrice(retailPrice, currency) : '',
+        salePrice: salePrice ? formatPrice(salePrice, currency) : '',
+        discount,
+        image: imageUrl, url,
+        description: (scraped.description || '').substring(0, 200),
+        tags,
+        sizes: validSizes,
+        addedDate: today,
+        lastChecked: today,
+        status: 'active'
+      };
+
+      if (!DRY_RUN) {
+        // Write to picks.json (backward compatible)
+        picksData.picks.push(newPick);
+
+        // Write to inventory file (new system)
+        addToInventory(storeInfo.name, storeInfo.flag, newInventoryProduct);
+
+        // Track for dupe detection within this run
+        inventoryProducts.push(newInventoryProduct);
+      }
 
       const priceStr = newPick.salePrice
         ? `${newPick.retailPrice || '?'} \u2192 ${newPick.salePrice} (${newPick.discount})`
@@ -667,15 +824,16 @@ async function main() {
 
       console.log(`  \u2705 ${name}`);
       console.log(`     ${brand} | ${priceStr}`);
-      console.log(`     Sizes: ${validSizes.length > 0 ? validSizes.join(', ') : 'none found'}`);
+      console.log(`     Category: ${category} | Sizes: ${validSizes.length > 0 ? validSizes.join(', ') : 'none found'}`);
       if (scraped._totalSizes) {
         console.log(`     Stock: ${validSizes.length} available, ${scraped._soldOut || 0} sold out of ${scraped._totalSizes} total`);
       }
       console.log(`     Image: ${newPick.image ? '\u2705' : '\u274c'}`);
       console.log(`     Color: ${newPick.colorway || '-'}`);
+      console.log(`     \u2192 picks.json #${nextPicksId} + inventory ${invId}`);
 
       results.success++;
-      results.items.push({ url, name, status: 'success', id: nextId });
+      results.items.push({ url, name, status: 'success', picksId: nextPicksId, invId });
       processedUrls.push(url);
 
     } catch (e) {
@@ -703,6 +861,17 @@ async function main() {
     console.log('\n  \ud83d\udcbe Saved picks.json');
   }
 
+  // ===== REBUILD CATALOG INDEX =====
+  if (!DRY_RUN && results.success > 0) {
+    console.log('  \ud83d\udcca Rebuilding catalog index...');
+    try {
+      execSync('node scripts/build-index.js', { cwd: path.join(__dirname, '..'), stdio: VERBOSE ? 'inherit' : 'pipe' });
+      console.log('  \ud83d\udcbe Saved catalog-index.json');
+    } catch (e) {
+      console.log('  \u26a0\ufe0f  Index rebuild had issues (run manually: node scripts/build-index.js)');
+    }
+  }
+
   if (!DRY_RUN && processedUrls.length > 0) {
     const timestamp = new Date().toISOString().split('T')[0];
     fs.appendFileSync(DONE_PATH, `\n# Processed ${timestamp}\n${processedUrls.join('\n')}\n`);
@@ -716,7 +885,8 @@ async function main() {
   console.log('='.repeat(50));
   for (const item of results.items) {
     const icon = item.status === 'success' ? '\u2705' : item.status === 'duplicate' ? '\u23ed\ufe0f' : '\u274c';
-    console.log(`  ${icon} #${item.id || '?'} ${item.name || item.url}`);
+    const idStr = item.picksId ? `picks:#${item.picksId} inv:${item.invId}` : (item.id || '?');
+    console.log(`  ${icon} ${idStr} ${item.name || item.url}`);
   }
   console.log('\n\u2728 Done!\n');
 }
