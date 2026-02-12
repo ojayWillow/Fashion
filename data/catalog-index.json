@@ -1,0 +1,61 @@
+{
+  "lastBuilt": "2026-02-12T15:00:00Z",
+  "totalProducts": 26,
+  "stores": [
+    {
+      "slug": "end-clothing",
+      "name": "END. Clothing",
+      "flag": "🇬🇧",
+      "count": 10
+    },
+    {
+      "slug": "foot-locker",
+      "name": "Foot Locker",
+      "flag": "🇪🇺",
+      "count": 16
+    }
+  ],
+  "categories": [
+    {
+      "slug": "sneakers",
+      "name": "Sneakers",
+      "count": 22,
+      "icon": "👟"
+    },
+    {
+      "slug": "hoodies",
+      "name": "Hoodies",
+      "count": 1,
+      "icon": "🧥"
+    },
+    {
+      "slug": "shorts",
+      "name": "Shorts",
+      "count": 1,
+      "icon": "🩳"
+    },
+    {
+      "slug": "jackets",
+      "name": "Jackets",
+      "count": 1,
+      "icon": "🧥"
+    },
+    {
+      "slug": "boots",
+      "name": "Boots",
+      "count": 1,
+      "icon": "🥾"
+    }
+  ],
+  "brands": [
+    { "name": "Jordan", "count": 11 },
+    { "name": "New Balance", "count": 4 },
+    { "name": "Nike", "count": 3 },
+    { "name": "Puma", "count": 3 },
+    { "name": "Jordan x Travis Scott", "count": 1 },
+    { "name": "Asics", "count": 1 },
+    { "name": "Salomon", "count": 1 },
+    { "name": "adidas", "count": 1 },
+    { "name": "Timberland", "count": 1 }
+  ]
+}
