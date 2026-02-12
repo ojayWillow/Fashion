@@ -1,26 +1,38 @@
 {
-  "lastBuilt": "2026-02-12T15:00:00Z",
-  "totalProducts": 26,
+  "lastBuilt": "2026-02-12T17:06:18.293Z",
+  "totalProducts": 100,
   "stores": [
     {
-      "slug": "end-clothing",
-      "name": "END. Clothing",
-      "flag": "🇬🇧",
-      "count": 10
+      "slug": "sns-sneakersnstuff",
+      "name": "SNS (Sneakersnstuff)",
+      "flag": "🇸🇪",
+      "count": 74
     },
     {
       "slug": "foot-locker",
       "name": "Foot Locker",
       "flag": "🇪🇺",
       "count": 16
+    },
+    {
+      "slug": "end-clothing",
+      "name": "END. Clothing",
+      "flag": "🇬🇧",
+      "count": 10
     }
   ],
   "categories": [
     {
       "slug": "sneakers",
       "name": "Sneakers",
-      "count": 22,
+      "count": 91,
       "icon": "👟"
+    },
+    {
+      "slug": "jackets",
+      "name": "Jackets",
+      "count": 5,
+      "icon": "🧥"
     },
     {
       "slug": "hoodies",
@@ -35,27 +47,78 @@
       "icon": "🩳"
     },
     {
-      "slug": "jackets",
-      "name": "Jackets",
-      "count": 1,
-      "icon": "🧥"
-    },
-    {
       "slug": "boots",
       "name": "Boots",
       "count": 1,
       "icon": "🥾"
+    },
+    {
+      "slug": "clothing",
+      "name": "Clothing",
+      "count": 1,
+      "icon": "👕"
     }
   ],
   "brands": [
-    { "name": "Jordan", "count": 11 },
-    { "name": "New Balance", "count": 4 },
-    { "name": "Nike", "count": 3 },
-    { "name": "Puma", "count": 3 },
-    { "name": "Jordan x Travis Scott", "count": 1 },
-    { "name": "Asics", "count": 1 },
-    { "name": "Salomon", "count": 1 },
-    { "name": "adidas", "count": 1 },
-    { "name": "Timberland", "count": 1 }
+    {
+      "name": "Jordan",
+      "count": 21
+    },
+    {
+      "name": "Nike",
+      "count": 18
+    },
+    {
+      "name": "adidas",
+      "count": 17
+    },
+    {
+      "name": "Puma",
+      "count": 12
+    },
+    {
+      "name": "New Balance",
+      "count": 7
+    },
+    {
+      "name": "The North Face",
+      "count": 6
+    },
+    {
+      "name": "ON",
+      "count": 6
+    },
+    {
+      "name": "Converse",
+      "count": 3
+    },
+    {
+      "name": "Saucony",
+      "count": 2
+    },
+    {
+      "name": "Butter Goods",
+      "count": 2
+    },
+    {
+      "name": "Jordan x Travis Scott",
+      "count": 1
+    },
+    {
+      "name": "Asics",
+      "count": 1
+    },
+    {
+      "name": "Salomon",
+      "count": 1
+    },
+    {
+      "name": "Timberland",
+      "count": 1
+    },
+    {
+      "name": "WAWA",
+      "count": 1
+    }
   ]
 }
