@@ -12,6 +12,7 @@
  *   node scripts/process-queue.js
  *   node scripts/process-queue.js --verbose
  *   node scripts/process-queue.js --dry-run
+ *   node scripts/process-queue.js --requeue-denied
  */
 
 require('dotenv').config();
@@ -33,6 +34,7 @@ const INVENTORY_DIR = path.join(__dirname, '..', 'data', 'inventory');
 const args = process.argv.slice(2);
 const VERBOSE = args.includes('--verbose') || args.includes('-v');
 const DRY_RUN = args.includes('--dry-run') || args.includes('--dry');
+const REQUEUE_DENIED = args.includes('--requeue-denied');
 
 function log(msg) { if (VERBOSE) console.log(`    [v] ${msg}`); }
 
@@ -696,7 +698,7 @@ async function scrapeFootLocker(url) {
   }
 
   log(`FL result: name="${scraped.name}", sale="${scraped.salePrice}", retail="${scraped.retailPrice}"`);
-  log(`FL sizes: ${scraped.sizes.length} available, ${scraped.soldOutSizes} sold out, ${scraped.totalSizes} total`);
+  log(`FL sizes: ${scraped.sizes.length} available, ${scraped._soldOut || 0} sold out, ${scraped._totalSizes || 0} total`);
   log(`FL image: ${image}`);
 
   return {
@@ -924,6 +926,70 @@ function readQueue() {
   return content.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#') && l.startsWith('http'));
 }
 
+function loadPicks() {
+  return JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
+}
+
+function savePicks(picksData) {
+  fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
+}
+
+function removeFromInventoryByPicksId(picksId) {
+  if (!fs.existsSync(INVENTORY_DIR)) return 0;
+  let removed = 0;
+  const files = fs.readdirSync(INVENTORY_DIR).filter(f => f.endsWith('.json'));
+  for (const file of files) {
+    const filePath = path.join(INVENTORY_DIR, file);
+    try {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      if (!Array.isArray(data.products)) continue;
+      const before = data.products.length;
+      data.products = data.products.filter(p => p.picksId !== picksId);
+      const after = data.products.length;
+      if (after !== before) {
+        removed += (before - after);
+        data.totalProducts = after;
+        data.lastUpdated = new Date().toISOString().split('T')[0];
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2) + '\n');
+      }
+    } catch (e) {
+      log(`Warning: could not edit inventory file ${file}`);
+    }
+  }
+  return removed;
+}
+
+function requeueDeniedPicks(picksData) {
+  const denied = picksData.picks.filter(p => p.name === 'Access Denied');
+  const ids = denied.map(p => p.id);
+  if (denied.length === 0) {
+    console.log('  \n  \u2139\ufe0f  No "Access Denied" picks found.');
+    return { added: 0, removedPicks: 0, removedInventory: 0 };
+  }
+
+  // Write queue from denied URLs
+  const urls = denied.map(p => p.url).filter(Boolean);
+  fs.mkdirSync(path.dirname(QUEUE_PATH), { recursive: true });
+  fs.writeFileSync(QUEUE_PATH, urls.join('\n') + '\n');
+
+  // Remove from picks
+  picksData.picks = picksData.picks.filter(p => p.name !== 'Access Denied');
+
+  // Remove from inventory via picksId
+  let removedInventory = 0;
+  for (const id of ids) {
+    removedInventory += removeFromInventoryByPicksId(id);
+  }
+
+  savePicks(picksData);
+
+  console.log(`\n  \ud83d\udd01 Re-queued ${urls.length} denied URL${urls.length > 1 ? 's' : ''} into data/queue.txt`);
+  console.log(`  \ud83e\uddf9 Removed ${ids.length} picks entries (Access Denied)`);
+  console.log(`  \ud83e\uddf9 Removed ${removedInventory} inventory products (matched by picksId)`);
+
+  return { added: urls.length, removedPicks: ids.length, removedInventory };
+}
+
 // ===== MAIN =====
 async function main() {
   console.log(`\n\ud83d\udd25 FASHION. \u2014 Process Queue`);
@@ -934,6 +1000,12 @@ async function main() {
   fs.mkdirSync(IMAGES_DIR, { recursive: true });
   fs.mkdirSync(INVENTORY_DIR, { recursive: true });
 
+  let picksData = loadPicks();
+  if (REQUEUE_DENIED) {
+    requeueDeniedPicks(picksData);
+    picksData = loadPicks();
+  }
+
   const urls = readQueue();
   if (urls.length === 0) {
     console.log('\n  \ud83d\udcea Queue is empty! Paste URLs into data/queue.txt\n');
@@ -942,7 +1014,6 @@ async function main() {
 
   console.log(`\n  \ud83d\udce6 ${urls.length} product${urls.length > 1 ? 's' : ''} in queue\n`);
 
-  const picksData = JSON.parse(fs.readFileSync(PICKS_PATH, 'utf-8'));
   const inventoryProducts = getAllInventoryProducts();
   log(`Loaded ${picksData.picks.length} picks + ${inventoryProducts.length} inventory products for dupe check`);
 
@@ -1074,7 +1145,7 @@ async function main() {
   }
 
   if (!DRY_RUN) {
-    fs.writeFileSync(PICKS_PATH, JSON.stringify(picksData, null, 2) + '\n');
+    savePicks(picksData);
     console.log('\n  \ud83d\udcbe Saved picks.json');
   }
 
