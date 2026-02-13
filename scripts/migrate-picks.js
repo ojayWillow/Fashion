@@ -98,6 +98,23 @@ function upgradeImageUrl(url) {
   return url;
 }
 
+/**
+ * Score an item by metadata richness. Higher = more complete.
+ * Used to pick the best "base" item when merging duplicates.
+ */
+function metadataScore(item) {
+  let score = 0;
+  const desc = cleanDescription(item.description);
+  if (desc.length > 0) score += 3;                          // has a real description
+  if (desc.length > 100) score += 2;                        // description is substantial
+  const cw = item.colorway || '';
+  if (cw && cw !== 'TBD' && cw !== 'Kies een model*') score += 3; // has colorway
+  if (item._originalImage) score += 2;                      // has original image
+  if ((item.name || '').length > 30) score += 1;            // longer (more descriptive) name
+  if ((item.tags || []).length > 2) score += 1;             // richer tags
+  return score;
+}
+
 // --- Main Migration ---
 function migrate() {
   console.log('Reading picks.json...');
@@ -139,10 +156,24 @@ function migrate() {
   const indexEntries = [];
 
   for (const [productId, items] of productMap) {
-    // Use the item with the most data as base
-    const base = items.reduce((a, b) => 
-      (cleanDescription(a.description) || '').length >= (cleanDescription(b.description) || '').length ? a : b
-    );
+    // Pick the item with the richest metadata as base
+    const base = items.reduce((a, b) => metadataScore(a) >= metadataScore(b) ? a : b);
+
+    // For fields that might be empty on the base, prefer the first
+    // non-empty value from any item in the group
+    const bestColorway = items
+      .map(i => i.colorway || '')
+      .find(c => c && c !== 'TBD' && c !== 'Kies een model*') || '';
+
+    const bestOriginalImage = items
+      .map(i => i._originalImage || '')
+      .find(img => img) || '';
+
+    // Pick the longest cleaned name across items (more likely to include
+    // colorway nicknames, collabs, etc.)
+    const bestName = items
+      .map(i => cleanName(i.name))
+      .reduce((a, b) => b.length > a.length ? b : a);
 
     // Build listings
     const listings = items.map(item => {
@@ -180,17 +211,16 @@ function migrate() {
     });
 
     const image = upgradeImageUrl(base.image || '');
-    const colorway = (base.colorway && base.colorway !== 'Kies een model*') ? base.colorway : '';
 
     const product = {
       productId,
-      name: cleanName(base.name),
+      name: bestName,
       brand: base.brand || '',
-      colorway: colorway || 'TBD',
+      colorway: bestColorway || 'TBD',
       category: determineCategory(base),
       tags: [...new Set(items.flatMap(i => i.tags || []))],
       image,
-      originalImage: base._originalImage || '',
+      originalImage: bestOriginalImage,
       imageStatus: image ? 'ok' : 'missing',
       description: cleanDescription(base.description),
       listings: uniqueListings
