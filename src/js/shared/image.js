@@ -2,16 +2,25 @@
 /* Cloudinary image normalization + fallback handling */
 
 /**
- * Normalize Cloudinary URLs: trim whitespace/borders and pad with #F5F5F7.
+ * Normalize Cloudinary URLs: trim whitespace/borders and fill frame uniformly.
+ * Uses c_fill with g_auto so every product image fills the card at the same
+ * size — no more misaligned heights from inconsistent store photography.
  * @param {string} url - Raw image URL
  * @returns {string} Normalized URL or empty string
  */
 export function normalizeImage(url) {
   if (!url || url === '/favicon.png') return '';
-  return url.replace(
+  // Legacy format (old scraper output)
+  url = url.replace(
     'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-    'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_rgb:F5F5F7'
+    'f_auto,q_auto/e_trim/w_800,h_800,c_fill,g_auto'
   );
+  // Current format (already has e_trim but still using c_pad)
+  url = url.replace(
+    'w_800,h_800,c_pad,b_rgb:F5F5F7',
+    'w_800,h_800,c_fill,g_auto'
+  );
+  return url;
 }
 
 /**
