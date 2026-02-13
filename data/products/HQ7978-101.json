@@ -1,0 +1,54 @@
+{
+  "productId": "HQ7978-101",
+  "name": "Air Jordan 5 Retro OG \"Fire Red\"",
+  "brand": "Jordan",
+  "colorway": "White / Fire Red / Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/1-air-jordan-5-retro-og-fire-red",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/3b98cc38-4f52-4e6f-a4b6-e9cfb2e2e55e/JORDAN+5+RETRO+OG.png",
+  "imageStatus": "ok",
+  "description": "The iconic Fire Red colorway returns with OG Black Tongue detailing, white leather upper, Nike Air branding on the heels, and a translucent outsole.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-5-retro-og-sneaker-hq7978-101.html",
+      "retailPrice": {
+        "amount": 210,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 36",
+        "EU 36.5",
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

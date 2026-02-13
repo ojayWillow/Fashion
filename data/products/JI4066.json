@@ -1,0 +1,45 @@
+{
+  "productId": "JI4066",
+  "name": "adidas A.E 1 Low",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "adidas",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/165-adidas-basketball-a-e-1-low-ji4066",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Designed for certified bucket getters and true basketball fans, the adidas Basketball Anthony Edwards 1 Low delivers superstar style with game-ready performance. A lightweight textile upper pairs with",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-a-e-1-low-ji4066",
+      "retailPrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 77,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45.5",
+        "EU 46",
+        "EU 47",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

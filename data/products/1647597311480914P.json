@@ -1,0 +1,38 @@
+{
+  "productId": "1647597311480914P",
+  "name": "Air Max 1 Escape Leather-Trimmed Suede and Mesh Sneakers",
+  "brand": "NIKE",
+  "colorway": "Gray",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/194-air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Air Max 1 Escape Leather-Trimmed Suede and Mesh Sneakers, available in gray. % Leather % Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers/1647597311480915",
+      "retailPrice": {
+        "amount": 150,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

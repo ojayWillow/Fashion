@@ -1,0 +1,39 @@
+{
+  "productId": "NF0A3C8DGOB1",
+  "name": "The North Face 1996 Retro Nuptse Jacket",
+  "brand": "The North Face",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "Clothing",
+    "The North Face",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/121-the-north-face-1996-retro-nuptse-jacket-nf0a3c8dgob1",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "A classic for an adventure, The North Face continues to bring its iconic Nuptse design straight from the slopes to the street. Featuring a comfy, relaxed fit and boxy silhouette, this 1996 Retro Nupts",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/the-north-face-1996-retro-nuptse-jacket-nf0a3c8dgob1",
+      "retailPrice": {
+        "amount": 350,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 263,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "productId": "314217928804",
+  "name": "New Balance 1000",
+  "brand": "New Balance",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "New Balance",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/16-new-balance-1000",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/16-new-balance-1000",
+  "imageStatus": "ok",
+  "description": "Nostalgie met een tech-twist Stap terug in de tijd met de New Balance 1000, een klassieker van rond de millenniumwisseling die terug is en beter dan ooit. Deze schoenen werden oors",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314217928804.html",
+      "retailPrice": {
+        "amount": 115,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 60,
+        "currency": "EUR"
+      },
+      "discount": 48,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41.5",
+        "EU 43",
+        "EU 44",
+        "EU 45",
+        "EU 45.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

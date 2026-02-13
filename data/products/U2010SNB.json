@@ -1,0 +1,50 @@
+{
+  "productId": "U2010SNB",
+  "name": "END. x New Balance 2010 \"Moonbeam\"",
+  "brand": "New Balance",
+  "colorway": "Moonbeam",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "New Balance",
+    "END. Exclusive"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/7-end-x-new-balance-2010-moonbeam",
+  "originalImage": "https://nb.scene7.com/is/image/NB/u2010snb_nb_02_i?$pdpflexf2$&wid=440&hei=440",
+  "imageStatus": "ok",
+  "description": "END. exclusive. Mesh panels and suede overlays in off-white and grey. Cream ABZORB midsole.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/new-balance-2010-presented-by-end-sneaker-u2010snb.html",
+      "retailPrice": {
+        "amount": 175,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 149,
+        "currency": "EUR"
+      },
+      "discount": 15,
+      "sizes": [
+        "EU 36.5",
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

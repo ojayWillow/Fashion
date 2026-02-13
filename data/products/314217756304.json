@@ -1,0 +1,43 @@
+{
+  "productId": "314217756304",
+  "name": "New Balance 1906R",
+  "brand": "New Balance",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "New Balance",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/18-new-balance-1906r",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/18-new-balance-1906r",
+  "imageStatus": "ok",
+  "description": "De 1906W wordt, net als zijn neven de 2002R en de 860v2, geleid door een zool met een combinatie van flexibele ACTEVA LITE demping, schokabsorberende N-ergy en gesegmenteerde ABZORB SBS pods bij de hi",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314217756304.html",
+      "retailPrice": {
+        "amount": 100,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 100,
+        "currency": "EUR"
+      },
+      "discount": 0,
+      "sizes": [
+        "EU 40",
+        "EU 41.5",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

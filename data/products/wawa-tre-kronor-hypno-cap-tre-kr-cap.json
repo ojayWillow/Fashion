@@ -1,0 +1,36 @@
+{
+  "productId": "wawa-tre-kronor-hypno-cap-tre-kr-cap",
+  "name": "WAWA Tre Kronor Hypno Cap",
+  "brand": "WAWA",
+  "colorway": "TBD",
+  "category": "Accessories",
+  "tags": [
+    "WAWA",
+    "Sale",
+    "Accessories"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/111-wawa-tre-kronor-hypno-cap-tre-kr-cap",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Drawing inspiration from iconic Swedish symbols such as the historic Stockholm coat of arms and Tre Kronor, the collection celebrates the art of making through a modern lens. Each piece features print",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/wawa-tre-kronor-hypno-cap-tre-kr-cap",
+      "retailPrice": {
+        "amount": 55,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 42,
+        "currency": "EUR"
+      },
+      "discount": 24,
+      "sizes": [
+        "OS"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

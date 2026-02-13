@@ -1,0 +1,38 @@
+{
+  "productId": "A15677C",
+  "name": "Converse Chuck 70 National Leather",
+  "brand": "Converse",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Converse",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/172-converse-chuck-70-national-leather-a15677c",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Whether you're dressing up or keeping things casual, the Converse Chuck 70 National Leather brings a disruptive look to an icon, ready for any dress code. Crafted with luxe leather, a houndstooth tong",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/converse-chuck-70-national-leather-a15677c",
+      "retailPrice": {
+        "amount": 120,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 84,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 36",
+        "EU 37.5",
+        "EU 39"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

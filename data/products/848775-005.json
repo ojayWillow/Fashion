@@ -1,0 +1,39 @@
+{
+  "productId": "848775-005",
+  "name": "Air Jordan 1 Retro Low \"No Swoosh\"",
+  "brand": "Jordan",
+  "colorway": "Black / Sail",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/10-air-jordan-1-retro-low-no-swoosh",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/i1-2e4a1f6a-0f08-4758-a0f4-30c94e0c8085/AIR+JORDAN+1+LOW.png",
+  "imageStatus": "ok",
+  "description": "Clean, minimal Jordan 1 Low without the Swoosh. Black leather with Sail accents.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-1-retro-low-no-swoosh-sneaker-848775-005.html",
+      "retailPrice": {
+        "amount": 159,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 135,
+        "currency": "EUR"
+      },
+      "discount": 15,
+      "sizes": [
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

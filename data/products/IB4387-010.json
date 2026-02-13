@@ -1,0 +1,40 @@
+{
+  "productId": "IB4387-010",
+  "name": "Jordan 4 Retro (TD)",
+  "brand": "Jordan",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Jordan",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/166-jordan-jordan-4-retro-td-ib4387-010",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Jordan Brand keeps the legacy alive with the Air Jordan 4 Retro “Black Cat,” crafted especially for the youngest in flight. Originally released in 1989 and inspired by one of MJ’s many monikers, this",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/jordan-jordan-4-retro-td-ib4387-010",
+      "retailPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 64,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 17",
+        "EU 21",
+        "EU 22",
+        "EU 23.5",
+        "EU 25"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

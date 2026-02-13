@@ -1,0 +1,45 @@
+{
+  "productId": "3MF10674179",
+  "name": "ON Cloudmonster Void",
+  "brand": "ON",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "ON",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/141-on-cloudmonster-void-3mf10674179",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/on-cloudmonster-void-3mf10674179",
+      "retailPrice": {
+        "amount": 180,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

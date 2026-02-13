@@ -1,0 +1,36 @@
+{
+  "productId": "1647597327873040P",
+  "name": "Leather-Trimmed Suede Clogs",
+  "brand": "FRESCOBOL CARIOCA",
+  "colorway": "Navy",
+  "category": "Sneakers",
+  "tags": [
+    "FRESCOBOL CARIOCA",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/200-leather-trimmed-suede-clogs",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Leather-Trimmed Suede Clogs, available in navy or green. 60% Leather 20% Textile fibres 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/frescobol-carioca/shoes/espadrilles/leather-trimmed-suede-clogs/1647597327873041",
+      "retailPrice": {
+        "amount": 185,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 74,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 43"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

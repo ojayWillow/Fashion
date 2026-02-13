@@ -1,5 +1,5 @@
 {
-  "lastBuilt": "2026-02-12T21:20:58.875Z",
+  "lastBuilt": "2026-02-13T07:01:07.798Z",
   "totalProducts": 168,
   "stores": [
     {
@@ -31,7 +31,7 @@
     {
       "slug": "sneakers",
       "name": "Sneakers",
-      "count": 159,
+      "count": 156,
       "icon": "👟"
     },
     {
@@ -39,6 +39,12 @@
       "name": "Jackets",
       "count": 5,
       "icon": "🧥"
+    },
+    {
+      "slug": "clothing",
+      "name": "Clothing",
+      "count": 4,
+      "icon": "👕"
     },
     {
       "slug": "hoodies",
@@ -57,17 +63,15 @@
       "name": "Boots",
       "count": 1,
       "icon": "🥾"
-    },
-    {
-      "slug": "clothing",
-      "name": "Clothing",
-      "count": 1,
-      "icon": "👕"
     }
   ],
   "brands": [
     {
       "name": "Jordan",
+      "count": 21
+    },
+    {
+      "name": "NIKE",
       "count": 21
     },
     {
@@ -79,16 +83,12 @@
       "count": 17
     },
     {
-      "name": "NIKE",
-      "count": 14
-    },
-    {
       "name": "Puma",
       "count": 12
     },
     {
       "name": "MR P.",
-      "count": 10
+      "count": 11
     },
     {
       "name": "New Balance",
@@ -96,6 +96,14 @@
     },
     {
       "name": "NEW BALANCE",
+      "count": 7
+    },
+    {
+      "name": "ON",
+      "count": 7
+    },
+    {
+      "name": "ADIDAS ORIGINALS",
       "count": 6
     },
     {
@@ -103,16 +111,8 @@
       "count": 6
     },
     {
-      "name": "ON",
-      "count": 6
-    },
-    {
       "name": "MULO",
       "count": 4
-    },
-    {
-      "name": "ADIDAS ORIGINALS",
-      "count": 3
     },
     {
       "name": "Converse",
@@ -120,6 +120,10 @@
     },
     {
       "name": "RICK OWENS",
+      "count": 2
+    },
+    {
+      "name": "BIRKENSTOCK",
       "count": 2
     },
     {
@@ -167,11 +171,23 @@
       "count": 1
     },
     {
-      "name": "BIRKENSTOCK",
+      "name": "SUICOKE",
       "count": 1
     },
     {
-      "name": "SUICOKE",
+      "name": "HOWLIN'",
+      "count": 1
+    },
+    {
+      "name": "A.P.C.",
+      "count": 1
+    },
+    {
+      "name": "ANDERSON'S",
+      "count": 1
+    },
+    {
+      "name": "FEAR OF GOD ESSENTIALS",
       "count": 1
     },
     {

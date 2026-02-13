@@ -1,0 +1,38 @@
+{
+  "productId": "1647597350968092P",
+  "name": "+ Brain Dead Forest Hills Leather-Trimmed Brushed-Suede Sneakers",
+  "brand": "ADIDAS ORIGINALS",
+  "colorway": "Neutral",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "ADIDAS ORIGINALS",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/212-brain-dead-forest-hills-leather-trimmed-brushed-suede-sneake",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "+ Brain Dead Forest Hills Leather-Trimmed Brushed-Suede Sneakers, available in neutral. 40% Textile fibres 40% Leather 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/plus-brain-dead-forest-hills-leather-trimmed-brushed-suede-sneakers/1647597350968115",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 65,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 38",
+        "EU 38.5",
+        "EU 39"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

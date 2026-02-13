@@ -1,0 +1,38 @@
+{
+  "productId": "46376663162896747P",
+  "name": "2002R Protection Pack Suede and Mesh Sneakers",
+  "brand": "NEW BALANCE",
+  "colorway": "Cream",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NEW BALANCE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/178-2002r-protection-pack-suede-and-mesh-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "2002R Protection Pack Suede and Mesh Sneakers, available in cream or gray. 40% Leather 40% Textile paper 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/2002r-protection-pack-suede-and-mesh-sneakers/46376663162896752",
+      "retailPrice": {
+        "amount": 150,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 90,
+        "currency": "GBP"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 40.5",
+        "EU 41",
+        "EU 43"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

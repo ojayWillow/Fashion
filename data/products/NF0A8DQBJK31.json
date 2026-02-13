@@ -1,0 +1,39 @@
+{
+  "productId": "NF0A8DQBJK31",
+  "name": "The North Face Pertex Down Jacket",
+  "brand": "The North Face",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "Clothing",
+    "The North Face",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/116-the-north-face-pertex-down-jacket-nf0a8dqbjk31",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "The The North Face Pertex Down Jacket – Ap combines lightweight insulation with durable Pertex® outer fabric to keep you warm in cold conditions. Its water-resistant finish and down fill provide relia",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/the-north-face-pertex-down-jacket-nf0a8dqbjk31",
+      "retailPrice": {
+        "amount": 500,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 375,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "productId": "IF1411-554",
+  "name": "Jordan Rare Air Fleece Short",
+  "brand": "Jordan",
+  "colorway": "Purple Earth / Sail",
+  "category": "Clothing",
+  "tags": [
+    "Shorts",
+    "Jordan",
+    "Sale",
+    "Clothing"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/3-jordan-rare-air-fleece-short",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/JORDAN+RARE+AIR+FT+SHORT.png",
+  "imageStatus": "ok",
+  "description": "Matching Rare Air fleece shorts in Purple Earth with crackled detailing. Pairs with the hoodie.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-rare-air-pullover-fleece-short-if1411-554.html",
+      "retailPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 59,
+        "currency": "EUR"
+      },
+      "discount": 31,
+      "sizes": [
+        "XS",
+        "S"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

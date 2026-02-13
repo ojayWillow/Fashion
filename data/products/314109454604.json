@@ -1,0 +1,42 @@
+{
+  "productId": "314109454604",
+  "name": "Jordan AJ1 Mid",
+  "brand": "Jordan",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Jordan",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/19-jordan-aj1-mid",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/19-jordan-aj1-mid",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314109454604.html",
+      "retailPrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "discount": 0,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "productId": "DN3707-202",
+  "name": "Air Jordan 3 Retro \"Palomino\"",
+  "brand": "Jordan",
+  "colorway": "Medium Olive / Sequoia",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/9-air-jordan-3-retro-palomino",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/e04c4b54-d5fe-4b86-b04b-a0db0ad94e79/AIR+JORDAN+3+RETRO.png",
+  "imageStatus": "ok",
+  "description": "Premium leather with suede overlays in warm earth tones and Air cushioning.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-3-retro-og-rt-sneaker-dn3707-202.html",
+      "retailPrice": {
+        "amount": 210,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 135,
+        "currency": "EUR"
+      },
+      "discount": 36,
+      "sizes": [
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

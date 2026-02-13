@@ -1,0 +1,10 @@
+{
+  "slug": "end-clothing",
+  "name": "END. Clothing",
+  "url": "https://www.endclothing.com",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "currency": "EUR",
+  "shipsTo": ["EU", "UK", "US", "Worldwide"],
+  "scrapeMethod": "browser"
+}

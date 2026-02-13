@@ -1,0 +1,38 @@
+{
+  "productId": "30629810019970306P",
+  "name": "+ Undercover Dunk Hi 1985 Leather High-Top Sneakers",
+  "brand": "NIKE",
+  "colorway": "Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/199-undercover-dunk-hi-1985-leather-high-top-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "+ Undercover Dunk Hi 1985 Leather High-Top Sneakers, available in black. % Leather % Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/high-top-sneakers/plus-undercover-dunk-hi-1985-leather-high-top-sneakers/30629810019970307",
+      "retailPrice": {
+        "amount": 150,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

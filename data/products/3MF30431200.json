@@ -1,0 +1,37 @@
+{
+  "productId": "3MF30431200",
+  "name": "ON Cloudsurfer Max 1",
+  "brand": "ON",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "ON",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/135-on-cloudsurfer-max-1-3mf30431200",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Delivering a comfortable, smooth sensation with every stride, the ON Cloudsurfer Max 1 is a maximum cushioned shoe for everything from long, effortless runs to short daily travels and everything in be",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/on-cloudsurfer-max-1-3mf30431200",
+      "retailPrice": {
+        "amount": 190,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 133,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 42.5",
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

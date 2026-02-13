@@ -1,0 +1,38 @@
+{
+  "productId": "314626953104",
+  "name": "Timberland 6 Inch",
+  "brand": "Timberland",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Timberland",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/26-timberland-6-inch",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/26-timberland-6-inch",
+  "imageStatus": "ok",
+  "description": "Het originele icoon Timberland Premium 6-inch laars is gemaakt voor veeleisende duurzaamheid en tijdloze stijl. Deze laars is gemaakt van hoogwaardig waterdicht leer en heeft een",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314626953104.html",
+      "retailPrice": {
+        "amount": 229.99,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 160,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 41.5",
+        "EU 42",
+        "EU 44"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

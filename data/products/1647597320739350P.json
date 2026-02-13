@@ -1,0 +1,36 @@
+{
+  "productId": "1647597320739350P",
+  "name": "Air Force 1 Low Retro QS Leather Sneakers",
+  "brand": "NIKE",
+  "colorway": "White",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/211-air-force-1-low-retro-qs-leather-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Air Force 1 Low Retro QS Leather Sneakers, available in white. % Leather % Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-force-1-low-retro-qs-leather-sneakers/1647597321720462",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 65,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 37.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

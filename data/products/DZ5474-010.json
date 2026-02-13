@@ -1,0 +1,40 @@
+{
+  "productId": "DZ5474-010",
+  "name": "Air Jordan x Travis Scott Waxed Jacket",
+  "brand": "Jordan x Travis Scott",
+  "colorway": "Black / Red / Noir",
+  "category": "Clothing",
+  "tags": [
+    "Jacket",
+    "Travis Scott",
+    "Jordan",
+    "Sale",
+    "Clothing"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/6-air-jordan-x-travis-scott-waxed-jacket",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/d4fd8d71-a458-4e88-b56e-8da63f499bb3/JORDAN+X+TS+WAXED+JKT.png",
+  "imageStatus": "ok",
+  "description": "Waxed cotton biker-inspired jacket with embossed tonal detail and a leather Cactus Jack patch on the back.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-x-travis-scott-waxed-jacket-dz5474-010.html",
+      "retailPrice": {
+        "amount": 600,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "discount": 73,
+      "sizes": [
+        "S",
+        "M",
+        "XXL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

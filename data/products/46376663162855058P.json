@@ -1,0 +1,36 @@
+{
+  "productId": "46376663162855058P",
+  "name": "Samba OG Leather-Trimmed Snake-Effect Sneakers",
+  "brand": "ADIDAS ORIGINALS",
+  "colorway": "Green",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "ADIDAS ORIGINALS",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/227-samba-og-leather-trimmed-snake-effect-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Samba OG Leather-Trimmed Snake-Effect Sneakers, available in 4 colours. 50% Textile fibres 40% Leather 10% Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/samba-og-leather-trimmed-snake-effect-sneakers/46376663162855176",
+      "retailPrice": {
+        "amount": 95,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 57,
+        "currency": "GBP"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 45.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

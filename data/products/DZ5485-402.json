@@ -1,0 +1,37 @@
+{
+  "productId": "DZ5485-402",
+  "name": "Jordan Air Jordan 1 Retro High OG",
+  "brand": "Jordan",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/159-jordan-air-jordan-1-retro-high-og-dz5485-402",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Jordan Brand taps into its illustrious history to reimagine the legendary Air Jordan 1 Retro High OG in its coveted \"UNC\" colorway. True Jumpman fans will recognize this look, which was one of the ori",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/jordan-air-jordan-1-retro-high-og-dz5485-402",
+      "retailPrice": {
+        "amount": 190,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 43",
+        "EU 45.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

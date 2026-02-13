@@ -1,0 +1,40 @@
+{
+  "productId": "1647597321922493P",
+  "name": "Jacques Two-Tone Leather Penny Loafers",
+  "brand": "MR P.",
+  "colorway": "Black",
+  "category": "Sneakers",
+  "tags": [
+    "MR P.",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/182-jacques-two-tone-leather-penny-loafers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Jacques Two-Tone Leather Penny Loafers, available in black. 80% Leather 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/loafers/jacques-two-tone-leather-penny-loafers/1647597321922494",
+      "retailPrice": {
+        "amount": 295,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 89,
+        "currency": "GBP"
+      },
+      "discount": 70,
+      "sizes": [
+        "EU 42.5",
+        "EU 43",
+        "EU 44.5",
+        "EU 45.5",
+        "EU 47"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

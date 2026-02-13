@@ -1,0 +1,2795 @@
+{
+  "products": [
+    {
+      "productId": "1647597324701203P",
+      "name": "+ Auralee 1906R Rubber-Trimmed Mesh, Leather and Suede Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/189-auralee-1906r-rubber-trimmed-mesh-leather-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597350968092P",
+      "name": "+ Brain Dead Forest Hills Leather-Trimmed Brushed-Suede Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/212-brain-dead-forest-hills-leather-trimmed-brushed-suede-sneake",
+      "bestPrice": {
+        "amount": 65,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597347332810P",
+      "name": "+ Bureau Borsche Cloudflow 4 IKON Rubber-Trimmed Mesh Running Sneakers",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/225-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-",
+      "bestPrice": {
+        "amount": 96,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ON",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "28941591747013631P",
+      "name": "+ Converse DRKSTAR OX Drill Sneakers",
+      "brand": "RICK OWENS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/190-converse-drkstar-ox-drill-sneakers",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "RICK OWENS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "43769801097771261P",
+      "name": "+ Converse TURBODRK Chuck 70 Zebra-Print Faux Shearling High-Top Sneakers",
+      "brand": "RICK OWENS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/185-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-t",
+      "bestPrice": {
+        "amount": 80,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "RICK OWENS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597334937130P",
+      "name": "+ Fear of God Athletics One Model Rubber and Scuba-Trimmed Stretch-Knit Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/210-fear-of-god-athletics-one-model-rubber-and-scuba-trimmed-str",
+      "bestPrice": {
+        "amount": 66,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162871491P",
+      "name": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap",
+      "brand": "A.P.C.",
+      "category": "Accessories",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/235-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "A.P.C.",
+        "Sale",
+        "Accessories"
+      ]
+    },
+    {
+      "productId": "1647597311480910P",
+      "name": "+ Off-White Air Force 1 Mid Two-Tone Leather High-Top Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/205-off-white-air-force-1-mid-two-tone-leather-high-top-sneakers",
+      "bestPrice": {
+        "amount": 70,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597290809362P",
+      "name": "+ Undercover Air Force 1 Rubber-Trimmed Leather Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/241-undercover-air-force-1-rubber-trimmed-leather-sneakers",
+      "bestPrice": {
+        "amount": 44,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "30629810019970306P",
+      "name": "+ Undercover Dunk Hi 1985 Leather High-Top Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/199-undercover-dunk-hi-1985-leather-high-top-sneakers",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162896740P",
+      "name": "1906 Mesh Penny Loafers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/203-1906-mesh-penny-loafers",
+      "bestPrice": {
+        "amount": 72,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597322372604P",
+      "name": "1906R Rubber-Trimmed Mesh and Metallic Faux Leather Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/195-1906r-rubber-trimmed-mesh-and-metallic-faux-leather-sneakers",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162896747P",
+      "name": "2002R Protection Pack Suede and Mesh Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/178-2002r-protection-pack-suede-and-mesh-sneakers",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "14097096497399056P",
+      "name": "3.5cm Suede Belt",
+      "brand": "ANDERSON'S",
+      "category": "Accessories",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/236-3-5cm-suede-belt",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ANDERSON'S",
+        "Sale",
+        "Accessories"
+      ]
+    },
+    {
+      "productId": "1647597322372594P",
+      "name": "550 Leather Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/213-550-leather-sneakers",
+      "bestPrice": {
+        "amount": 65,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597337782125P",
+      "name": "740 Leather-Trimmed Mesh Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/238-740-leather-trimmed-mesh-sneakers",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162877398P",
+      "name": "ABZORB 2010 Suede and Mesh Sneakers",
+      "brand": "NEW BALANCE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/196-abzorb-2010-suede-and-mesh-sneakers",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NEW BALANCE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597353264647P",
+      "name": "ACG Izy Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/204-acg-izy-suede-sneakers",
+      "bestPrice": {
+        "amount": 72,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162896518P",
+      "name": "ACG Phassad Mesh and Rubber Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/207-acg-phassad-mesh-and-rubber-sneakers",
+      "bestPrice": {
+        "amount": 66,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "JI4066",
+      "name": "adidas A.E 1 Low",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/165-adidas-basketball-a-e-1-low-ji4066",
+      "bestPrice": {
+        "amount": 77,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JQ6787",
+      "name": "adidas Adistar HRMY",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/163-adidas-originals-adistar-hrmy-jq6787",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JR4369",
+      "name": "adidas Adistar HRMY",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/164-adidas-originals-adistar-hrmy-jr4369",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JS1305",
+      "name": "adidas Harden Volume 9",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/139-adidas-basketball-harden-volume-9-js1305",
+      "bestPrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JS1304",
+      "name": "adidas Harden Volume 9",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/168-adidas-basketball-harden-volume-9-js1304",
+      "bestPrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JI3515",
+      "name": "adidas Predator Megaride",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/102-adidas-originals-predator-megaride-ji3515",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JQ1263",
+      "name": "adidas Pro Model x CLOT By Edison Chen",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/122-adidas-originals-pro-model-x-clot-by-edison-chen-jq1263",
+      "bestPrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JQ1260",
+      "name": "adidas Pro Model x CLOT By Edison Chen",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/123-adidas-originals-pro-model-x-clot-by-edison-chen-jq1260",
+      "bestPrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JR9246",
+      "name": "adidas Samba x BAPE",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/150-adidas-originals-samba-x-bape-jr9246",
+      "bestPrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "adidas",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "JW1110",
+      "name": "adidas Satin Hood x Wales Bonner",
+      "brand": "adidas",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/134-adidas-originals-wmns-satin-hood-x-wales-bonner-jw1110",
+      "bestPrice": {
+        "amount": 196,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "314310716304",
+      "name": "adidas Superstar II",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/25-adidas-superstar-ii",
+      "bestPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JQ3258",
+      "name": "adidas Superstar Vintage",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/133-adidas-originals-superstar-vintage-jq3258",
+      "bestPrice": {
+        "amount": 113,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JR1642",
+      "name": "adidas Superstar Vintage MiG",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/125-adidas-originals-superstar-vintage-mig-jr1642",
+      "bestPrice": {
+        "amount": 175,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JS1046",
+      "name": "adidas Taekwondo F50",
+      "brand": "adidas",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/171-adidas-originals-wmns-taekwondo-f50-js1046",
+      "bestPrice": {
+        "amount": 84,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "JW5868",
+      "name": "adidas Teamgeist Adicolor Track Pant",
+      "brand": "adidas",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/108-adidas-originals-teamgeist-adicolor-track-pant-jw5868",
+      "bestPrice": {
+        "amount": 46,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "JX6598",
+      "name": "adidas Teamgeist Adicolor Track Top",
+      "brand": "adidas",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/113-adidas-originals-teamgeist-adicolor-track-top-jx6598",
+      "bestPrice": {
+        "amount": 56,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "JV7479",
+      "name": "adidas Teamgeist Adicolor Woven Track Pant",
+      "brand": "adidas",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/104-adidas-originals-wmns-teamgeist-adicolor-woven-track-pant-jv",
+      "bestPrice": {
+        "amount": 60,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "adidas",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "1647597323527983P",
+      "name": "Air Footscape Woven Webbing and Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/232-air-footscape-woven-webbing-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "38063312421161091P",
+      "name": "Air Force 1 '07 Fresh Leather Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/197-air-force-1-07-fresh-leather-sneakers",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162896507P",
+      "name": "Air Force 1 Leather and Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/208-air-force-1-leather-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 66,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597320739350P",
+      "name": "Air Force 1 Low Retro QS Leather Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/211-air-force-1-low-retro-qs-leather-sneakers",
+      "bestPrice": {
+        "amount": 65,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "848775-005",
+      "name": "Air Jordan 1 Retro Low \"No Swoosh\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/10-air-jordan-1-retro-low-no-swoosh",
+      "bestPrice": {
+        "amount": 135,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "IH0296-400",
+      "name": "Air Jordan 11 Retro \"Rare Air\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/8-air-jordan-11-retro-rare-air",
+      "bestPrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "storeCount": 2,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "CT8532-101",
+      "name": "Air Jordan 3 Retro \"Lucky Shorts\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/5-air-jordan-3-retro-lucky-shorts",
+      "bestPrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "DN3707-202",
+      "name": "Air Jordan 3 Retro \"Palomino\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/9-air-jordan-3-retro-palomino",
+      "bestPrice": {
+        "amount": 135,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "HQ7978-101",
+      "name": "Air Jordan 5 Retro OG \"Fire Red\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/1-air-jordan-5-retro-og-fire-red",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "FD1412-008",
+      "name": "Air Jordan Baby 8.5 TD Sneaker",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/4-air-jordan-baby-8-5-td-sneaker",
+      "bestPrice": {
+        "amount": 39,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Kids",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "DZ5474-010",
+      "name": "Air Jordan x Travis Scott Waxed Jacket",
+      "brand": "Jordan x Travis Scott",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/6-air-jordan-x-travis-scott-waxed-jacket",
+      "bestPrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jacket",
+        "Travis Scott",
+        "Jordan",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "1647597323527992P",
+      "name": "Air Max 1 '87 Mesh-Trimmed Leather and Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/223-air-max-1-87-mesh-trimmed-leather-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 58,
+        "currency": "GBP"
+      },
+      "storeCount": 2,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597311480914P",
+      "name": "Air Max 1 Escape Leather-Trimmed Suede and Mesh Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/194-air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597290809272P",
+      "name": "Air Max 1 PRM Denim and Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/188-air-max-1-prm-denim-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "46376663162939663P",
+      "name": "Air Max 95 OG Mesh Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/183-air-max-95-og-mesh-sneakers",
+      "bestPrice": {
+        "amount": 88,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597332442737P",
+      "name": "Air Max DN Rubber-Trimmed Mesh Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/186-air-max-dn-rubber-trimmed-mesh-sneakers",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597336438625P",
+      "name": "Air Max DN Rubber-Trimmed Mesh Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/226-air-max-dn-rubber-trimmed-mesh-sneakers",
+      "bestPrice": {
+        "amount": 93,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597344041473P",
+      "name": "Ansel Colour-Block Suede and Leather Sneakers",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/202-ansel-colour-block-suede-and-leather-sneakers",
+      "bestPrice": {
+        "amount": 74,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "MR P.",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "3983529959672196P",
+      "name": "Arizona EVA Sandals",
+      "brand": "BIRKENSTOCK",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/245-arizona-eva-sandals",
+      "bestPrice": {
+        "amount": 27,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "BIRKENSTOCK",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314217920504",
+      "name": "Asics GEL-QUANTUM 360 I",
+      "brand": "Asics",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/17-asics-gel-quantum-360-i",
+      "bestPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Asics",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597344041556P",
+      "name": "Atticus Colour-Block Suede Sneakers",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/206-atticus-colour-block-suede-sneakers",
+      "bestPrice": {
+        "amount": 68,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "MR P.",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "BGQ425D159020",
+      "name": "Butter Goods Blotch Denim Jeans",
+      "brand": "Butter Goods",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/143-butter-goods-blotch-denim-jeans-bgq425d159020",
+      "bestPrice": {
+        "amount": 94,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Butter Goods",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "BGQ425D156030",
+      "name": "Butter Goods Racer Denim Jeans",
+      "brand": "Butter Goods",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/142-butter-goods-racer-denim-jeans-bgq425d156030",
+      "bestPrice": {
+        "amount": 94,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Butter Goods",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "1647597308398777P",
+      "name": "Camp-Collar Stretch-Cotton Seersucker Shirt",
+      "brand": "HOWLIN'",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/231-camp-collar-stretch-cotton-seersucker-shirt",
+      "bestPrice": {
+        "amount": 53,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "HOWLIN'",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597357962623P",
+      "name": "Clogposite Iridescent TPU and Shell Slip-On Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/187-clogposite-iridescent-tpu-and-shell-slip-on-sneakers",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597356473324P",
+      "name": "Collapsible-Heel Suede Loafers",
+      "brand": "MULO",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/201-collapsible-heel-suede-loafers",
+      "bestPrice": {
+        "amount": 74,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MULO",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "A15610C",
+      "name": "Converse Chuck 70",
+      "brand": "Converse",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/109-converse-chuck-70-a15610c",
+      "bestPrice": {
+        "amount": 70,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Converse",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "A15611C",
+      "name": "Converse Chuck 70",
+      "brand": "Converse",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/110-converse-chuck-70-a15611c",
+      "bestPrice": {
+        "amount": 67,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Converse",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "A15677C",
+      "name": "Converse Chuck 70 National Leather",
+      "brand": "Converse",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/172-converse-chuck-70-national-leather-a15677c",
+      "bestPrice": {
+        "amount": 84,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Converse",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597357962621P",
+      "name": "Cortez Leather Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/230-cortez-leather-sneakers",
+      "bestPrice": {
+        "amount": 54,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597300455914P",
+      "name": "David Regenerated Suede by evolo® Sandals",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/218-david-regenerated-suede-by-evolo-sandals",
+      "bestPrice": {
+        "amount": 59,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "46376663162838824P",
+      "name": "Docksides Portland Leather Boat Shoes",
+      "brand": "SEBAGO",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/179-docksides-portland-leather-boat-shoes",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "SEBAGO",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597336456639P",
+      "name": "Dunk Low Brushed-Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/228-dunk-low-brushed-suede-sneakers",
+      "bestPrice": {
+        "amount": 55,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597332487729P",
+      "name": "Dunk Low Brushed-Suede Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/239-dunk-low-brushed-suede-sneakers",
+      "bestPrice": {
+        "amount": 48,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597343063033P",
+      "name": "Dunk Low QS Leather Sneakers",
+      "brand": "NIKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/234-dunk-low-qs-leather-sneakers",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "NIKE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "U2010SNB",
+      "name": "END. x New Balance 2010 \"Moonbeam\"",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/7-end-x-new-balance-2010-moonbeam",
+      "bestPrice": {
+        "amount": 149,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "END. Exclusive"
+      ]
+    },
+    {
+      "productId": "1647597341064578P",
+      "name": "Gallivan2R TPU Golf Shoes",
+      "brand": "G/FORE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/198-gallivan2r-tpu-golf-shoes",
+      "bestPrice": {
+        "amount": 75,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "G/FORE",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597321098715P",
+      "name": "Handball Spezial Leather-Trimmed Suede Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/240-handball-spezial-leather-trimmed-suede-sneakers",
+      "bestPrice": {
+        "amount": 45,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597321922493P",
+      "name": "Jacques Two-Tone Leather Penny Loafers",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/182-jacques-two-tone-leather-penny-loafers",
+      "bestPrice": {
+        "amount": 89,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "151186-114",
+      "name": "Jordan 12 Retro (PS)",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/114-jordan-jordan-12-retro-ps-151186-114",
+      "bestPrice": {
+        "amount": 63,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB4387-010",
+      "name": "Jordan 4 Retro (TD)",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/166-jordan-jordan-4-retro-td-ib4387-010",
+      "bestPrice": {
+        "amount": 64,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB4387-003",
+      "name": "Jordan 4 Retro OG (TD)",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/101-jordan-jordan-4-retro-og-td-ib4387-003",
+      "bestPrice": {
+        "amount": 49,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "DZ5485-402",
+      "name": "Jordan Air Jordan 1 Retro High OG",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/159-jordan-air-jordan-1-retro-high-og-dz5485-402",
+      "bestPrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "DZ5485-008",
+      "name": "Jordan Air Jordan 1 Retro High OG",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/160-jordan-air-jordan-1-retro-high-og-dz5485-008",
+      "bestPrice": {
+        "amount": 133,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "AR0715-110",
+      "name": "Jordan Air Jordan 11 Retro",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/131-jordan-wmns-air-jordan-11-retro-ar0715-110",
+      "bestPrice": {
+        "amount": 158,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "IH7694-200",
+      "name": "Jordan Air Jordan 3 Retro",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/144-jordan-wmns-air-jordan-3-retro-ih7694-200",
+      "bestPrice": {
+        "amount": 147,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "HQ3004-001",
+      "name": "Jordan Air Jordan 5 Retro x PSG",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/124-jordan-air-jordan-5-retro-x-psg-hq3004-001",
+      "bestPrice": {
+        "amount": 158,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "IB4388-200",
+      "name": "Jordan Air Jordan Retro 4 OG (PS)",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/112-jordan-air-jordan-retro-4-og-ps-ib4388-200",
+      "bestPrice": {
+        "amount": 70,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314109454604",
+      "name": "Jordan AJ1 Mid",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/19-jordan-aj1-mid",
+      "bestPrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314109262304",
+      "name": "Jordan AJ1 Mid",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/20-jordan-aj1-mid",
+      "bestPrice": {
+        "amount": 70,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IF1411-554",
+      "name": "Jordan Rare Air Fleece Short",
+      "brand": "Jordan",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/3-jordan-rare-air-fleece-short",
+      "bestPrice": {
+        "amount": 59,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Shorts",
+        "Jordan",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "IB3003-554",
+      "name": "Jordan Rare Air Pullover Fleece Hoodie",
+      "brand": "Jordan",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/2-jordan-rare-air-pullover-fleece-hoodie",
+      "bestPrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Hoodie",
+        "Jordan",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "314109461104",
+      "name": "Jordan Spizike Low",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/12-jordan-spizike-low",
+      "bestPrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Jordan",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597304855509P",
+      "name": "Larry Pebble-Grain Leather and Suede Sneakers",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/181-larry-pebble-grain-leather-and-suede-sneakers",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "MR P.",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597310185829P",
+      "name": "Leather Slippers",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/180-leather-slippers",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597327873040P",
+      "name": "Leather-Trimmed Suede Clogs",
+      "brand": "FRESCOBOL CARIOCA",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/200-leather-trimmed-suede-clogs",
+      "bestPrice": {
+        "amount": 74,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "FRESCOBOL CARIOCA",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597324091579P",
+      "name": "London Suede Clogs",
+      "brand": "BIRKENSTOCK",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/214-london-suede-clogs",
+      "bestPrice": {
+        "amount": 63,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "BIRKENSTOCK",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "mr-p-full-grain-leather-golf-ball-and-tee-holder",
+      "name": "MR P. Full-Grain Leather Golf Ball and Tee Holder",
+      "brand": "",
+      "category": "Accessories",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/237-mr-p-full-grain-leather-golf-ball-and-tee-holder",
+      "bestPrice": {
+        "amount": 0,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sale",
+        "Accessories"
+      ]
+    },
+    {
+      "productId": "mr-porter",
+      "name": "MR PORTER",
+      "brand": "",
+      "category": "Sneakers",
+      "image": "/favicon.png",
+      "bestPrice": {
+        "amount": 0,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "46376663162869361P",
+      "name": "Nemo Suede Boat Shoes",
+      "brand": "CASTAÑER",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/184-nemo-suede-boat-shoes",
+      "bestPrice": {
+        "amount": 80,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "CASTAÑER",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314217928804",
+      "name": "New Balance 1000",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/16-new-balance-1000",
+      "bestPrice": {
+        "amount": 60,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "New Balance",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "U1906LAR",
+      "name": "New Balance 1906L",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/148-new-balance-1906l-u1906lar",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314217756304",
+      "name": "New Balance 1906R",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/18-new-balance-1906r",
+      "bestPrice": {
+        "amount": 100,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "U1906ROE",
+      "name": "New Balance 1906R \"Black\"",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/11-new-balance-1906r-black",
+      "bestPrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "New Balance",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "U992TO",
+      "name": "New Balance 992",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/127-new-balance-992-u992to",
+      "bestPrice": {
+        "amount": 173,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "New Balance",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "U993BB",
+      "name": "New Balance 993",
+      "brand": "New Balance",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/119-new-balance-993-u993bb",
+      "bestPrice": {
+        "amount": 180,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "New Balance",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB6388-301",
+      "name": "Nike Air Force 1 '07 LV8",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/103-nike-sportswear-air-force-1-39-07-lv8-ib6388-301",
+      "bestPrice": {
+        "amount": 84,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314109418104",
+      "name": "Nike Air Force 1 Low",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/23-nike-air-force-1-low",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB0018-500",
+      "name": "Nike Air Force 1 Low x Kobe",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/158-nike-sportswear-air-force-1-low-x-kobe-ib0018-500",
+      "bestPrice": {
+        "amount": 90,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB5724-100",
+      "name": "Nike Air Force 1 Retro",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/162-nike-sportswear-air-force-1-retro-ib5724-100",
+      "bestPrice": {
+        "amount": 91,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "FZ5808-012",
+      "name": "Nike Air Max 1 Essential",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/152-nike-sportswear-air-max-1-essential-fz5808-012",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "FZ5808-014",
+      "name": "Nike Air Max 1 Essential",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/154-nike-sportswear-air-max-1-essential-fz5808-014",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "HQ1973-001",
+      "name": "Nike Air Max 95 OG QS",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/145-nike-sportswear-air-max-95-og-qs-hq1973-001",
+      "bestPrice": {
+        "amount": 140,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314217829804",
+      "name": "Nike Air Max TL 2.5",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/13-nike-air-max-tl-2-5",
+      "bestPrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314217367904",
+      "name": "Nike Air Max TL 2.5",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/15-nike-air-max-tl-2-5",
+      "bestPrice": {
+        "amount": 100,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "HM8818-400",
+      "name": "Nike Air Max TL 2.5",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/140-nike-sportswear-air-max-tl-2-5-hm8818-400",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Nike",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "FZ9033-102",
+      "name": "Nike Air Tech Challenge 2",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/155-nike-sportswear-air-tech-challenge-2-fz9033-102",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "DX4215-100",
+      "name": "Nike Ava Rover",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/157-nike-sportswear-ava-rover-dx4215-100",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "BV1021-101",
+      "name": "Nike P-6000",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/169-nike-sportswear-wmns-p-6000-bv1021-101",
+      "bestPrice": {
+        "amount": 77,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IB7670-001",
+      "name": "Nike Shox TL",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/153-nike-sportswear-shox-tl-ib7670-001",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "HQ7540-101",
+      "name": "Nike Shox Z",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/137-nike-sportswear-wmns-shox-z-hq7540-101",
+      "bestPrice": {
+        "amount": 98,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "HQ7540-003",
+      "name": "Nike Shox Z",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/138-nike-sportswear-wmns-shox-z-hq7540-003",
+      "bestPrice": {
+        "amount": 98,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "IO4323-001",
+      "name": "Nike Vomero Plus",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/147-nike-running-vomero-plus-io4323-001",
+      "bestPrice": {
+        "amount": 116,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "HQ3072-400",
+      "name": "Nike Zoom Field Jaxx",
+      "brand": "Nike",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/174-nike-sportswear-zoom-field-jaxx-hq3072-400",
+      "bestPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "FN8196-370",
+      "name": "NOCTA Sunset Puffer",
+      "brand": "Nike",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/117-nocta-sunset-puffer-fn8196-370",
+      "bestPrice": {
+        "amount": 300,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Nike",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "3MF30314229",
+      "name": "ON Cloudboom Max 1",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/132-on-cloudboom-max-1-3mf30314229",
+      "bestPrice": {
+        "amount": 168,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "3MF30704443",
+      "name": "ON Cloudflow 5 AD",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/120-on-cloudflow-5-ad-3mf30704443",
+      "bestPrice": {
+        "amount": 173,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "3ME10121043",
+      "name": "ON Cloudmonster 2",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/126-on-cloudmonster-2-3me10121043",
+      "bestPrice": {
+        "amount": 143,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "3MF10674179",
+      "name": "ON Cloudmonster Void",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/141-on-cloudmonster-void-3mf10674179",
+      "bestPrice": {
+        "amount": 126,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "3MF30431200",
+      "name": "ON Cloudsurfer Max 1",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/135-on-cloudsurfer-max-1-3mf30431200",
+      "bestPrice": {
+        "amount": 133,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "3MF30430106",
+      "name": "ON Cloudsurfer Max 1",
+      "brand": "ON",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/136-on-cloudsurfer-max-1-3mf30430106",
+      "bestPrice": {
+        "amount": 133,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "ON",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597331446220P",
+      "name": "Oversized Logo-Appliquéd Cotton-Jersey T",
+      "brand": "FEAR OF GOD ESSENTIALS",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/244-oversized-logo-appliqu-d-cotton-jersey-t-shirt",
+      "bestPrice": {
+        "amount": 30,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "FEAR OF GOD ESSENTIALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
+      "name": "POLO RALPH LAUREN Logo-Embroidered Striped Cotton-Blend Seersucker Baseball Cap",
+      "brand": "",
+      "category": "Accessories",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/229-polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
+      "bestPrice": {
+        "amount": 0,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sale",
+        "Accessories"
+      ]
+    },
+    {
+      "productId": "401665-01",
+      "name": "Puma Inhale Color Shifting",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/107-puma-inhale-color-shifting-401665-01",
+      "bestPrice": {
+        "amount": 65,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314109239104",
+      "name": "Puma Lafrance Icey",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/14-puma-lafrance-icey",
+      "bestPrice": {
+        "amount": 80,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314109407404",
+      "name": "Puma Lafrance Rnnr",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/22-puma-lafrance-rnnr",
+      "bestPrice": {
+        "amount": 70,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314109233404",
+      "name": "Puma Mb.04 Flare",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/21-puma-mb-04-flare",
+      "bestPrice": {
+        "amount": 80,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "311318-01",
+      "name": "Puma MB.04 Lo Alien Skins",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/173-puma-mb-04-lo-alien-skins-311318-01",
+      "bestPrice": {
+        "amount": 63,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "312129-01",
+      "name": "Puma MB.05 World Tour",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/170-puma-mb-05-world-tour-312129-01",
+      "bestPrice": {
+        "amount": 74,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "633393-02",
+      "name": "Puma Moto Armor Long Sleeve Tee x A$AP Rocky",
+      "brand": "Puma",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/156-puma-moto-armor-long-sleeve-tee-x-a-ap-rocky-633393-02",
+      "bestPrice": {
+        "amount": 100,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Clothing"
+      ]
+    },
+    {
+      "productId": "407787-01",
+      "name": "Puma Speedcat Ballet Cow",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/100-puma-wmns-speedcat-ballet-cow-407787-01",
+      "bestPrice": {
+        "amount": 68,
+        "currency": "EUR"
+      },
+      "storeCount": 2,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "398846-56",
+      "name": "Puma Speedcat OG",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/105-puma-speedcat-og-398846-56",
+      "bestPrice": {
+        "amount": 55,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "404147-05",
+      "name": "Puma V-S1 Afcon",
+      "brand": "Puma",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/149-puma-v-s1-afcon-404147-05",
+      "bestPrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Puma",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597277620686P",
+      "name": "RON-MWPAB-MID Suede and Shell Slippers",
+      "brand": "SUICOKE",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/221-ron-mwpab-mid-suede-and-shell-slippers",
+      "bestPrice": {
+        "amount": 59,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "SUICOKE",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "314217728204",
+      "name": "Salomon XT-6",
+      "brand": "Salomon",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/24-salomon-xt-6",
+      "bestPrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Salomon",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "46376663162855058P",
+      "name": "Samba OG Leather-Trimmed Snake-Effect Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/227-samba-og-leather-trimmed-snake-effect-sneakers",
+      "bestPrice": {
+        "amount": 57,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597349668441P",
+      "name": "Samba OG Suede-Trimmed Calf Hair Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/233-samba-og-suede-trimmed-calf-hair-sneakers",
+      "bestPrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "S30994-97",
+      "name": "Saucony Endorphin Elite 2",
+      "brand": "Saucony",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/129-saucony-endorphin-elite-2-s30994-97",
+      "bestPrice": {
+        "amount": 225,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Saucony",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "S70966-2",
+      "name": "Saucony Progrid Triumph 4 x Jae Tips",
+      "brand": "Saucony",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/128-saucony-progrid-triumph-4-x-jae-tips-s70966-2",
+      "bestPrice": {
+        "amount": 143,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Saucony",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597353552799P",
+      "name": "Shearling-Lined Suede-Trimmed Cotton-Corduroy Loafers",
+      "brand": "MULO",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/216-shearling-lined-suede-trimmed-cotton-corduroy-loafers",
+      "bestPrice": {
+        "amount": 62,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MULO",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "shoes",
+      "name": "Shoes",
+      "brand": "",
+      "category": "Sneakers",
+      "image": "",
+      "bestPrice": {
+        "amount": 0,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597307381874P",
+      "name": "Suede Loafers",
+      "brand": "MULO",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/209-suede-loafers",
+      "bestPrice": {
+        "amount": 66,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MULO",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597354961861P",
+      "name": "Suede Sandals",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/191-suede-sandals",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597353552815P",
+      "name": "Suede-Trimmed Shearling-Lined Wool Slippers",
+      "brand": "MULO",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/215-suede-trimmed-shearling-lined-wool-slippers",
+      "bestPrice": {
+        "amount": 62,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MULO",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597336664746P",
+      "name": "Superstar 82 Leather Sneakers",
+      "brand": "ADIDAS ORIGINALS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/217-superstar-82-leather-sneakers",
+      "bestPrice": {
+        "amount": 60,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Sneakers",
+        "ADIDAS ORIGINALS",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "1647597331955622P",
+      "name": "Textured Cotton T",
+      "brand": "MR P.",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/242-textured-cotton-t-shirt",
+      "bestPrice": {
+        "amount": 38,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "MR P.",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "NF0A3C8DGOB1",
+      "name": "The North Face 1996 Retro Nuptse Jacket",
+      "brand": "The North Face",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/121-the-north-face-1996-retro-nuptse-jacket-nf0a3c8dgob1",
+      "bestPrice": {
+        "amount": 263,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "The North Face",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "NF0A8D9GKX71",
+      "name": "The North Face Base Camp WP Mule",
+      "brand": "The North Face",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/161-the-north-face-base-camp-wp-mule-nf0a8d9gkx71",
+      "bestPrice": {
+        "amount": 91,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "The North Face",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "NF0A88ZBJK31",
+      "name": "The North Face Extreme Pile Full Zip Jacket 2",
+      "brand": "The North Face",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/151-the-north-face-wmns-extreme-pile-full-zip-jacket-2-nf0a88zbj",
+      "bestPrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "The North Face",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "NF0A8DTWJK31",
+      "name": "The North Face NSE Tech Overshirt",
+      "brand": "The North Face",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/146-the-north-face-nse-tech-overshirt-nf0a8dtwjk31",
+      "bestPrice": {
+        "amount": 140,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "The North Face",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "NF0A8DQBJK31",
+      "name": "The North Face Pertex Down Jacket",
+      "brand": "The North Face",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/116-the-north-face-pertex-down-jacket-nf0a8dqbjk31",
+      "bestPrice": {
+        "amount": 375,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "The North Face",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "NF0A8DQB1JI1",
+      "name": "The North Face Pertex Down Jacket",
+      "brand": "The North Face",
+      "category": "Clothing",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/118-the-north-face-pertex-down-jacket-nf0a8dqb1ji1",
+      "bestPrice": {
+        "amount": 350,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Clothing",
+        "The North Face",
+        "Sale"
+      ]
+    },
+    {
+      "productId": "314626953104",
+      "name": "Timberland 6 Inch",
+      "brand": "Timberland",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/26-timberland-6-inch",
+      "bestPrice": {
+        "amount": 160,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "Timberland",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597332642182P",
+      "name": "Tom Padded Suede Sandals",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/192-tom-padded-suede-sandals",
+      "bestPrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597332642146P",
+      "name": "Tom Padded Suede Sandals",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/219-tom-padded-suede-sandals",
+      "bestPrice": {
+        "amount": 59,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "1647597332642122P",
+      "name": "Tom Padded Suede Sandals",
+      "brand": "MR P.",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/220-tom-padded-suede-sandals",
+      "bestPrice": {
+        "amount": 59,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "MR P.",
+        "Sale",
+        "Sneakers"
+      ]
+    },
+    {
+      "productId": "wawa-tre-kronor-hypno-cap-tre-kr-cap",
+      "name": "WAWA Tre Kronor Hypno Cap",
+      "brand": "WAWA",
+      "category": "Accessories",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/111-wawa-tre-kronor-hypno-cap-tre-kr-cap",
+      "bestPrice": {
+        "amount": 42,
+        "currency": "EUR"
+      },
+      "storeCount": 1,
+      "tags": [
+        "WAWA",
+        "Sale",
+        "Accessories"
+      ]
+    },
+    {
+      "productId": "1647597284554790P",
+      "name": "Weejuns 90 Larson Suede Penny Loafers",
+      "brand": "G.H. BASS",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/193-weejuns-90-larson-suede-penny-loafers",
+      "bestPrice": {
+        "amount": 76,
+        "currency": "GBP"
+      },
+      "storeCount": 1,
+      "tags": [
+        "G.H. BASS",
+        "Sale",
+        "Sneakers"
+      ]
+    }
+  ],
+  "generatedAt": "2026-02-13T06:46:50.646Z",
+  "totalProducts": 164
+}

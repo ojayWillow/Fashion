@@ -1,0 +1,46 @@
+{
+  "productId": "1647597332487729P",
+  "name": "Dunk Low Brushed-Suede Sneakers",
+  "brand": "NIKE",
+  "colorway": "Orange",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/239-dunk-low-brushed-suede-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Dunk Low Brushed-Suede Sneakers, available in orange. 40% Leather 40% Textile fibres 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/dunk-low-brushed-suede-sneakers/1647597332489310",
+      "retailPrice": {
+        "amount": 120,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 48,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44.5",
+        "EU 45",
+        "EU 46",
+        "EU 47.5",
+        "EU 46.5",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

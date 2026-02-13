@@ -1,0 +1,38 @@
+{
+  "productId": "U1906LAR",
+  "name": "New Balance 1906L",
+  "brand": "New Balance",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "New Balance",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/148-new-balance-1906l-u1906lar",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Heads up: these run a bit small — go half a size up for the best fit. New Balance explores the juxtaposition of sneakers and more formal attire with the latest iteration of the versatile 1906, reimagi",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/new-balance-1906l-u1906lar",
+      "retailPrice": {
+        "amount": 140,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 45.5",
+        "EU 46",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "productId": "JQ1263",
+  "name": "adidas Pro Model x CLOT By Edison Chen",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "adidas",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/122-adidas-originals-pro-model-x-clot-by-edison-chen-jq1263",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "This Pro Model collaboration is shaped more like a rugged boot than a court shoe, carrying Edison Chen’s material-driven vision into a sturdier, more grounded form. Deep dark brown leather runs throug",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-pro-model-x-clot-by-edison-chen-jq1263",
+      "retailPrice": {
+        "amount": 220,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 42.5",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

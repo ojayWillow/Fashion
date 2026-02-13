@@ -1,0 +1,39 @@
+{
+  "productId": "NF0A8D9GKX71",
+  "name": "The North Face Base Camp WP Mule",
+  "brand": "The North Face",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "The North Face",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/161-the-north-face-base-camp-wp-mule-nf0a8d9gkx71",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/the-north-face-base-camp-wp-mule-nf0a8d9gkx71",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 91,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 37.5",
+        "EU 38.5",
+        "EU 41",
+        "EU 44"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "productId": "JW1110",
+  "name": "adidas Satin Hood x Wales Bonner",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "adidas",
+    "Sale",
+    "Clothing"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/134-adidas-originals-wmns-satin-hood-x-wales-bonner-jw1110",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "adidas Originals and Wales Bonner team up once again for a brand-new Spring/Summer 2025 collection that grounds classic athleticism with elevated sensibility and craftsmanship. Drawing on the vibrance",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-wmns-satin-hood-x-wales-bonner-jw1110",
+      "retailPrice": {
+        "amount": 280,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 196,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "XS",
+        "S",
+        "M"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

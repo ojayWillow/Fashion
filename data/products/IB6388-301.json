@@ -1,0 +1,40 @@
+{
+  "productId": "IB6388-301",
+  "name": "Nike Air Force 1 '07 LV8",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Nike",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/103-nike-sportswear-air-force-1-39-07-lv8-ib6388-301",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Comfortable, durable, and timeless—the Nike Air Force 1 is a legend for a reason. This brand-new \"Dusty Cactus\" colorway brings together premium leather and plush suede throughout the upper alongside",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-air-force-1-07-lv8-ib6388-301",
+      "retailPrice": {
+        "amount": 120,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 84,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 40.5",
+        "EU 41",
+        "EU 45.5",
+        "EU 46",
+        "EU 47"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

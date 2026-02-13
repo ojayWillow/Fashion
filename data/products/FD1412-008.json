@@ -1,0 +1,38 @@
+{
+  "productId": "FD1412-008",
+  "name": "Air Jordan Baby 8.5 TD Sneaker",
+  "brand": "Jordan",
+  "colorway": "Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Kids",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/4-air-jordan-baby-8-5-td-sneaker",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/e98d2a7e-0e7d-4c40-b09f-40023b61a628/JORDAN+8.5+%28TD%29.png",
+  "imageStatus": "ok",
+  "description": "Mini Jordan 8.5 for the little ones. Toddler sizing.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-baby-85-td-sneaker-fd1412-008.html",
+      "retailPrice": {
+        "amount": 55,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 39,
+        "currency": "EUR"
+      },
+      "discount": 29,
+      "sizes": [
+        "EU 33.5",
+        "EU 29.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

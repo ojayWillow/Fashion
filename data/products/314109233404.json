@@ -1,0 +1,40 @@
+{
+  "productId": "314109233404",
+  "name": "Puma Mb.04 Flare",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale",
+    "Sneakers"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/21-puma-mb-04-flare",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/21-puma-mb-04-flare",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314109233404.html",
+      "retailPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 80,
+        "currency": "EUR"
+      },
+      "discount": 6,
+      "sizes": [
+        "EU 41",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

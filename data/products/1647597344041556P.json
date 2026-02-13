@@ -1,0 +1,39 @@
+{
+  "productId": "1647597344041556P",
+  "name": "Atticus Colour-Block Suede Sneakers",
+  "brand": "MR P.",
+  "colorway": "Green",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "MR P.",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/206-atticus-colour-block-suede-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Atticus Colour-Block Suede Sneakers, available in green or beige. 80% Leather 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/low-top-sneakers/atticus-colour-block-suede-sneakers/1647597344040949",
+      "retailPrice": {
+        "amount": 225,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 68,
+        "currency": "GBP"
+      },
+      "discount": 70,
+      "sizes": [
+        "EU 40.5",
+        "EU 42",
+        "EU 42.5",
+        "EU 43"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

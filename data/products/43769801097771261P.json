@@ -1,0 +1,40 @@
+{
+  "productId": "43769801097771261P",
+  "name": "+ Converse TURBODRK Chuck 70 Zebra-Print Faux Shearling High-Top Sneakers",
+  "brand": "RICK OWENS",
+  "colorway": "Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "RICK OWENS",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/185-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-t",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "+ Converse TURBODRK Chuck 70 Zebra-Print Faux Shearling High-Top Sneakers, available in black. 80% Textile fibres",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/rick-owens/shoes/high-top-sneakers/plus-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-top-sneakers/1647597296516851",
+      "retailPrice": {
+        "amount": 160,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 80,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

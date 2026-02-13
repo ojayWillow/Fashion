@@ -1,0 +1,10 @@
+{
+  "slug": "sns",
+  "name": "SNS (Sneakersnstuff)",
+  "url": "https://www.sneakersnstuff.com",
+  "flag": "🇸🇪",
+  "country": "Sweden (EU)",
+  "currency": "EUR",
+  "shipsTo": ["EU", "US", "Worldwide"],
+  "scrapeMethod": "browser"
+}

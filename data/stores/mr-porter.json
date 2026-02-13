@@ -1,0 +1,10 @@
+{
+  "slug": "mr-porter",
+  "name": "MR PORTER",
+  "url": "https://www.mrporter.com",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "currency": "GBP",
+  "shipsTo": ["EU", "UK", "US", "Worldwide"],
+  "scrapeMethod": "browser"
+}
