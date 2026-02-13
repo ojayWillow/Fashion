@@ -1,0 +1,17 @@
+{
+  "slug": "mr-porter",
+  "name": "MR PORTER",
+  "url": "https://www.mrporter.com",
+  "saleUrl": "https://www.mrporter.com/en-gb/mens/sale",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "category": "Luxury Platforms",
+  "categoryIcon": "✨",
+  "description": "Premium menswear.",
+  "currentDeal": "Men's sale — luxury menswear",
+  "currency": "GBP",
+  "shipsTo": ["Worldwide"],
+  "scrapeMethod": "browser",
+  "lat": 51.5074,
+  "lng": -0.1278
+}

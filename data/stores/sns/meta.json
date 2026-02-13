@@ -1,0 +1,17 @@
+{
+  "slug": "sns",
+  "name": "SNS (Sneakersnstuff)",
+  "url": "https://www.sneakersnstuff.com",
+  "saleUrl": "https://www.sneakersnstuff.com/sale",
+  "flag": "🇸🇪",
+  "country": "Sweden",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Stockholm premium sneakers.",
+  "currentDeal": "Premium sneaker sale",
+  "currency": "EUR",
+  "shipsTo": ["EU", "US", "Worldwide"],
+  "scrapeMethod": "browser",
+  "lat": 59.3293,
+  "lng": 18.0686
+}

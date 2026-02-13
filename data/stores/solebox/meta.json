@@ -1,0 +1,14 @@
+{
+  "slug": "solebox",
+  "name": "Solebox",
+  "url": "https://www.solebox.com",
+  "saleUrl": "https://www.solebox.com/sale",
+  "flag": "🇩🇪",
+  "country": "Germany",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Berlin-based sneaker boutique.",
+  "currentDeal": "Berlin sneaker culture sale",
+  "lat": 52.52,
+  "lng": 13.405
+}

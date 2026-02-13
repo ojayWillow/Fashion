@@ -1,0 +1,14 @@
+{
+  "slug": "ssense",
+  "name": "SSENSE",
+  "url": "https://www.ssense.com",
+  "saleUrl": "https://www.ssense.com/en-gb/sale",
+  "flag": "🇨🇦",
+  "country": "Canada",
+  "category": "Luxury Platforms",
+  "categoryIcon": "✨",
+  "description": "Montreal-based luxury & streetwear.",
+  "currentDeal": "Legendary sale — up to 70% off",
+  "lat": 45.5017,
+  "lng": -73.5673
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "end-clothing",
+  "name": "END. Clothing",
+  "url": "https://www.endclothing.com",
+  "saleUrl": "https://www.endclothing.com/gb/sale",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Newcastle-based, 400+ brands.",
+  "currentDeal": "Streetwear & sneaker sale",
+  "currency": "EUR",
+  "shipsTo": ["EU", "UK", "US", "Worldwide"],
+  "scrapeMethod": "browser",
+  "lat": 54.9783,
+  "lng": -1.6178
+}

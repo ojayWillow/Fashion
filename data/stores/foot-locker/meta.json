@@ -1,0 +1,17 @@
+{
+  "slug": "foot-locker",
+  "name": "Foot Locker",
+  "url": "https://www.footlocker.eu",
+  "saleUrl": "https://www.footlocker.eu/sale",
+  "flag": "🇪🇺",
+  "country": "EU-wide",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Biggest sneaker retail chain in Europe.",
+  "currentDeal": "Sneaker sale",
+  "currency": "EUR",
+  "shipsTo": ["EU"],
+  "scrapeMethod": "browser",
+  "lat": 52.3676,
+  "lng": 4.9041
+}

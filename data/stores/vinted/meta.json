@@ -1,0 +1,14 @@
+{
+  "slug": "vinted",
+  "name": "Vinted",
+  "url": "https://www.vinted.com",
+  "saleUrl": "https://www.vinted.com",
+  "flag": "🇱🇹",
+  "country": "Lithuania",
+  "category": "Resale & Vintage",
+  "categoryIcon": "♻️",
+  "description": "Europe's #1 resale marketplace.",
+  "currentDeal": "Pre-owned fashion marketplace",
+  "lat": 54.6872,
+  "lng": 25.2797
+}

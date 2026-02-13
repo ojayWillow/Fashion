@@ -1,0 +1,14 @@
+{
+  "slug": "footpatrol",
+  "name": "Footpatrol",
+  "url": "https://www.footpatrol.com",
+  "saleUrl": "https://www.footpatrol.com/sale",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "London and Paris specialist.",
+  "currentDeal": "Limited edition sale",
+  "lat": 51.5074,
+  "lng": -0.1278
+}

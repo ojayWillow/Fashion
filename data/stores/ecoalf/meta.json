@@ -1,0 +1,14 @@
+{
+  "slug": "ecoalf",
+  "name": "Ecoalf",
+  "url": "https://www.ecoalf.com",
+  "saleUrl": "https://www.ecoalf.com/en/sale",
+  "flag": "🇪🇸",
+  "country": "Spain",
+  "category": "Sustainable Fashion",
+  "categoryIcon": "🌿",
+  "description": "Clothing from recycled ocean waste.",
+  "currentDeal": "Ocean waste fashion sale",
+  "lat": 40.4168,
+  "lng": -3.7038
+}

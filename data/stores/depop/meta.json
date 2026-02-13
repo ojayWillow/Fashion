@@ -1,0 +1,14 @@
+{
+  "slug": "depop",
+  "name": "Depop",
+  "url": "https://www.depop.com",
+  "saleUrl": "https://www.depop.com",
+  "flag": "🇬🇧",
+  "country": "United Kingdom",
+  "category": "Resale & Vintage",
+  "categoryIcon": "♻️",
+  "description": "Gen-Z focused resale platform.",
+  "currentDeal": "Vintage & Y2K marketplace",
+  "lat": 51.5074,
+  "lng": -0.1278
+}
