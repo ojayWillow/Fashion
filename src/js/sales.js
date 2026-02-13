@@ -180,6 +180,47 @@ function renderPicks(picks) {
 
 loadPicks();
 
+// ===== STORE VOTING (localStorage) =====
+function getStoreVotes() {
+  try {
+    return JSON.parse(localStorage.getItem('storeVotes') || '{}');
+  } catch { return {}; }
+}
+
+function getMyVote(slug) {
+  try {
+    const myVotes = JSON.parse(localStorage.getItem('storeMyVotes') || '{}');
+    return myVotes[slug] || null; // 'up', 'down', or null
+  } catch { return null; }
+}
+
+function castVote(slug, direction) {
+  // direction: 'up' or 'down'
+  const votes = getStoreVotes();
+  const myVotes = JSON.parse(localStorage.getItem('storeMyVotes') || '{}');
+  const current = myVotes[slug] || null;
+
+  // If clicking the same direction again, remove the vote (toggle off)
+  if (current === direction) {
+    if (direction === 'up') votes[slug] = (votes[slug] || 0) - 1;
+    else votes[slug] = (votes[slug] || 0) + 1;
+    delete myVotes[slug];
+  } else {
+    // If switching from opposite vote, undo that first
+    if (current === 'up') votes[slug] = (votes[slug] || 0) - 1;
+    if (current === 'down') votes[slug] = (votes[slug] || 0) + 1;
+    // Apply new vote
+    if (direction === 'up') votes[slug] = (votes[slug] || 0) + 1;
+    else votes[slug] = (votes[slug] || 0) - 1;
+    myVotes[slug] = direction;
+  }
+
+  localStorage.setItem('storeVotes', JSON.stringify(votes));
+  localStorage.setItem('storeMyVotes', JSON.stringify(myVotes));
+
+  return { score: votes[slug] || 0, myVote: myVotes[slug] || null };
+}
+
 // ===== STORE DETAIL OVERLAY =====
 function showStoreDetail(store, picks) {
   document.querySelector('.store-detail-overlay')?.remove();
@@ -187,6 +228,14 @@ function showStoreDetail(store, picks) {
   const overlay = document.createElement('div');
   overlay.className = 'store-detail-overlay';
   const escapedStoreName = (store.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+  const votes = getStoreVotes();
+  const score = votes[store.slug] || 0;
+  const myVote = getMyVote(store.slug);
+
+  const descriptionHTML = store.description
+    ? `<p class="store-detail-description">${store.description}</p>`
+    : '';
 
   overlay.innerHTML = `
     <div class="store-detail-panel">
@@ -204,6 +253,21 @@ function showStoreDetail(store, picks) {
           </div>
         </div>
         <div class="store-detail-actions">
+          <div class="store-detail-votes" data-slug="${store.slug}">
+            <button class="vote-btn vote-up${myVote === 'up' ? ' active' : ''}" data-dir="up" aria-label="Upvote">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5"></path>
+                <path d="M5 12l7-7 7 7"></path>
+              </svg>
+            </button>
+            <span class="vote-count${score > 0 ? ' positive' : score < 0 ? ' negative' : ''}">${score > 0 ? '+' : ''}${score}</span>
+            <button class="vote-btn vote-down${myVote === 'down' ? ' active' : ''}" data-dir="down" aria-label="Downvote">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14"></path>
+                <path d="M19 12l-7 7-7-7"></path>
+              </svg>
+            </button>
+          </div>
           <button class="store-detail-visit" onclick="redirectTo('${store.saleUrl}', '${escapedStoreName}')">
             Visit Store \u2192
           </button>
@@ -215,6 +279,7 @@ function showStoreDetail(store, picks) {
           </button>
         </div>
       </div>
+      ${descriptionHTML ? `<div class="store-detail-description-bar">${descriptionHTML}</div>` : ''}
       <div class="store-detail-grid">
         ${picks.map((product, i) => {
           const listing = (product.listings || []).find(l =>
@@ -265,6 +330,28 @@ function showStoreDetail(store, picks) {
       </div>
     </div>
   `;
+
+  // Wire up vote buttons
+  overlay.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const votesContainer = btn.closest('.store-detail-votes');
+      const slug = votesContainer.dataset.slug;
+      const dir = btn.dataset.dir;
+      const result = castVote(slug, dir);
+
+      // Update UI
+      const countEl = votesContainer.querySelector('.vote-count');
+      countEl.textContent = (result.score > 0 ? '+' : '') + result.score;
+      countEl.className = 'vote-count' + (result.score > 0 ? ' positive' : result.score < 0 ? ' negative' : '');
+
+      votesContainer.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('active'));
+      if (result.myVote) {
+        votesContainer.querySelector(`.vote-${result.myVote}`).classList.add('active');
+      }
+    });
+    addHoverCursor(btn);
+  });
 
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay || e.target.closest('.store-detail-close')) {
@@ -421,6 +508,12 @@ function renderStores() {
            <span class="store-preview-label">View curated picks</span>
          </div>` : '';
 
+    // Show vote score on store card if non-zero
+    const votes = getStoreVotes();
+    const cardScore = votes[store.slug] || 0;
+    const scoreBadge = cardScore !== 0
+      ? `<span class="store-card-vote-badge${cardScore > 0 ? ' positive' : ' negative'}">${cardScore > 0 ? '\u25B2' : '\u25BC'} ${Math.abs(cardScore)}</span>` : '';
+
     card.innerHTML = `
       <div class="store-card-header">
         <div class="store-card-logo">
@@ -429,6 +522,7 @@ function renderStores() {
         </div>
         <div class="store-card-title"><h3>${store.name}</h3><span class="store-location">${store.flag} ${store.country}</span></div>
         <div class="store-card-badges">
+          ${scoreBadge}
           ${picksBadge}
           <span class="store-card-category">${store.categoryIcon} ${store.category}</span>
         </div>
