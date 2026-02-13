@@ -1,12 +1,12 @@
 /* ===== FASHION. — Sales Dashboard ===== */
-/* Updated for product-centric data model (#5 Step 5) */
+/* Updated for product-centric + per-store folder data model */
 /* Refactored: shared code extracted to src/js/shared/ */
 
 import { initCursor } from './shared/cursor.js';
 import { initDock } from './shared/dock.js';
 import { redirectTo } from './shared/redirect.js';
 import { normalizeImage, handleImageError } from './shared/image.js';
-import { formatPrice, storeDisplayName, storeFlag, bestListing, allSizes } from './shared/format.js';
+import { loadStoreMetadata, formatPrice, storeDisplayName, storeFlag, bestListing, allSizes } from './shared/format.js';
 import { extractDomain } from './shared/utils.js';
 
 // ===== Init shared UI =====
@@ -291,24 +291,60 @@ function closeStoreDetail(overlay) {
   setTimeout(() => overlay.remove(), 400);
 }
 
-// ===== SALES DASHBOARD =====
+// ===== SALES DASHBOARD (Store Cards) =====
 let allStores = [], storeCategories = [], activeFilter = 'all', searchQuery = '';
 
 async function init() {
   try {
-    const response = await fetch('data/stores.json');
-    const data = await response.json();
-    storeCategories = data.categories.map(c => ({ name: c.name, icon: c.icon }));
-    data.categories.forEach(cat => {
-      cat.stores.forEach(store => {
-        allStores.push({
-          name: store.name, country: store.country, flag: store.flag,
-          url: store.url, saleUrl: store.saleUrl, description: store.description,
-          deal: store.currentDeal, category: cat.name, categoryIcon: cat.icon,
-          domain: extractDomain(store.url)
-        });
-      });
+    // Load shared store metadata first (format.js)
+    await loadStoreMetadata();
+
+    // Fetch store index
+    const indexResp = await fetch('data/store-index.json');
+    const indexData = await indexResp.json();
+
+    // Build category list from index
+    storeCategories = indexData.categories.map(catName => {
+      const storeInCat = indexData.stores.find(s => s.category === catName);
+      return { name: catName, icon: storeInCat ? storeInCat.categoryIcon : '\u{1F3F7}\u{FE0F}' };
     });
+
+    // Load full meta.json for each store (parallel fetch)
+    const metaPromises = indexData.stores.map(async (entry) => {
+      try {
+        const resp = await fetch(`data/stores/${entry.slug}/meta.json`);
+        const meta = await resp.json();
+        return {
+          slug: meta.slug,
+          name: meta.name,
+          country: meta.country,
+          flag: meta.flag,
+          url: meta.url,
+          saleUrl: meta.saleUrl,
+          description: meta.description,
+          deal: meta.currentDeal,
+          category: meta.category,
+          categoryIcon: meta.categoryIcon,
+          domain: meta.url ? extractDomain(meta.url) : ''
+        };
+      } catch (e) {
+        console.warn(`Could not load meta for ${entry.slug}:`, e);
+        // Fallback to index data
+        return {
+          slug: entry.slug,
+          name: entry.name,
+          country: entry.country,
+          flag: entry.flag,
+          url: '', saleUrl: '', description: '', deal: '',
+          category: entry.category,
+          categoryIcon: entry.categoryIcon,
+          domain: ''
+        };
+      }
+    });
+
+    allStores = await Promise.all(metaPromises);
+
     buildFilterTabs();
     renderStores();
     setupSearch();
