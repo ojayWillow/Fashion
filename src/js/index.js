@@ -62,42 +62,45 @@ function initTiltCards() {
 }
 initTiltCards();
 
-// ===== LATEST DROPS (from picks.json) =====
+// ===== LATEST DROPS (from index.json product index) =====
 async function loadDrops() {
   const grid = document.getElementById('dropsGrid');
   if (!grid) return;
 
   try {
-    const res = await fetch('data/picks.json');
+    const res = await fetch('data/index.json');
     const data = await res.json();
 
-    const latest = [...data.picks]
-      .filter(p => !p._linkDead)
-      .sort((a, b) => b.id - a.id)
+    const latest = [...data.products]
+      .filter(p => p.bestPrice && p.bestPrice.amount > 0 && p.image)
+      .sort(() => Math.random() - 0.5)
       .slice(0, 6);
 
     if (latest.length === 0) return;
 
-    grid.innerHTML = latest.map((pick) => {
-      const escapedUrl = (pick.url || '').replace(/'/g, "\\'");
+    grid.innerHTML = latest.map((p) => {
+      const priceLabel = p.bestPrice.amount
+        ? `${p.bestPrice.currency === 'GBP' ? '\u00A3' : '\u20AC'}${p.bestPrice.amount}`
+        : '';
+      const storeLabel = p.storeCount === 1 ? '1 store' : `${p.storeCount} stores`;
+
       return `
         <div class="card-3d" data-tilt>
           <div class="card-3d-inner">
             <div class="card-3d-shine"></div>
-            <div class="drop-badge">${pick.discount || 'Sale'}</div>
+            <div class="drop-badge">${p.category || 'Sale'}</div>
             <div class="drop-product-img">
-              <img src="${pick.image}" alt="${pick.name}" loading="lazy"
+              <img src="${p.image}" alt="${p.name}" loading="lazy"
                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="drop-img-fallback" style="display:none;">${pick.brand ? pick.brand.charAt(0) : '?'}</div>
+              <div class="drop-img-fallback" style="display:none;">${p.brand ? p.brand.charAt(0) : '?'}</div>
             </div>
-            <div class="drop-card-brand">${pick.brand || ''}</div>
-            <h3>${pick.name}</h3>
-            <p class="drop-region">${pick.storeFlag || '\u{1F3F7}\u{FE0F}'} ${pick.store}</p>
+            <div class="drop-card-brand">${p.brand || ''}</div>
+            <h3>${p.name}</h3>
+            <p class="drop-region">\u{1F3F7}\u{FE0F} ${storeLabel}</p>
             <div class="drop-card-pricing">
-              <span class="drop-price-sale">${pick.salePrice || ''}</span>
-              <span class="drop-price-retail">${pick.retailPrice || ''}</span>
+              <span class="drop-price-sale">${priceLabel}</span>
             </div>
-            <a href="${pick.url}" target="_blank" rel="noopener" class="btn btn-outline card-3d-float">Shop \u2192</a>
+            <a href="sales.html?product=${encodeURIComponent(p.productId)}" class="btn btn-outline card-3d-float">Shop \u2192</a>
           </div>
         </div>
       `;
@@ -110,21 +113,19 @@ async function loadDrops() {
 }
 loadDrops();
 
-// ===== PARTNERS — Floating Marquee =====
+// ===== PARTNERS — Floating Marquee (from store-index.json) =====
 async function loadPartners() {
   try {
-    const response = await fetch('data/stores.json');
+    const response = await fetch('data/store-index.json');
     const data = await response.json();
 
-    const allStores = [];
-    data.categories.forEach(cat => {
-      cat.stores.forEach(store => {
-        allStores.push({
-          name: store.name, country: store.country,
-          flag: store.flag, url: store.url, deal: store.currentDeal
-        });
-      });
-    });
+    const allStores = data.stores.map(s => ({
+      name: s.name,
+      country: s.country,
+      flag: s.flag,
+      url: `sales.html?store=${encodeURIComponent(s.slug)}`,
+      deal: `${s.categoryIcon} ${s.category}`
+    }));
 
     buildMarquee(allStores);
   } catch (error) {
