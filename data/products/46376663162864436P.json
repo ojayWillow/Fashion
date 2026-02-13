@@ -1,0 +1,40 @@
+{
+  "productId": "46376663162864436P",
+  "name": "Logo-Appliquéd Striped Cotton-Jersey T-Shirt",
+  "brand": "Loewe",
+  "colorway": "Black",
+  "category": "Clothing",
+  "tags": [
+    "Loewe",
+    "Clothing",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_fit/picks/46376663162864436P-logo-appliqu-d-striped-cotton-jersey-t-shirt",
+  "originalImage": "https://www.mrporter.com/variants/images/46376663162864438/in/w2000_q60.jpg",
+  "imageStatus": "ok",
+  "description": "Logo-Appliquéd Striped Cotton-Jersey T-Shirt, available in black. 100% Cotton",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/loewe/clothing/printed-t-shirts/logo-appliqued-striped-cotton-jersey-t-shirt/46376663162864438",
+      "retailPrice": {
+        "amount": 495,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 248,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "XS",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "lastScraped": "2026-02-13T15:24:43.590Z",
+      "available": true
+    }
+  ]
+}

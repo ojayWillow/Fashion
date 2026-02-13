@@ -1,0 +1,38 @@
+{
+  "productId": "A2267CC",
+  "name": "Our Legacy Camion Boot",
+  "brand": "Our Legacy",
+  "colorway": "Castagna",
+  "category": "Footwear",
+  "tags": [
+    "Our Legacy",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_fit/picks/A2267CC-our-legacy-camion-boot",
+  "originalImage": "https://media.endclothing.com/media/catalog/product/B/R/BR_A2267CC_1_1.jpg",
+  "imageStatus": "ok",
+  "description": "Buy Our Legacy Camion Boot - Castagna from END. (Europe) - only €590. Fast shipping on latest Our Legacy",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/eu/our-legacy-camion-boot-a2267cc.html",
+      "retailPrice": null,
+      "salePrice": {
+        "amount": 590,
+        "currency": "EUR"
+      },
+      "discount": 0,
+      "sizes": [
+        "EU 44",
+        "EU 43",
+        "EU 42",
+        "EU 41",
+        "EU 46",
+        "EU 40",
+        "EU 45"
+      ],
+      "lastScraped": "2026-02-13T15:24:30.530Z",
+      "available": true
+    }
+  ]
+}

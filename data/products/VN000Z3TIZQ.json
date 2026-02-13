@@ -1,0 +1,40 @@
+{
+  "productId": "VN000Z3TIZQ",
+  "name": "OTW Authentic 44",
+  "brand": "Vans",
+  "colorway": "",
+  "category": "Sneakers",
+  "tags": [
+    "Vans",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_fit/picks/VN000Z3TIZQ-otw-authentic-44",
+  "originalImage": "https://www.sneakersnstuff.com/cdn/shop/files/VN000Z3TIZQ_01_bddd61e8-3879-4194-a58d-ddb6795354e7.jpg?v=1770798287&width=1920",
+  "imageStatus": "ok",
+  "description": "This one's for people who like their classics with a bit more edge.Vans takes the Authentic and gives it a sharper feel, with raw-edge leather and canvas, giving you that worn-in look, and they only get better the more you put them though. Round laces, tonal eyelets for a simple but intentional fini",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/products/vans-otw-authentic-44-vn000z3tizq",
+      "retailPrice": null,
+      "salePrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "discount": 0,
+      "sizes": [
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-13T15:24:18.864Z",
+      "available": true
+    }
+  ]
+}
