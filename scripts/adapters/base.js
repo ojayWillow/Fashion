@@ -5,11 +5,41 @@
  * Opens pages with Playwright or Patchright, extracts product
  * data from JSON-LD, meta tags, and DOM selectors.
  *
- * Store-specific adapters can override any step.
+ * Store-specific adapters can override postProcess().
  * When no specific adapter exists, this base handles everything.
+ *
+ * Adapter resolution order:
+ *   1. Check domain → load store-specific adapter if exists
+ *   2. Extract raw data via JSON-LD + DOM (shared)
+ *   3. Run adapter's postProcess() or generic normalization
+ *   4. Return normalized product data
  */
 
 const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, calcDiscount, normalizeSizes, isValidSize } = require('../lib/helpers');
+
+// ===== ADAPTER REGISTRY =====
+const ADAPTER_MAP = {
+  'sneakersnstuff.com': () => require('./sns'),
+  'endclothing.com':    () => require('./end'),
+  'footlocker.nl':      () => require('./footlocker'),
+  'footlocker.co.uk':   () => require('./footlocker'),
+  'footlocker.com':     () => require('./footlocker'),
+  'footlocker.de':      () => require('./footlocker'),
+  'footlocker.fr':      () => require('./footlocker'),
+  'mrporter.com':       () => require('./mrporter'),
+  'net-a-porter.com':   () => require('./mrporter'),
+};
+
+function getAdapter(domain) {
+  const domainLower = domain.toLowerCase();
+  // Exact match
+  if (ADAPTER_MAP[domainLower]) return ADAPTER_MAP[domainLower]();
+  // Partial match
+  for (const [key, loader] of Object.entries(ADAPTER_MAP)) {
+    if (domainLower.includes(key.split('.')[0])) return loader();
+  }
+  return null;
+}
 
 // ===== BROWSER MANAGEMENT =====
 
@@ -221,13 +251,41 @@ async function extractWithAdapter(url, domain, store) {
   log(`Opening ${domain} (${store.scrapeMethod})...`);
 
   const page = await openPage(url, store);
+  const adapter = getAdapter(domain);
 
   try {
-    // Extract raw data
-    const raw = await extractJsonLd(page);
+    // Step 1: Extract raw data from JSON-LD
+    let raw = await extractJsonLd(page);
+
+    // Step 2: Foot Locker DOM fallback if JSON-LD is weak
+    if (adapter && adapter.extractFromDOM) {
+      if (!raw.name || !raw.salePrice || raw.sizes.length === 0) {
+        log('JSON-LD insufficient, trying DOM extraction...');
+        const domData = await adapter.extractFromDOM(page);
+        // Merge: prefer non-empty values
+        raw = {
+          name: raw.name || domData.name,
+          brand: raw.brand || domData.brand,
+          image: raw.image || domData.image,
+          description: raw.description || domData.description,
+          colorway: raw.colorway || domData.colorway,
+          salePrice: raw.salePrice || domData.salePrice,
+          retailPrice: raw.retailPrice || domData.retailPrice,
+          currency: raw.currency || domData.currency,
+          sizes: raw.sizes.length > 0 ? raw.sizes : domData.sizes,
+          styleCode: raw.styleCode || domData.styleCode,
+        };
+      }
+    }
+
     await page.close();
 
-    // Normalize
+    // Step 3: Run adapter's postProcess or generic normalization
+    if (adapter && adapter.postProcess) {
+      return adapter.postProcess(raw, store);
+    }
+
+    // Generic normalization (no specific adapter)
     const brand = raw.brand || detectBrand(raw.name);
     const currency = raw.currency || store.currency;
     const salePriceNum = parsePrice(raw.salePrice);
