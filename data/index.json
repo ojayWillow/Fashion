@@ -718,7 +718,7 @@
       "productId": "CT8532-101",
       "name": "Air Jordan 3 Retro \"Lucky Shorts\"",
       "brand": "Jordan",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/5-air-jordan-3-retro-lucky-shorts",
       "bestPrice": {
         "amount": 110,
@@ -728,8 +728,7 @@
       "tags": [
         "Sneakers",
         "Jordan",
-        "Sale",
-        "Clothing"
+        "Sale"
       ]
     },
     {
@@ -788,7 +787,7 @@
       "productId": "DZ5474-010",
       "name": "Air Jordan x Travis Scott Waxed Jacket",
       "brand": "Jordan x Travis Scott",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/6-air-jordan-x-travis-scott-waxed-jacket",
       "bestPrice": {
         "amount": 165,
@@ -800,7 +799,7 @@
         "Travis Scott",
         "Jordan",
         "Sale",
-        "Clothing"
+        "Sneakers"
       ]
     },
     {
@@ -2791,6 +2790,6 @@
       ]
     }
   ],
-  "generatedAt": "2026-02-13T06:31:33.413Z",
+  "generatedAt": "2026-02-13T06:35:33.922Z",
   "totalProducts": 164
 }
