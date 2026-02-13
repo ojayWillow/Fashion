@@ -1,15 +1,12 @@
 /**
  * FASHION. — Image Pipeline
  * ==========================
- * Downloads product images, uploads to Cloudinary with
- * the correct transforms (f5f5f7 background + shadow).
+ * Downloads product images, uploads to Cloudinary.
+ * Keeps the original store image intact (no trimming/padding).
  *
  * Transform chain:
- *   e_trim:20          → strip white/light borders from source
  *   f_auto,q_auto      → auto format + quality
- *   w_800,h_800,c_pad  → fit into 800x800 canvas
- *   b_rgb:f5f5f7       → card-matching background
- *   e_shadow:40        → subtle drop shadow
+ *   w_800,h_800,c_fit  → fit into 800x800 without cropping
  *
  * See: data/standards/IMAGE_STANDARDS.md
  */
@@ -25,8 +22,8 @@ let cloudinary = null;
 let CLOUD_ENABLED = false;
 let CLOUD_NAME = '';
 
-// e_trim:20 strips near-white borders (tolerance 20%) before padding
-const CLOUDINARY_TRANSFORM = 'e_trim:20/f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40';
+// Keep original image intact — just resize and optimize
+const CLOUDINARY_TRANSFORM = 'f_auto,q_auto,w_800,h_800,c_fit';
 
 function initCloudinary() {
   const url = process.env.CLOUDINARY_URL;
