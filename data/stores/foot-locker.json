@@ -1,0 +1,10 @@
+{
+  "slug": "foot-locker",
+  "name": "Foot Locker",
+  "url": "https://www.footlocker.nl",
+  "flag": "🇪🇺",
+  "country": "Netherlands (EU)",
+  "currency": "EUR",
+  "shipsTo": ["EU"],
+  "scrapeMethod": "browser"
+}
