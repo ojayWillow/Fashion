@@ -26,7 +26,7 @@ Examples:
 ### Transform URL
 
 ```
-https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/{name}
+https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40/picks/{name}
 ```
 
 | Parameter | Value | Purpose |
@@ -36,14 +36,20 @@ https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pa
 | `w_800` | 800px | Canvas width |
 | `h_800` | 800px | Canvas height |
 | `c_pad` | pad | Fits image into canvas without cropping |
-| `b_white` | #FFFFFF | White background fill |
+| `b_rgb:f5f5f7` | #f5f5f7 | Card-matching background — blends with `.pick-card-image` |
+| `e_shadow:40` | 40% intensity | Subtle professional drop shadow |
+
+### Why `#f5f5f7` not white?
+
+The product card image area uses `background: #f5f5f7` in the CSS. Using pure white (`b_white`) creates a visible white rectangle sitting on the gray card — breaking the seamless look. Matching the Cloudinary background to the card background makes images blend perfectly into their containers.
 
 ## 3. Visual Standard
 
 | Property | Requirement |
 |----------|-------------|
 | **Aspect ratio** | 1:1 square |
-| **Background** | Pure white `#FFFFFF` |
+| **Background** | `#f5f5f7` — matches card image area |
+| **Shadow** | Subtle drop shadow via `e_shadow:40` |
 | **Product placement** | Centered, occupying ~80% of the frame |
 | **Footwear angle** | 3/4 lateral view (standard industry angle) |
 | **Clothing angle** | Flat-lay or mannequin (no on-model for primary) |
@@ -51,7 +57,19 @@ https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pa
 | **Overlays** | None — no text, watermarks, or store branding |
 | **Minimum resolution** | 800×800px for the hosted version |
 
-## 4. Processing Pipeline
+## 4. Color Reference
+
+These values must stay in sync:
+
+| Location | Property | Value |
+|----------|----------|-------|
+| `sales.css` | `.pick-card-image { background }` | `#f5f5f7` |
+| Cloudinary transform | `b_rgb:` | `f5f5f7` |
+| This doc | Visual standard background | `#f5f5f7` |
+
+If the card background changes, update the Cloudinary transform to match.
+
+## 5. Processing Pipeline
 
 When a scraper fetches a new product:
 
@@ -64,7 +82,7 @@ When a scraper fetches a new product:
    - If source blocked or unavailable → `"imageStatus": "missing"`
    - If only lifestyle/on-model available → `"imageStatus": "non-standard"`
 
-## 5. Fallback Rules
+## 6. Fallback Rules
 
 | Situation | Action |
 |-----------|--------|
@@ -73,14 +91,19 @@ When a scraper fetches a new product:
 | Image too small (<400px) | Flag `"imageStatus": "needs-review"`, look for higher-res source |
 | Multiple colorways in one shot | Crop to single product, or find per-colorway image |
 
-## 6. Examples
+## 7. Examples
 
-### ✅ Good: Brand CDN, white background, 3/4 view
+### ✅ Good: Brand CDN, matching background, shadow, 3/4 view
 ```
-https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/.../JORDAN+5+RETRO+OG.png
+https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40/picks/HQ7978-101-air-jordan-5-retro
 ```
 
-### ❌ Bad: Store lifestyle shot, non-white background
+### ❌ Bad: Pure white background (creates visible box on card)
+```
+https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/some-product
+```
+
+### ❌ Bad: Store lifestyle shot, non-standard background
 ```
 https://www.footlocker.nl/product-images/lifestyle-shot-on-model.jpg
 ```

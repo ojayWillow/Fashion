@@ -88,7 +88,6 @@
     transform: translateY(-2px);
 }
 
-<<<<<<< HEAD
 /* ===== PRODUCT CARD — Clean White ===== */
 .pick-card {
     background: #ffffff;
@@ -107,7 +106,7 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(168, 85, 247, 0.06);
 }
 
-/* === Product Image — unified #f5f5f7 bg to match Cloudinary padding === */
+/* === Product Image — #f5f5f7 bg matches Cloudinary b_rgb:f5f5f7 === */
 .pick-card-image {
     position: relative;
     width: 100%;
@@ -249,7 +248,7 @@
     box-shadow: 0 16px 50px rgba(245, 158, 11, 0.06);
 }
 
-/* ===== CARD BODY — Dark text on white ===== */
+/* ===== CARD BODY ===== */
 .pick-card-body {
     padding: 22px;
 }
@@ -377,8 +376,6 @@
     box-shadow: 0 6px 25px rgba(168, 85, 247, 0.35);
 }
 
-=======
->>>>>>> main
 /* ===== Filter Tabs ===== */
 .filters-bar {
     padding: 20px 0 10px;
