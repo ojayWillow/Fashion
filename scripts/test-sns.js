@@ -1,4 +1,4 @@
-// Foot Locker NL recon — Patchright (already working partially)
+// Foot Locker NL recon #2 — find the retail/original price
 const { chromium } = require('patchright');
 
 (async () => {
@@ -24,144 +24,98 @@ const { chromium } = require('patchright');
   const data = await page.evaluate(() => {
     const result = {};
 
-    // 1. JSON-LD
-    const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
-    result.jsonLdCount = jsonLd.length;
-    result.jsonLdData = [...jsonLd].map(s => {
-      try { return JSON.parse(s.textContent); }
-      catch { return 'parse-error'; }
-    });
-
-    // 2. Page info
-    result.title = document.title;
-    const h1 = document.querySelector('h1');
-    result.h1 = h1 ? h1.textContent.trim().substring(0, 100) : null;
-
-    // 3. Price elements
+    // 1. Find ANY element containing a currency symbol or "EUR"
     const allEls = document.querySelectorAll('*');
-    const priceEls = [];
+    const priceTexts = [];
     for (const el of allEls) {
-      const cls = el.className || '';
-      const testId = el.getAttribute('data-testid') || '';
-      if (typeof cls === 'string' && (
-        cls.toLowerCase().includes('price') ||
-        testId.toLowerCase().includes('price')
-      )) {
-        const text = el.textContent.trim();
-        if (text.length < 80 && text.length > 0) {
-          priceEls.push({
-            tag: el.tagName,
-            class: cls.substring(0, 100),
-            testId: testId || null,
-            text: text.substring(0, 80),
-            html: el.innerHTML.substring(0, 200),
+      if (el.children.length > 0) continue; // leaf nodes only
+      const text = el.textContent.trim();
+      if (text && (text.includes('€') || text.includes('EUR') || /^\d{2,3}[.,]\d{2}$/.test(text))) {
+        priceTexts.push({
+          tag: el.tagName,
+          text: text.substring(0, 60),
+          class: (el.className || '').substring(0, 100),
+          parentClass: (el.parentElement?.className || '').substring(0, 100),
+          grandparentClass: (el.parentElement?.parentElement?.className || '').substring(0, 100),
+        });
+      }
+    }
+    result.allPriceTexts = priceTexts.slice(0, 30);
+
+    // 2. Check for data attributes containing price
+    const dataEls = document.querySelectorAll('[data-price], [data-original-price], [data-sale-price], [data-list-price], [data-retail-price]');
+    result.dataPriceElements = [...dataEls].slice(0, 10).map(el => ({
+      tag: el.tagName,
+      attributes: Object.fromEntries(
+        [...el.attributes].filter(a => a.name.startsWith('data-')).map(a => [a.name, a.value.substring(0, 50)])
+      ),
+      text: el.textContent.trim().substring(0, 50),
+    }));
+
+    // 3. Search ALL script tags for price data (inline JS, dataLayer, etc)
+    const scripts = document.querySelectorAll('script:not([src])');
+    const priceScripts = [];
+    for (const script of scripts) {
+      const text = script.textContent;
+      if (text.includes('price') || text.includes('Price') || text.includes('PRICE')) {
+        // Extract just the price-related lines
+        const lines = text.split('\n').filter(l =>
+          l.toLowerCase().includes('price') ||
+          l.toLowerCase().includes('discount') ||
+          l.toLowerCase().includes('original') ||
+          l.toLowerCase().includes('retail') ||
+          l.toLowerCase().includes('was') ||
+          l.toLowerCase().includes('listprice') ||
+          l.toLowerCase().includes('list_price')
+        );
+        if (lines.length > 0) {
+          priceScripts.push({
+            type: script.type || 'none',
+            relevantLines: lines.slice(0, 10).map(l => l.trim().substring(0, 150)),
           });
         }
       }
     }
-    result.priceElements = priceEls.slice(0, 15);
+    result.priceInScripts = priceScripts.slice(0, 5);
 
-    // 4. Strikethrough / crossed out prices
-    const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"], [class*="crossed"], [class*="Crossed"], [class*="was"], [class*="Was"], [class*="original"], [class*="Original"]');
-    result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
-      tag: el.tagName,
-      text: el.textContent.trim().substring(0, 50),
-      class: (el.className || '').substring(0, 80),
-      parent: el.parentElement?.className?.substring(0, 80) || null,
-    }));
-
-    // 5. Size elements — broad search
-    const sizeByTestId = document.querySelectorAll('[data-testid*="ize"], [data-testid*="SIZE"]');
-    result.sizeTestIdElements = [...sizeByTestId].slice(0, 20).map(el => ({
-      tag: el.tagName,
-      testId: el.getAttribute('data-testid'),
-      text: el.textContent.trim().substring(0, 50),
-      class: (el.className || '').substring(0, 80),
-      childCount: el.children.length,
-    }));
-
-    // Size buttons (numeric)
-    const allButtons = document.querySelectorAll('button, a');
-    const sizeButtons = [];
-    for (const btn of allButtons) {
-      const text = btn.textContent.trim();
-      if (/^(EU\s?)?\d{2}(\.5)?$/.test(text) || /^(UK\s?)?\d{1,2}(\.5)?$/.test(text)) {
-        sizeButtons.push({
-          tag: btn.tagName,
-          text,
-          class: (btn.className || '').substring(0, 80),
-          testId: btn.getAttribute('data-testid') || null,
-          disabled: btn.disabled || btn.classList.contains('disabled') || false,
-        });
-      }
-    }
-    result.sizeButtons = sizeButtons.slice(0, 20);
-
-    // Size containers
-    const containers = document.querySelectorAll(
-      '[class*="SizeSelector"], [class*="sizeSelector"], [class*="size-selector"], ' +
-      '[class*="SizeGrid"], [class*="sizeGrid"], [class*="size-grid"], ' +
-      '[class*="SizeList"], [class*="sizeList"], [class*="size-list"]'
-    );
-    result.sizeContainers = [...containers].slice(0, 3).map(el => ({
-      tag: el.tagName,
-      class: (el.className || '').substring(0, 120),
-      childCount: el.children.length,
-      innerHTML: el.innerHTML.substring(0, 500),
-    }));
-
-    // 6. Any XHR/fetch data in window (Foot Locker often stores product data in JS)
-    result.windowKeys = Object.keys(window).filter(k =>
-      k.toLowerCase().includes('product') ||
-      k.toLowerCase().includes('pdp') ||
-      k.toLowerCase().includes('data') ||
-      k.toLowerCase().includes('state') ||
-      k.toLowerCase().includes('__')
-    ).slice(0, 20);
-
-    // Check for __NEXT_DATA__ or similar
-    if (window.__NEXT_DATA__) {
-      result.nextData = JSON.stringify(window.__NEXT_DATA__).substring(0, 500);
-    }
-    if (window.__INITIAL_STATE__) {
-      result.initialState = JSON.stringify(window.__INITIAL_STATE__).substring(0, 500);
+    // 4. Check dataLayer
+    if (window.dataLayer) {
+      const dlStr = JSON.stringify(window.dataLayer);
+      const priceMatch = dlStr.match(/"price"[^}]{0,200}/g);
+      const discountMatch = dlStr.match(/"discount"[^}]{0,200}/g);
+      const originalMatch = dlStr.match(/"original"[^}]{0,200}/g);
+      result.dataLayerPrices = {
+        priceMatches: priceMatch ? priceMatch.slice(0, 5) : [],
+        discountMatches: discountMatch ? discountMatch.slice(0, 5) : [],
+        originalMatches: originalMatch ? originalMatch.slice(0, 5) : [],
+      };
     }
 
-    // 7. Meta tags
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 150) : null;
+    // 5. Look for product container area specifically
+    const productArea = document.querySelector('[class*="ProductDetails"], [class*="product-details"], [class*="pdp"], [class*="PDP"], main, [role="main"]');
+    if (productArea) {
+      result.productAreaHTML = productArea.innerHTML.substring(0, 2000);
+    }
 
     return result;
   });
 
-  console.log('\n=== PAGE INFO ===');
-  console.log(`Title: ${data.title}`);
-  console.log(`H1: ${data.h1}`);
-  console.log(`OG Image: ${data.ogImage}`);
+  console.log('\n=== ALL PRICE-LIKE TEXTS (leaf nodes with € or numbers) ===');
+  console.log(JSON.stringify(data.allPriceTexts, null, 2));
 
-  console.log('\n=== JSON-LD ===');
-  console.log(`Count: ${data.jsonLdCount}`);
-  console.log(JSON.stringify(data.jsonLdData, null, 2).substring(0, 3000));
+  console.log('\n=== DATA-PRICE ATTRIBUTES ===');
+  console.log(JSON.stringify(data.dataPriceElements, null, 2));
 
-  console.log('\n=== PRICE ELEMENTS ===');
-  console.log(JSON.stringify(data.priceElements, null, 2));
+  console.log('\n=== PRICE IN INLINE SCRIPTS ===');
+  console.log(JSON.stringify(data.priceInScripts, null, 2));
 
-  console.log('\n=== STRIKETHROUGH ===');
-  console.log(JSON.stringify(data.strikethroughElements, null, 2));
+  console.log('\n=== DATALAYER PRICES ===');
+  console.log(JSON.stringify(data.dataLayerPrices, null, 2));
 
-  console.log('\n=== SIZE ELEMENTS (data-testid) ===');
-  console.log(JSON.stringify(data.sizeTestIdElements, null, 2));
-
-  console.log('\n=== SIZE BUTTONS (numeric) ===');
-  console.log(JSON.stringify(data.sizeButtons, null, 2));
-
-  console.log('\n=== SIZE CONTAINERS ===');
-  console.log(JSON.stringify(data.sizeContainers, null, 2));
-
-  console.log('\n=== WINDOW KEYS ===');
-  console.log(JSON.stringify(data.windowKeys, null, 2));
-  if (data.nextData) console.log('\n__NEXT_DATA__:', data.nextData);
-  if (data.initialState) console.log('\n__INITIAL_STATE__:', data.initialState);
+  if (data.productAreaHTML) {
+    console.log('\n=== PRODUCT AREA HTML (first 2000 chars) ===');
+    console.log(data.productAreaHTML);
+  }
 
   await browser.close();
   console.log('\nDone.');
