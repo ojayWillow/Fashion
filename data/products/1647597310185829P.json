@@ -3,10 +3,11 @@
   "name": "Leather Slippers",
   "brand": "MR P.",
   "colorway": "Black",
-  "category": "Footwear",
+  "category": "Sneakers",
   "tags": [
     "MR P.",
-    "Sale"
+    "Sale",
+    "Sneakers"
   ],
   "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/180-leather-slippers",
   "originalImage": "",

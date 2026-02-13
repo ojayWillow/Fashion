@@ -82,7 +82,8 @@
       "tags": [
         "Sneakers",
         "RICK OWENS",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -106,7 +107,7 @@
       "productId": "46376663162871491P",
       "name": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap",
       "brand": "A.P.C.",
-      "category": "Accessories",
+      "category": "Clothing",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/235-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap",
       "bestPrice": {
         "amount": 50,
@@ -115,7 +116,8 @@
       "storeCount": 1,
       "tags": [
         "A.P.C.",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -132,7 +134,8 @@
       "tags": [
         "Sneakers",
         "NIKE",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -166,14 +169,15 @@
       "tags": [
         "Sneakers",
         "NIKE",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
       "productId": "46376663162896740P",
       "name": "1906 Mesh Penny Loafers",
       "brand": "NEW BALANCE",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/203-1906-mesh-penny-loafers",
       "bestPrice": {
         "amount": 72,
@@ -224,7 +228,7 @@
       "productId": "14097096497399056P",
       "name": "3.5cm Suede Belt",
       "brand": "ANDERSON'S",
-      "category": "Sneakers",
+      "category": "Accessories",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/236-3-5cm-suede-belt",
       "bestPrice": {
         "amount": 50,
@@ -233,7 +237,8 @@
       "storeCount": 1,
       "tags": [
         "ANDERSON'S",
-        "Sale"
+        "Sale",
+        "Accessories"
       ]
     },
     {
@@ -334,7 +339,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -350,7 +356,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -366,7 +373,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -382,7 +390,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -398,7 +407,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -414,7 +424,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -430,7 +441,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -446,7 +458,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -479,7 +492,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -495,7 +509,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -511,7 +526,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -527,7 +543,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -543,7 +560,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -559,7 +577,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -575,7 +594,8 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -591,14 +611,15 @@
       "storeCount": 1,
       "tags": [
         "adidas",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
       "productId": "1647597323527983P",
       "name": "Air Footscape Woven Webbing and Suede Sneakers",
       "brand": "NIKE",
-      "category": "Accessories",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/232-air-footscape-woven-webbing-and-suede-sneakers",
       "bestPrice": {
         "amount": 50,
@@ -710,7 +731,8 @@
       "tags": [
         "Sneakers",
         "Jordan",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -780,7 +802,8 @@
         "Jacket",
         "Travis Scott",
         "Jordan",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -804,7 +827,7 @@
       "productId": "1647597311480914P",
       "name": "Air Max 1 Escape Leather-Trimmed Suede and Mesh Sneakers",
       "brand": "NIKE",
-      "category": "Accessories",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/194-air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers",
       "bestPrice": {
         "amount": 75,
@@ -906,7 +929,7 @@
       "productId": "3983529959672196P",
       "name": "Arizona EVA Sandals",
       "brand": "BIRKENSTOCK",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/245-arizona-eva-sandals",
       "bestPrice": {
         "amount": 27,
@@ -915,7 +938,8 @@
       "storeCount": 1,
       "tags": [
         "BIRKENSTOCK",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -965,7 +989,8 @@
       "storeCount": 1,
       "tags": [
         "Butter Goods",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -981,7 +1006,8 @@
       "storeCount": 1,
       "tags": [
         "Butter Goods",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -1005,7 +1031,7 @@
       "productId": "1647597357962623P",
       "name": "Clogposite Iridescent TPU and Shell Slip-On Sneakers",
       "brand": "NIKE",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/187-clogposite-iridescent-tpu-and-shell-slip-on-sneakers",
       "bestPrice": {
         "amount": 78,
@@ -1022,7 +1048,7 @@
       "productId": "1647597356473324P",
       "name": "Collapsible-Heel Suede Loafers",
       "brand": "MULO",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/201-collapsible-heel-suede-loafers",
       "bestPrice": {
         "amount": 74,
@@ -1031,7 +1057,8 @@
       "storeCount": 1,
       "tags": [
         "MULO",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1047,7 +1074,8 @@
       "storeCount": 1,
       "tags": [
         "Converse",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1063,7 +1091,8 @@
       "storeCount": 1,
       "tags": [
         "Converse",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1079,7 +1108,8 @@
       "storeCount": 1,
       "tags": [
         "Converse",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1103,7 +1133,7 @@
       "productId": "1647597300455914P",
       "name": "David Regenerated Suede by evolo® Sandals",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/218-david-regenerated-suede-by-evolo-sandals",
       "bestPrice": {
         "amount": 59,
@@ -1112,14 +1142,15 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "46376663162838824P",
       "name": "Docksides Portland Leather Boat Shoes",
       "brand": "SEBAGO",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/179-docksides-portland-leather-boat-shoes",
       "bestPrice": {
         "amount": 90,
@@ -1238,7 +1269,7 @@
       "productId": "1647597321922493P",
       "name": "Jacques Two-Tone Leather Penny Loafers",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/182-jacques-two-tone-leather-penny-loafers",
       "bestPrice": {
         "amount": 89,
@@ -1247,7 +1278,8 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1263,7 +1295,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1279,7 +1312,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1295,7 +1329,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1413,7 +1448,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1429,7 +1465,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1446,7 +1483,8 @@
       "tags": [
         "Shorts",
         "Jordan",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -1463,7 +1501,8 @@
       "tags": [
         "Hoodie",
         "Jordan",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -1479,7 +1518,8 @@
       "storeCount": 1,
       "tags": [
         "Jordan",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1503,7 +1543,7 @@
       "productId": "1647597310185829P",
       "name": "Leather Slippers",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/180-leather-slippers",
       "bestPrice": {
         "amount": 90,
@@ -1512,14 +1552,15 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597327873040P",
       "name": "Leather-Trimmed Suede Clogs",
       "brand": "FRESCOBOL CARIOCA",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/200-leather-trimmed-suede-clogs",
       "bestPrice": {
         "amount": 74,
@@ -1528,14 +1569,15 @@
       "storeCount": 1,
       "tags": [
         "FRESCOBOL CARIOCA",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597324091579P",
       "name": "London Suede Clogs",
       "brand": "BIRKENSTOCK",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/214-london-suede-clogs",
       "bestPrice": {
         "amount": 63,
@@ -1544,7 +1586,8 @@
       "storeCount": 1,
       "tags": [
         "BIRKENSTOCK",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1559,7 +1602,8 @@
       },
       "storeCount": 1,
       "tags": [
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -1574,14 +1618,15 @@
       },
       "storeCount": 1,
       "tags": [
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "46376663162869361P",
       "name": "Nemo Suede Boat Shoes",
       "brand": "CASTAÑER",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/184-nemo-suede-boat-shoes",
       "bestPrice": {
         "amount": 80,
@@ -1607,7 +1652,8 @@
       "storeCount": 1,
       "tags": [
         "New Balance",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1674,7 +1720,8 @@
       "storeCount": 1,
       "tags": [
         "New Balance",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1690,7 +1737,8 @@
       "storeCount": 1,
       "tags": [
         "New Balance",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1706,7 +1754,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1722,7 +1771,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1738,7 +1788,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1754,7 +1805,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1872,7 +1924,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1888,7 +1941,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1904,7 +1958,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1920,7 +1975,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1936,7 +1992,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1952,7 +2009,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1968,7 +2026,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -1984,7 +2043,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2000,7 +2060,8 @@
       "storeCount": 1,
       "tags": [
         "Nike",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2016,7 +2077,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2032,7 +2094,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2048,7 +2111,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2064,7 +2128,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2080,7 +2145,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2096,7 +2162,8 @@
       "storeCount": 1,
       "tags": [
         "ON",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2120,7 +2187,7 @@
       "productId": "polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
       "name": "POLO RALPH LAUREN Logo-Embroidered Striped Cotton-Blend Seersucker Baseball Cap",
       "brand": "",
-      "category": "Accessories",
+      "category": "Clothing",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/229-polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
       "bestPrice": {
         "amount": 0,
@@ -2128,7 +2195,8 @@
       },
       "storeCount": 1,
       "tags": [
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -2144,7 +2212,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2160,7 +2229,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2176,7 +2246,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2192,7 +2263,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2208,7 +2280,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2224,7 +2297,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2240,7 +2314,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Clothing"
       ]
     },
     {
@@ -2256,7 +2331,8 @@
       "storeCount": 2,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2272,7 +2348,8 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2288,14 +2365,15 @@
       "storeCount": 1,
       "tags": [
         "Puma",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597277620686P",
       "name": "RON-MWPAB-MID Suede and Shell Slippers",
       "brand": "SUICOKE",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/221-ron-mwpab-mid-suede-and-shell-slippers",
       "bestPrice": {
         "amount": 59,
@@ -2304,7 +2382,8 @@
       "storeCount": 1,
       "tags": [
         "SUICOKE",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2320,7 +2399,8 @@
       "storeCount": 1,
       "tags": [
         "Salomon",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2370,7 +2450,8 @@
       "storeCount": 1,
       "tags": [
         "Saucony",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2386,14 +2467,15 @@
       "storeCount": 1,
       "tags": [
         "Saucony",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597353552799P",
       "name": "Shearling-Lined Suede-Trimmed Cotton-Corduroy Loafers",
       "brand": "MULO",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/216-shearling-lined-suede-trimmed-cotton-corduroy-loafers",
       "bestPrice": {
         "amount": 62,
@@ -2402,7 +2484,8 @@
       "storeCount": 1,
       "tags": [
         "MULO",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2425,7 +2508,7 @@
       "productId": "1647597307381874P",
       "name": "Suede Loafers",
       "brand": "MULO",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/209-suede-loafers",
       "bestPrice": {
         "amount": 66,
@@ -2434,14 +2517,15 @@
       "storeCount": 1,
       "tags": [
         "MULO",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597354961861P",
       "name": "Suede Sandals",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/191-suede-sandals",
       "bestPrice": {
         "amount": 78,
@@ -2450,14 +2534,15 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597353552815P",
       "name": "Suede-Trimmed Shearling-Lined Wool Slippers",
       "brand": "MULO",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/215-suede-trimmed-shearling-lined-wool-slippers",
       "bestPrice": {
         "amount": 62,
@@ -2466,7 +2551,8 @@
       "storeCount": 1,
       "tags": [
         "MULO",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2524,7 +2610,7 @@
       "productId": "NF0A8D9GKX71",
       "name": "The North Face Base Camp WP Mule",
       "brand": "The North Face",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/161-the-north-face-base-camp-wp-mule-nf0a8d9gkx71",
       "bestPrice": {
         "amount": 91,
@@ -2533,7 +2619,8 @@
       "storeCount": 1,
       "tags": [
         "The North Face",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2617,14 +2704,15 @@
       "storeCount": 1,
       "tags": [
         "Timberland",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597332642182P",
       "name": "Tom Padded Suede Sandals",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/192-tom-padded-suede-sandals",
       "bestPrice": {
         "amount": 78,
@@ -2633,14 +2721,15 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597332642146P",
       "name": "Tom Padded Suede Sandals",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/219-tom-padded-suede-sandals",
       "bestPrice": {
         "amount": 59,
@@ -2649,14 +2738,15 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
       "productId": "1647597332642122P",
       "name": "Tom Padded Suede Sandals",
       "brand": "MR P.",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/220-tom-padded-suede-sandals",
       "bestPrice": {
         "amount": 59,
@@ -2665,7 +2755,8 @@
       "storeCount": 1,
       "tags": [
         "MR P.",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     },
     {
@@ -2681,14 +2772,15 @@
       "storeCount": 1,
       "tags": [
         "WAWA",
-        "Sale"
+        "Sale",
+        "Accessories"
       ]
     },
     {
       "productId": "1647597284554790P",
       "name": "Weejuns 90 Larson Suede Penny Loafers",
       "brand": "G.H. BASS",
-      "category": "Footwear",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/193-weejuns-90-larson-suede-penny-loafers",
       "bestPrice": {
         "amount": 76,
@@ -2697,10 +2789,11 @@
       "storeCount": 1,
       "tags": [
         "G.H. BASS",
-        "Sale"
+        "Sale",
+        "Sneakers"
       ]
     }
   ],
-  "generatedAt": "2026-02-13T06:09:19.396Z",
+  "generatedAt": "2026-02-13T06:22:22.963Z",
   "totalProducts": 164
 }

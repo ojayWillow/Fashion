@@ -3,10 +3,11 @@
   "name": "Suede Sandals",
   "brand": "MR P.",
   "colorway": "Blue",
-  "category": "Footwear",
+  "category": "Sneakers",
   "tags": [
     "MR P.",
-    "Sale"
+    "Sale",
+    "Sneakers"
   ],
   "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/191-suede-sandals",
   "originalImage": "",
