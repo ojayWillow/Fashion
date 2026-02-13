@@ -360,15 +360,13 @@
     aspect-ratio: 1;
     padding: 0;
     background: #f5f5f7;
-    overflow: hidden;
 }
 
 .catalog-grid .pick-card-image img {
-    width: 140%;
-    height: 140%;
+    width: 85%;
+    height: 85%;
     object-fit: contain;
     object-position: center;
-    margin: -20% 0 0 -20%;
 }
 
 .catalog-grid .pick-card-body {
