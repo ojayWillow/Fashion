@@ -123,10 +123,10 @@ function handleImageError(imgEl, brandName) {
 // ===== CLOUDINARY IMAGE NORMALIZER =====
 function normalizeImage(url) {
     if (!url || url === '/favicon.png') return '';
-    // Trim whitespace/borders, then pad uniformly on white
+    // Trim whitespace/borders, then pad uniformly with #F5F5F7 to match card bg
     return url.replace(
         'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-        'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_white'
+        'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_rgb:F5F5F7'
     );
 }
 
@@ -298,7 +298,7 @@ function renderPicks(picks) {
         const sizes = [...allSizes];
 
         const sizesHTML = sizes.length
-            ? `<div class="pick-card-sizes-label">Sizes</div>
+            ? `<div class="pick-card-sizes-label">Available Sizes</div>
                <div class="pick-card-sizes">${sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
             : '';
 
@@ -337,7 +337,7 @@ function renderPicks(picks) {
                 ${sizesHTML}
                 ${tagsHTML ? `<div class="pick-card-tags">${tagsHTML}</div>` : ''}
                 <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStore}')">
-                    Shop Now →
+                    View Deal →
                 </button>
             </div>
         `;
@@ -430,7 +430,7 @@ function showStoreDetail(store, picks) {
                                 ${sizesHTML}
                                 <div class="pick-card-tags">${(product.tags || []).map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
                                 <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStoreName}')">
-                                    Shop Now →
+                                    View Deal →
                                 </button>
                             </div>
                         </div>
