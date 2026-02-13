@@ -35,9 +35,10 @@
   // ===== CLOUDINARY IMAGE NORMALIZER =====
   function normalizeImage(url) {
     if (!url || url === '/favicon.png') return '';
+    // Trim whitespace/borders, then pad uniformly with #F5F5F7 to match card bg
     return url.replace(
       'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-      'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_white'
+      'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_rgb:F5F5F7'
     );
   }
 
