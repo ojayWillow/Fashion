@@ -2,11 +2,8 @@
  * FASHION. — Image Pipeline
  * ==========================
  * Downloads product images, uploads to Cloudinary.
- * Keeps the original store image intact (no trimming/padding).
- *
- * Transform chain:
- *   f_auto,q_auto      → auto format + quality
- *   w_800,h_800,c_fit  → fit into 800x800 without cropping
+ * Tries brand CDN first for clean, consistent images.
+ * Falls back to store image + sharp processing if no CDN match.
  *
  * See: data/standards/IMAGE_STANDARDS.md
  */
@@ -16,14 +13,22 @@ const http = require('http');
 const { URL } = require('url');
 const { log, slugify } = require('./helpers');
 
+let sharp;
+try {
+  sharp = require('sharp');
+} catch (e) {
+  // sharp is optional — only needed for store image fallback processing
+  sharp = null;
+}
+
 // ===== CLOUDINARY =====
 
 let cloudinary = null;
 let CLOUD_ENABLED = false;
 let CLOUD_NAME = '';
 
-// Keep original image intact — just resize and optimize
-const CLOUDINARY_TRANSFORM = 'f_auto,q_auto,w_800,h_800,c_fit';
+// Simple transform — no padding/trimming needed since images are already clean
+const CLOUDINARY_TRANSFORM = 'f_auto,q_auto,w_800,h_800,c_pad,b_rgb:F5F5F7';
 
 function initCloudinary() {
   const url = process.env.CLOUDINARY_URL;
@@ -41,7 +46,6 @@ function initCloudinary() {
   }
 }
 
-// Init on load
 initCloudinary();
 
 // ===== HTTP =====
@@ -117,8 +121,78 @@ async function uploadToCloudinary(source, publicId) {
   }
 }
 
+// ===== SHARP: NORMALIZE STORE IMAGES =====
+
+/**
+ * Process a store image with sharp to match brand CDN quality:
+ * 1. Trim whitespace/background
+ * 2. Resize product to ~70% of 800x800 (560px)
+ * 3. Center on 800x800 white canvas
+ *
+ * This makes store images look like brand CDN images.
+ */
+async function normalizeWithSharp(buffer) {
+  if (!sharp) {
+    log('sharp not installed — skipping image normalization');
+    return buffer;
+  }
+
+  try {
+    // Step 1: Trim whitespace around the product
+    const trimmed = await sharp(buffer)
+      .trim({ threshold: 30 })
+      .toBuffer();
+
+    // Step 2: Get trimmed dimensions
+    const meta = await sharp(trimmed).metadata();
+    const maxDim = Math.max(meta.width || 0, meta.height || 0);
+
+    if (maxDim === 0) return buffer;
+
+    // Step 3: Resize so the product fits in ~560px (70% of 800)
+    const targetSize = 560;
+    const scale = targetSize / maxDim;
+    const newW = Math.round((meta.width || 1) * Math.min(scale, 1));
+    const newH = Math.round((meta.height || 1) * Math.min(scale, 1));
+
+    // Step 4: Resize and center on 800x800 white canvas
+    const resized = await sharp(trimmed)
+      .resize(newW, newH, { fit: 'inside' })
+      .toBuffer();
+
+    const final = await sharp({
+      create: {
+        width: 800,
+        height: 800,
+        channels: 4,
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      },
+    })
+      .composite([{
+        input: resized,
+        gravity: 'centre',
+      }])
+      .png()
+      .toBuffer();
+
+    log(`sharp: normalized ${meta.width}x${meta.height} → 800x800 (product ${newW}x${newH})`);
+    return final;
+  } catch (e) {
+    log(`sharp normalization failed: ${e.message} — using original`);
+    return buffer;
+  }
+}
+
 // ===== BRAND CDN RESOLVERS =====
 
+/**
+ * Brand CDN map.
+ * Each brand has a function that takes a style code and returns
+ * a direct URL to a clean, high-res product image.
+ *
+ * These images are studio-shot, white background, perfectly centered.
+ * Much better than store-scraped images.
+ */
 const BRAND_CDN = {
   'Nike': (styleCode) => {
     if (!styleCode) return null;
@@ -128,21 +202,92 @@ const BRAND_CDN = {
     if (!styleCode) return null;
     return `https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/${styleCode}.png`;
   },
+  'adidas': (styleCode) => {
+    if (!styleCode) return null;
+    // adidas CDN uses style code in the path
+    return `https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/${styleCode}_01_standard.jpg`;
+  },
+  'Adidas': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/${styleCode}_01_standard.jpg`;
+  },
+  'ADIDAS': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/${styleCode}_01_standard.jpg`;
+  },
+  'New Balance': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://nb.scene7.com/is/image/NB/${styleCode}_nb_02_i?$pdpflexf2$&qlt=80&wid=880`;
+  },
+  'NEW BALANCE': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://nb.scene7.com/is/image/NB/${styleCode}_nb_02_i?$pdpflexf2$&qlt=80&wid=880`;
+  },
+  'Puma': (styleCode) => {
+    if (!styleCode) return null;
+    // Puma CDN: style code with _01 suffix
+    return `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_750,h_750/${styleCode}_01.png`;
+  },
+  'PUMA': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_750,h_750/${styleCode}_01.png`;
+  },
+  'ASICS': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://images.asics.com/is/image/asics/${styleCode}_SR_RT_GLB?$productpage$`;
+  },
+  'Asics': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://images.asics.com/is/image/asics/${styleCode}_SR_RT_GLB?$productpage$`;
+  },
+  'ON': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://res.cloudinary.com/on-running/image/upload/q_auto,f_auto,w_900/${styleCode}_fw23_${styleCode}_png_hero.png`;
+  },
+  'On': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://res.cloudinary.com/on-running/image/upload/q_auto,f_auto,w_900/${styleCode}_fw23_${styleCode}_png_hero.png`;
+  },
+  'Timberland': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://images.timberland.com/is/image/TimberlandEU/${styleCode}-hero?wid=720`;
+  },
+  'TIMBERLAND': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://images.timberland.com/is/image/TimberlandEU/${styleCode}-hero?wid=720`;
+  },
+  'Salomon': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://www.salomon.com/sites/default/files/product-images/${styleCode}_01_GHO.png`;
+  },
+  'SALOMON': (styleCode) => {
+    if (!styleCode) return null;
+    return `https://www.salomon.com/sites/default/files/product-images/${styleCode}_01_GHO.png`;
+  },
 };
 
 async function tryBrandCDN(brand, styleCode) {
-  const resolver = BRAND_CDN[brand];
-  if (!resolver) return null;
-  const url = resolver(styleCode);
-  if (!url) return null;
-  try {
-    const buffer = await fetchBuffer(url);
-    if (isValidImageBuffer(buffer)) {
-      log(`Brand CDN hit: ${url}`);
-      return { url, buffer };
+  // Try exact brand name first, then common variations
+  const variations = [brand];
+  if (brand) {
+    variations.push(brand.toUpperCase());
+    variations.push(brand.charAt(0).toUpperCase() + brand.slice(1).toLowerCase());
+  }
+
+  for (const name of variations) {
+    const resolver = BRAND_CDN[name];
+    if (!resolver) continue;
+    const url = resolver(styleCode);
+    if (!url) continue;
+    try {
+      const buffer = await fetchBuffer(url);
+      if (isValidImageBuffer(buffer)) {
+        log(`Brand CDN hit: ${name} → ${url}`);
+        return { url, buffer };
+      }
+    } catch (e) {
+      log(`Brand CDN miss for ${name}: ${e.message}`);
     }
-  } catch (e) {
-    log(`Brand CDN miss for ${brand}: ${e.message}`);
   }
   return null;
 }
@@ -152,7 +297,7 @@ async function tryBrandCDN(brand, styleCode) {
 async function processImage({ imageUrl, brand, productId, name, styleCode }) {
   const publicId = `picks/${productId}-${slugify(name)}`;
 
-  // Step 1: Try brand CDN first
+  // Step 1: Try brand CDN first — clean, consistent images
   const brandResult = await tryBrandCDN(brand, styleCode);
   if (brandResult) {
     const cdnUrl = await uploadToCloudinary(brandResult.buffer, publicId);
@@ -165,7 +310,7 @@ async function processImage({ imageUrl, brand, productId, name, styleCode }) {
     }
   }
 
-  // Step 2: Use store image
+  // Step 2: Use store image — normalize with sharp before uploading
   if (!imageUrl) {
     return { image: '', originalImage: '', imageStatus: 'missing' };
   }
@@ -177,8 +322,10 @@ async function processImage({ imageUrl, brand, productId, name, styleCode }) {
       return { image: '', originalImage: imageUrl, imageStatus: 'missing' };
     }
 
-    const status = determineImageStatus(buffer, imageUrl);
-    const cdnUrl = await uploadToCloudinary(buffer, publicId);
+    // Normalize store image to match brand CDN quality
+    const normalized = await normalizeWithSharp(buffer);
+    const status = determineImageStatus(normalized, imageUrl);
+    const cdnUrl = await uploadToCloudinary(normalized, publicId);
 
     return {
       image: cdnUrl || '',
@@ -195,4 +342,4 @@ async function processImage({ imageUrl, brand, productId, name, styleCode }) {
   }
 }
 
-module.exports = { processImage, CLOUDINARY_TRANSFORM };
+module.exports = { processImage, CLOUDINARY_TRANSFORM, tryBrandCDN, normalizeWithSharp, uploadToCloudinary };
