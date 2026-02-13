@@ -84,6 +84,12 @@ function storeSlug(storeName) {
  * Determine product category from ALL items in a merged group.
  * Checks names, tags, and descriptions across every item.
  * 
+ * Priority order:
+ *   1. If name contains "sneaker(s)" → Sneakers (explicit override)
+ *   2. Accessories check (cap, hat, belt, bag, etc.)
+ *   3. Clothing check (jacket, hoodie, pants, etc.)
+ *   4. Default → Sneakers
+ * 
  * Categories: Sneakers (default, includes all footwear), Clothing, Accessories
  */
 function determineCategory(items) {
@@ -91,21 +97,39 @@ function determineCategory(items) {
   const allNames = items.map(i => (i.name || '').toLowerCase()).join(' ');
   const allTags = items.flatMap(i => i.tags || []).map(t => t.toLowerCase()).join(' ');
   const allDescriptions = items.map(i => (i.description || '').toLowerCase()).join(' ');
-  const combined = `${allNames} ${allTags} ${allDescriptions}`;
 
-  // Clothing patterns (check first — more specific than default)
-  const clothingPattern = /\b(jacket|hoodie|hoody|pants?|shorts?|tee|t-shirt|hood|top|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|jersey)\b/i;
-  if (clothingPattern.test(allNames) || allTags.includes('clothing')) {
-    return 'Clothing';
+  // 1. Explicit sneaker override: if the product name says "sneaker(s)", it's a sneaker
+  //    This catches "High-Top Sneakers", "Leather Sneakers", etc.
+  if (/\bsneakers?\b/i.test(allNames)) {
+    return 'Sneakers';
   }
 
-  // Accessories patterns
-  const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote)\b/i;
+  // 2. Accessories patterns (checked BEFORE clothing so "Baseball Cap" beats "Cotton-Jersey")
+  const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote|holder)\b/i;
   if (accessoriesPattern.test(allNames) || allTags.includes('accessories')) {
     return 'Accessories';
   }
 
-  // Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
+  // 3. Clothing patterns
+  //    - "top" requires negative lookbehind for "-" to avoid "high-top"
+  //    - "shorts" requires NOT being inside quotes (colorway names like "Lucky Shorts")
+  //    - "tee" requires NOT being followed by " holder" (golf tee holder)
+  const clothingPattern = /\b(jacket|puffer|hoodie|hoody|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
+  
+  // Check "top" separately to exclude "high-top"
+  const topPattern = /(?<![-])\btop\b/i;
+  
+  // Check "shorts" separately to exclude colorway-context shorts (inside quotes)
+  const shortsInName = /\bshorts?\b/i.test(allNames) && !/["'"]\w*\bshorts?\b/i.test(allNames) && !/\bshorts?\b\w*["'"]/i.test(allNames);
+  // More precise: only match "short(s)" if it's NOT preceded by a quote-like pattern (colorway)
+  const shortsIsColorway = /["'""]\s*\w*\bshorts?\b|retro\s+["'""]\w*shorts/i.test(allNames);
+  const shortsIsClothing = /\bshorts?\b/i.test(allNames) && !shortsIsColorway;
+
+  if (clothingPattern.test(allNames) || topPattern.test(allNames) || shortsIsClothing || allTags.includes('clothing')) {
+    return 'Clothing';
+  }
+
+  // 4. Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
   return 'Sneakers';
 }
 
@@ -156,9 +180,6 @@ function cleanTags(items, category) {
 
   // Ensure the canonical category is in tags
   cleaned.add(category);
-
-  // Ensure "Sale" tag if any listing has a discount
-  // (handled at product level, not here)
 
   return [...cleaned];
 }
