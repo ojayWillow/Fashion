@@ -70,12 +70,13 @@ process.on('SIGINT', () => { closeBrowsers().then(() => process.exit()); });
 /**
  * Wait for Cloudflare Turnstile to resolve.
  * Verified: SNS, END., Foot Locker all show "Just a moment..." during challenge.
+ * MR PORTER: no Cloudflare but needs Patchright for anti-bot.
  */
 async function waitForCloudflare(page, maxWait = 30000) {
   const start = Date.now();
   while (Date.now() - start < maxWait) {
     const title = await page.title();
-    if (title !== 'Just a moment...' && !title.includes('Attention')) {
+    if (title !== 'Just a moment...' && !title.includes('Attention') && title !== 'Access Denied' && title.length > 5) {
       log(`Cloudflare bypassed (${Math.round((Date.now() - start) / 1000)}s)`);
       await page.waitForTimeout(2000); // settle time for JS to hydrate
       return true;
@@ -151,35 +152,55 @@ async function extractJsonLd(page) {
           result.name = (first.name || ld.name || '')
             .replace(/\s*-\s*(XXS|XS|S|M|L|XL|XXL|\d{1,2}(\.5)?)\s*$/i, '').trim();
 
+          // Clean name: remove color suffix too
+          // MR PORTER: "Logo T-Shirt - black - XS" → after size strip: "Logo T-Shirt - black"
+          // Remove trailing " - colorname" if present
+          result.name = result.name.replace(/\s*-\s*[a-z]+\s*$/i, function(match) {
+            // Only strip if it looks like a color (lowercase, short word)
+            const word = match.replace(/[\s-]/g, '').toLowerCase();
+            const colors = ['black','white','red','blue','green','grey','gray','navy',
+              'beige','brown','cream','pink','orange','yellow','purple','khaki',
+              'olive','tan','ivory','charcoal','burgundy','maroon','teal','coral',
+              'sand','stone','ecru','natural','multi','multicolor'];
+            return colors.includes(word) ? '' : match;
+          }).trim();
+
           if (ld.brand && ld.brand.name) result.brand = ld.brand.name;
           if (ld.productGroupId) result.styleCode = ld.productGroupId;
           if (ld.description) result.description = ld.description.substring(0, 300);
 
-          // Image
+          // Image — handle string, ImageObject, and arrays of either
           if (first.image) {
-            const img = Array.isArray(first.image) ? first.image[0] : first.image;
-            result.image = typeof img === 'string' ? img : (img.url || '');
+            const imgArr = Array.isArray(first.image) ? first.image : [first.image];
+            const img = imgArr[0];
+            result.image = typeof img === 'string' ? img : (img.url || img.contentUrl || '');
           }
 
-          // Color
+          // Color — prefer first variant's color field
           if (first.color) {
             result.colorway = first.color.charAt(0).toUpperCase() + first.color.slice(1);
           }
 
-          // Sizes from variant names or SKUs
+          // Sizes from variants — priority: v.size > name suffix > sku suffix
+          // MR PORTER has explicit v.size = "XS", SNS has name = "Product - 42"
           const inStock = variants.filter(v =>
             v.offers && v.offers.availability && v.offers.availability.includes('InStock')
           );
           result.sizes = inStock.map(v => {
+            // 1. Explicit size field (MR PORTER, best source)
+            if (v.size) return v.size;
+            // 2. Size from variant name suffix: "Product Name - 42"
             if (v.name) {
-              const m = v.name.match(/\s-\s(.+)$/);
+              const m = v.name.match(/\s-\s(XXS|XS|S|M|L|XL|XXL|\d{1,2}(\.5)?)$/i);
               if (m) return m[1].trim();
             }
+            // 3. Size from SKU suffix: "SKU-42"
             if (v.sku) {
               const parts = v.sku.split('-');
-              return parts[parts.length - 1];
+              const last = parts[parts.length - 1];
+              const num = parseFloat(last);
+              if (!isNaN(num) && num >= 4 && num <= 55) return last;
             }
-            if (v.size) return v.size;
             return '';
           }).filter(Boolean);
 
@@ -189,7 +210,7 @@ async function extractJsonLd(page) {
             if (skuMatch) result.styleCode = skuMatch[1];
           }
 
-          // Prices
+          // Prices from priceSpecification or offers.price
           const priceVariant = inStock[0] || variants[0];
           if (priceVariant && priceVariant.offers) {
             if (priceVariant.offers.priceSpecification) {
@@ -226,8 +247,9 @@ async function extractJsonLd(page) {
           if (ld.model) result.model = ld.model;
 
           if (ld.image) {
-            const img = Array.isArray(ld.image) ? ld.image[0] : ld.image;
-            result.image = typeof img === 'string' ? img : (img.url || '');
+            const imgArr = Array.isArray(ld.image) ? ld.image : [ld.image];
+            const img = imgArr[0];
+            result.image = typeof img === 'string' ? img : (img.url || img.contentUrl || '');
           }
           if (ld.description) result.description = (ld.description || '').substring(0, 300);
 
@@ -242,15 +264,12 @@ async function extractJsonLd(page) {
             }
 
             // Sizes from multiple offers (Foot Locker pattern)
-            // Each offer has sku like "314217718304-39.5" and availability
             if (offers.length > 1) {
               const inStockSizes = [];
               for (const offer of offers) {
                 if (offer.availability && offer.availability.includes('InStock') && offer.sku) {
-                  // Extract size from SKU suffix: "314217718304-39.5" → "39.5"
                   const parts = offer.sku.split('-');
                   const lastPart = parts[parts.length - 1];
-                  // Validate it looks like a size (number between 4 and 55)
                   const num = parseFloat(lastPart);
                   if (!isNaN(num) && num >= 4 && num <= 55) {
                     inStockSizes.push(lastPart);
