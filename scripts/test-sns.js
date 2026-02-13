@@ -1,21 +1,23 @@
+// END. Clothing recon — Patchright (Cloudflare Turnstile expected)
 const { chromium } = require('patchright');
 
 (async () => {
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
-  console.log('Opening SNS with Patchright...');
-  await page.goto('https://www.sneakersnstuff.com/en-eu/products/puma-all-pro-nitro-2-e-t-312313-01', {
+  console.log('Opening END. with Patchright...');
+  await page.goto('https://www.endclothing.com/gb/adidas-tahiti-marine-sneaker-jr4773.html', {
     waitUntil: 'domcontentloaded',
   });
 
-  // Wait for page to load past Cloudflare
-  for (let i = 1; i <= 10; i++) {
+  // Wait for Cloudflare to resolve
+  for (let i = 1; i <= 15; i++) {
     await page.waitForTimeout(2000);
     const title = await page.title();
-    if (title !== 'Just a moment...') {
-      console.log(`Cloudflare bypassed at ${i * 2}s`);
-      await page.waitForTimeout(2000); // extra settle time
+    console.log(`${i * 2}s — title: "${title}"`);
+    if (title !== 'Just a moment...' && !title.includes('Attention')) {
+      console.log('Cloudflare bypassed!');
+      await page.waitForTimeout(3000); // settle
       break;
     }
   }
@@ -23,13 +25,26 @@ const { chromium } = require('patchright');
   const data = await page.evaluate(() => {
     const result = {};
 
-    // 1. ALL price-related elements
+    // 1. JSON-LD
+    const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
+    result.jsonLdCount = jsonLd.length;
+    result.jsonLdData = [...jsonLd].map(s => {
+      try { return JSON.parse(s.textContent); }
+      catch { return 'parse-error'; }
+    });
+
+    // 2. Basic page info
+    const h1 = document.querySelector('h1');
+    result.title = document.title;
+    result.h1 = h1 ? h1.textContent.trim().substring(0, 100) : null;
+
+    // 3. Price elements
     const allEls = document.querySelectorAll('*');
     const priceEls = [];
     for (const el of allEls) {
       const cls = el.className || '';
-      const text = el.textContent.trim();
       if (typeof cls === 'string' && (cls.toLowerCase().includes('price') || cls.toLowerCase().includes('compare'))) {
+        const text = el.textContent.trim();
         if (text.length < 80 && text.length > 0) {
           priceEls.push({
             tag: el.tagName,
@@ -40,9 +55,9 @@ const { chromium } = require('patchright');
         }
       }
     }
-    result.priceElements = priceEls.slice(0, 15);
+    result.priceElements = priceEls.slice(0, 10);
 
-    // 2. Look for <s>, <del>, <strike> (strikethrough = retail price)
+    // 4. Strikethrough elements
     const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"]');
     result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
       tag: el.tagName,
@@ -50,34 +65,12 @@ const { chromium } = require('patchright');
       parent: el.parentElement?.className?.substring(0, 80) || null,
     }));
 
-    // 3. Full JSON-LD variants (all of them)
-    const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
-    for (const s of jsonLd) {
-      try {
-        const ld = JSON.parse(s.textContent);
-        if (ld['@type'] === 'ProductGroup' && ld.hasVariant) {
-          result.totalVariants = ld.hasVariant.length;
-          result.inStockVariants = ld.hasVariant.filter(v =>
-            v.offers?.availability?.includes('InStock')
-          ).length;
-          result.allSizes = ld.hasVariant.map(v => ({
-            name: v.name,
-            sku: v.sku,
-            price: v.offers?.price,
-            inStock: v.offers?.availability?.includes('InStock') || false,
-          }));
-          // Check if any variant has priceSpecification
-          const firstVariant = ld.hasVariant[0];
-          result.offerStructure = firstVariant?.offers || null;
-        }
-      } catch {}
-    }
-
-    // 4. Size selector elements (buttons, dropdowns)
+    // 5. Size elements
     const sizeSelectors = document.querySelectorAll(
       'select option, [class*="size"] li, [class*="Size"] li, ' +
       'button[data-option], [class*="variant"] button, ' +
-      '[class*="swatch"] button, [data-size], [data-value]'
+      '[class*="swatch"] button, [data-size], [data-value], ' +
+      '[class*="size"] button, [class*="Size"] button'
     );
     result.sizeElements = [...sizeSelectors].slice(0, 20).map(el => ({
       tag: el.tagName,
@@ -87,25 +80,37 @@ const { chromium } = require('patchright');
       class: (el.className || '').substring(0, 80),
     }));
 
+    // 6. Meta tags
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    const metaDesc = document.querySelector('meta[name="description"]');
+    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 150) : null;
+    result.metaDesc = metaDesc ? metaDesc.getAttribute('content')?.substring(0, 150) : null;
+
     return result;
   });
+
+  console.log('\n=== PAGE INFO ===');
+  console.log(`Title: ${data.title}`);
+  console.log(`H1: ${data.h1}`);
+  console.log(`OG Image: ${data.ogImage}`);
+  console.log(`Meta Desc: ${data.metaDesc}`);
+
+  console.log('\n=== JSON-LD ===');
+  console.log(`Count: ${data.jsonLdCount}`);
+  console.log(JSON.stringify(data.jsonLdData, null, 2).substring(0, 4000));
 
   console.log('\n=== PRICE ELEMENTS ===');
   console.log(JSON.stringify(data.priceElements, null, 2));
 
-  console.log('\n=== STRIKETHROUGH (retail price) ===');
+  console.log('\n=== STRIKETHROUGH ===');
   console.log(JSON.stringify(data.strikethroughElements, null, 2));
 
-  console.log('\n=== JSON-LD VARIANTS ===');
-  console.log(`Total: ${data.totalVariants}, In Stock: ${data.inStockVariants}`);
-  console.log(JSON.stringify(data.allSizes, null, 2));
-
-  console.log('\n=== OFFER STRUCTURE (first variant) ===');
-  console.log(JSON.stringify(data.offerStructure, null, 2));
-
-  console.log('\n=== SIZE SELECTOR ELEMENTS ===');
+  console.log('\n=== SIZE ELEMENTS ===');
   console.log(JSON.stringify(data.sizeElements, null, 2));
 
+  const finalUrl = page.url();
+  console.log('\nFinal URL:', finalUrl);
+
   await browser.close();
-  console.log('\nDone.');
+  console.log('Done.');
 })();
