@@ -4,7 +4,13 @@
  * Downloads product images, uploads to Cloudinary with
  * the correct transforms (f5f5f7 background + shadow).
  *
- * Transform: f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40
+ * Transform chain:
+ *   e_trim:20          → strip white/light borders from source
+ *   f_auto,q_auto      → auto format + quality
+ *   w_800,h_800,c_pad  → fit into 800x800 canvas
+ *   b_rgb:f5f5f7       → card-matching background
+ *   e_shadow:40        → subtle drop shadow
+ *
  * See: data/standards/IMAGE_STANDARDS.md
  */
 
@@ -19,7 +25,8 @@ let cloudinary = null;
 let CLOUD_ENABLED = false;
 let CLOUD_NAME = '';
 
-const CLOUDINARY_TRANSFORM = 'f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40';
+// e_trim:20 strips near-white borders (tolerance 20%) before padding
+const CLOUDINARY_TRANSFORM = 'e_trim:20/f_auto,q_auto,w_800,h_800,c_pad,b_rgb:f5f5f7,e_shadow:40';
 
 function initCloudinary() {
   const url = process.env.CLOUDINARY_URL;
@@ -76,8 +83,8 @@ function isValidImageBuffer(buffer) {
 
 function determineImageStatus(buffer, imageUrl) {
   if (!imageUrl || !buffer) return 'missing';
-  if (buffer.length < 20000) return 'needs-review';   // < ~20KB is likely thumbnail
-  if (buffer.length < 50000) return 'needs-review';   // < ~50KB is suspicious
+  if (buffer.length < 20000) return 'needs-review';
+  if (buffer.length < 50000) return 'needs-review';
   return 'ok';
 }
 
@@ -114,7 +121,6 @@ async function uploadToCloudinary(source, publicId) {
 }
 
 // ===== BRAND CDN RESOLVERS =====
-// Try to get a high-quality image directly from the brand's CDN
 
 const BRAND_CDN = {
   'Nike': (styleCode) => {
@@ -146,17 +152,6 @@ async function tryBrandCDN(brand, styleCode) {
 
 // ===== MAIN PIPELINE =====
 
-/**
- * Process a product image through the full pipeline.
- *
- * @param {Object} opts
- * @param {string} opts.imageUrl      - Source image URL from adapter
- * @param {string} opts.brand         - Brand name
- * @param {string} opts.productId     - Product ID for naming
- * @param {string} opts.name          - Product name for slug
- * @param {string} opts.styleCode     - Style code for brand CDN lookup
- * @returns {{ image: string, originalImage: string, imageStatus: string }}
- */
 async function processImage({ imageUrl, brand, productId, name, styleCode }) {
   const publicId = `picks/${productId}-${slugify(name)}`;
 
@@ -195,7 +190,6 @@ async function processImage({ imageUrl, brand, productId, name, styleCode }) {
     };
   } catch (e) {
     log(`Image download failed: ${e.message}`);
-    // Still save the URL even if we can't download
     return {
       image: '',
       originalImage: imageUrl,
