@@ -6,12 +6,6 @@
  * scrapes each product, saves to the correct locations,
  * and rebuilds the catalog index.
  *
- * Data flow:
- *   queue.txt → adapter.extract() → image pipeline → writer
- *     → data/products/{productId}.json    (catalog)
- *     → data/inventory/{store-slug}.json  (per-store)
- *     → data/index.json                   (rebuilt)
- *
  * Usage:
  *   node scripts/scrape.js
  *   node scripts/scrape.js --verbose
@@ -40,9 +34,10 @@ setVerbose(VERBOSE);
 
 // ===== STORE REGISTRY =====
 // Maps domains to store metadata. Add new stores here.
+// scrapeMethod: 'patchright' = anti-bot bypass, 'browser' = standard Playwright
 const STORE_MAP = {
-  'endclothing.com':         { name: 'END. Clothing', flag: '🇬🇧', country: 'UK', currency: 'GBP', scrapeMethod: 'browser' },
-  'sneakersnstuff.com':      { name: 'SNS', flag: '🇸🇪', country: 'Sweden', currency: 'EUR', scrapeMethod: 'browser' },
+  'endclothing.com':         { name: 'END. Clothing', flag: '🇬🇧', country: 'UK', currency: 'GBP', scrapeMethod: 'patchright' },
+  'sneakersnstuff.com':      { name: 'SNS', flag: '🇸🇪', country: 'Sweden', currency: 'EUR', scrapeMethod: 'patchright' },
   'footlocker.nl':           { name: 'Foot Locker', flag: '🇪🇺', country: 'Netherlands', currency: 'EUR', scrapeMethod: 'patchright' },
   'footlocker.co.uk':        { name: 'Foot Locker UK', flag: '🇬🇧', country: 'UK', currency: 'GBP', scrapeMethod: 'patchright' },
   'footlocker.com':          { name: 'Foot Locker US', flag: '🇺🇸', country: 'US', currency: 'USD', scrapeMethod: 'patchright' },
@@ -57,15 +52,12 @@ const STORE_MAP = {
 
 function matchStore(domain) {
   const domainLower = domain.toLowerCase();
-  // Exact match
   if (STORE_MAP[domainLower]) return { ...STORE_MAP[domainLower], slug: storeSlug(STORE_MAP[domainLower].name) };
-  // Partial match (e.g. www.endclothing.com → endclothing.com)
   for (const [key, store] of Object.entries(STORE_MAP)) {
     if (domainLower.includes(key.split('.')[0])) {
       return { ...store, slug: storeSlug(store.name) };
     }
   }
-  // Unknown store
   const name = domainLower.split('.')[0];
   return {
     name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -77,15 +69,12 @@ function matchStore(domain) {
 
 // ===== DUPLICATE CHECK =====
 function isDuplicate(url, productId) {
-  // Check by product file existence
   if (productId) {
     const productPath = path.join(PRODUCTS_DIR, `${productId}.json`);
     if (fs.existsSync(productPath)) {
-      // Check if this exact store URL is already a listing
       const existing = JSON.parse(fs.readFileSync(productPath, 'utf-8'));
       const hasListing = existing.listings.some(l => l.url === url);
       if (hasListing) return { duplicate: true, reason: 'exact URL exists', existing };
-      // Same product, new store → will add listing
       return { duplicate: false, addListing: true, existing };
     }
   }
@@ -179,10 +168,8 @@ async function main() {
       // 5. Build or update product
       let product;
       if (dupeCheck.addListing && dupeCheck.existing) {
-        // Add new listing to existing product
         product = dupeCheck.existing;
         product.listings.push(listing);
-        // Update image if the new one is better
         if (imageResult.imageStatus === 'ok' && product.imageStatus !== 'ok') {
           product.image = imageResult.image;
           product.originalImage = imageResult.originalImage;
@@ -190,7 +177,6 @@ async function main() {
         }
         console.log(`  ➕ Added listing to existing product ${productId}`);
       } else {
-        // New product
         product = {
           productId,
           name: scraped.name,
@@ -247,7 +233,6 @@ async function main() {
   if (!DRY_RUN && processedUrls.length > 0) {
     const timestamp = new Date().toISOString().split('T')[0];
     fs.appendFileSync(DONE_PATH, `\n# Processed ${timestamp}\n${processedUrls.join('\n')}\n`);
-    // Clear queue (keep comments)
     const header = fs.readFileSync(QUEUE_PATH, 'utf-8')
       .split('\n')
       .filter(l => l.startsWith('#') || l.trim() === '')
