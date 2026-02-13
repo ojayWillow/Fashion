@@ -5,15 +5,13 @@
  * Opens pages with Playwright or Patchright, extracts product
  * data from JSON-LD, meta tags, and DOM selectors.
  *
- * Store-specific adapters can override postProcess().
- * When no specific adapter exists, this base handles everything.
- *
  * Adapter resolution order:
  *   1. Check domain → load store-specific adapter if exists
  *   2. Wait for Cloudflare bypass (if Patchright)
  *   3. Extract raw data via JSON-LD + DOM (shared)
- *   4. Run adapter's postProcess() or generic normalization
- *   5. Return normalized product data
+ *   4. If adapter has extractFromDOM and JSON-LD is incomplete → DOM fallback
+ *   5. Run adapter's postProcess() or generic normalization
+ *   6. Return normalized product data
  */
 
 const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, calcDiscount, normalizeSizes, isValidSize } = require('../lib/helpers');
@@ -78,7 +76,7 @@ async function waitForCloudflare(page, maxWait = 30000) {
   const start = Date.now();
   while (Date.now() - start < maxWait) {
     const title = await page.title();
-    if (title !== 'Just a moment...') {
+    if (title !== 'Just a moment...' && !title.includes('Attention')) {
       log(`Cloudflare bypassed (${Math.round((Date.now() - start) / 1000)}s)`);
       await page.waitForTimeout(2000); // settle time for JS to hydrate
       return true;
@@ -147,7 +145,7 @@ async function extractJsonLd(page) {
         let ld;
         try { ld = JSON.parse(script.textContent); } catch { continue; }
 
-        // ProductGroup (END., SNS, MR PORTER)
+        // ProductGroup (SNS, MR PORTER)
         if (ld['@type'] === 'ProductGroup' && ld.hasVariant) {
           const variants = ld.hasVariant || [];
           const first = variants[0] || {};
@@ -170,17 +168,15 @@ async function extractJsonLd(page) {
             result.colorway = first.color.charAt(0).toUpperCase() + first.color.slice(1);
           }
 
-          // Sizes — extract from variant names or SKUs
+          // Sizes from variant names or SKUs
           const inStock = variants.filter(v =>
             v.offers && v.offers.availability && v.offers.availability.includes('InStock')
           );
           result.sizes = inStock.map(v => {
-            // Try size from variant name suffix: "Product Name - 7" → "7"
             if (v.name) {
               const m = v.name.match(/\s-\s(.+)$/);
               if (m) return m[1].trim();
             }
-            // Try size from SKU suffix: "312313-01-7" → "7"
             if (v.sku) {
               const parts = v.sku.split('-');
               return parts[parts.length - 1];
@@ -191,7 +187,6 @@ async function extractJsonLd(page) {
 
           // Style code from first SKU if not from productGroupId
           if (!result.styleCode && first.sku) {
-            // "312313-01-7" → "312313-01"
             const skuMatch = first.sku.match(/^(.+)-\d+(\.5)?$/);
             if (skuMatch) result.styleCode = skuMatch[1];
           }
@@ -216,28 +211,39 @@ async function extractJsonLd(page) {
           break;
         }
 
-        // Product (Foot Locker, generic)
+        // Product (END., Foot Locker, generic)
         if (ld['@type'] === 'Product') {
           if (!result.name && ld.name) result.name = ld.name;
           if (ld.brand) result.brand = typeof ld.brand === 'string' ? ld.brand : (ld.brand.name || '');
-          if (ld.image) result.image = ld.image;
+          if (ld.sku) result.styleCode = ld.sku;
+          if (ld.image) {
+            const img = Array.isArray(ld.image) ? ld.image[0] : ld.image;
+            result.image = typeof img === 'string' ? img : (img.url || '');
+          }
           if (ld.description) result.description = (ld.description || '').substring(0, 300);
 
           if (ld.offers) {
             const offers = Array.isArray(ld.offers) ? ld.offers : [ld.offers];
-            const inStock = [];
-            for (const offer of offers) {
-              const sku = offer.sku || '';
-              const size = sku.split('-').pop();
-              if (offer.availability && offer.availability.includes('InStock') && size) {
-                inStock.push(size);
-              }
-              if (offer.priceCurrency) result.currency = offer.priceCurrency;
+            if (offers[0]) {
+              if (offers[0].price) result.salePrice = String(offers[0].price);
+              if (offers[0].priceCurrency) result.currency = offers[0].priceCurrency;
             }
-            if (inStock.length > 0) result.sizes = inStock;
-            if (offers[0] && offers[0].price) result.salePrice = String(offers[0].price);
+            // Try sizes from multiple offers
+            if (offers.length > 1) {
+              const inStock = [];
+              for (const offer of offers) {
+                const sku = offer.sku || '';
+                const size = sku.split('-').pop();
+                if (offer.availability && offer.availability.includes('InStock') && size) {
+                  inStock.push(size);
+                }
+              }
+              if (inStock.length > 0) result.sizes = inStock;
+            }
           }
-          break;
+          // Don't break — there might be a ProductGroup later
+          // But if we got a name, mark that we found Product type
+          if (result.name) continue;
         }
       }
     } catch (e) {}
@@ -254,21 +260,6 @@ async function extractJsonLd(page) {
     if (!result.description) {
       const meta = document.querySelector('meta[name="description"]');
       if (meta) result.description = (meta.getAttribute('content') || '').substring(0, 300);
-    }
-
-    // Retail price fallback — look for strikethrough price in DOM
-    if (!result.retailPrice) {
-      // SNS: <s class="price__original">€140</s>
-      const crossed = document.querySelector('s.price__original') ||
-        document.querySelector('.price__original') ||
-        document.querySelector('.price--discount s') ||
-        document.querySelector('[class*="price"] s') ||
-        document.querySelector('[class*="price"] del') ||
-        document.querySelector('[class*="LineThrough"]');
-      if (crossed) {
-        const text = crossed.textContent.trim();
-        if (text) result.retailPrice = text;
-      }
     }
 
     return result;
@@ -289,9 +280,21 @@ async function extractWithAdapter(url, domain, store) {
 
     // Step 2: Adapter-specific DOM extraction if JSON-LD is incomplete
     if (adapter && adapter.extractFromDOM) {
-      if (!raw.name || !raw.salePrice || raw.sizes.length === 0 || !raw.retailPrice) {
+      const needsDOM = !raw.name || !raw.salePrice || raw.sizes.length === 0 || !raw.retailPrice;
+      if (needsDOM) {
         log('JSON-LD incomplete, trying adapter DOM extraction...');
         const domData = await adapter.extractFromDOM(page);
+
+        // Extract colorway from H1 if adapter provides it
+        if (domData.h1Text && raw.name) {
+          const nameIdx = domData.h1Text.indexOf(raw.name);
+          if (nameIdx !== -1) {
+            const after = domData.h1Text.substring(nameIdx + raw.name.length).trim();
+            const colorway = after.replace(/^[-|\s]+/, '').trim();
+            if (colorway) raw.colorway = colorway;
+          }
+        }
+
         // Merge: prefer existing non-empty values, fill gaps from DOM
         raw = {
           name: raw.name || (domData.name || ''),
