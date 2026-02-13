@@ -16,6 +16,8 @@
  *     <div data-test-id="Size__Button">UK 4.5</div>
  *     inside <div data-test-id="Size__List">
  *     Format: "UK X" or "UK X.5"
+ *     NOTE: Size buttons may load AFTER initial hydration.
+ *           Must wait for them explicitly.
  * - Style code: JSON-LD sku (e.g. "JR4773")
  * - Brand: JSON-LD brand.name (e.g. "Adidas")
  * - Colorway: H1 text minus JSON-LD name (suffix after product name)
@@ -32,11 +34,9 @@ const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, ca
  */
 function extractColorway(h1Text, productName) {
   if (!h1Text || !productName) return '';
-  // H1 sometimes lacks space between name and colorway
   const idx = h1Text.indexOf(productName);
   if (idx === -1) return '';
   const after = h1Text.substring(idx + productName.length).trim();
-  // Remove leading dash or pipe if present
   return after.replace(/^[-|\s]+/, '').trim();
 }
 
@@ -45,6 +45,22 @@ function extractColorway(h1Text, productName) {
  * Grabs retail price and sizes that are NOT in JSON-LD.
  */
 async function extractFromDOM(page) {
+  // Wait for size buttons to render (they load after initial hydration)
+  try {
+    await page.waitForSelector('[data-test-id="Size__Button"], [data-test-id="Size__List"]', { timeout: 8000 });
+    log('Size buttons found');
+    // Small settle time for all sizes to render
+    await page.waitForTimeout(500);
+  } catch (e) {
+    log('Size buttons not found after 8s, checking alternatives...');
+    // Try waiting for any size-like element
+    try {
+      await page.waitForSelector('[class*="SizeButton"], [class*="size-selector"], select[name="size"]', { timeout: 3000 });
+    } catch (e2) {
+      log('No size elements found');
+    }
+  }
+
   return await page.evaluate(() => {
     const result = {
       retailPrice: null,
@@ -53,13 +69,10 @@ async function extractFromDOM(page) {
     };
 
     // 1. Retail price from the "was" price span
-    //    Selector: span with class containing "DetailsPriceSaleWas"
-    //    Or first span inside PriceContainer that isn't the final price
     const wasPrice = document.querySelector('[class*="DetailsPriceSaleWas"]');
     if (wasPrice) {
       result.retailPrice = wasPrice.textContent.trim();
     } else {
-      // Fallback: PriceContainer's first span (if two spans, first is retail)
       const priceContainer = document.querySelector('[class*="PriceContainer"]');
       if (priceContainer) {
         const spans = priceContainer.querySelectorAll('span');
@@ -76,7 +89,29 @@ async function extractFromDOM(page) {
       if (text) result.sizes.push(text);
     }
 
-    // 3. Colorway from H1
+    // 3. Fallback: any element with class containing SizeButton
+    if (result.sizes.length === 0) {
+      const altBtns = document.querySelectorAll('[class*="SizeButton"], [class*="size-button"]');
+      for (const btn of altBtns) {
+        const text = btn.textContent.trim();
+        if (text && text.length < 10) result.sizes.push(text);
+      }
+    }
+
+    // 4. Fallback: select options
+    if (result.sizes.length === 0) {
+      const selects = document.querySelectorAll('select');
+      for (const sel of selects) {
+        for (const opt of sel.options) {
+          const text = opt.text.trim();
+          if (text && /^(UK|EU|US)?\s*\d/.test(text)) {
+            result.sizes.push(text);
+          }
+        }
+      }
+    }
+
+    // 5. Colorway from H1
     const h1 = document.querySelector('h1');
     if (h1) {
       result.h1Text = h1.textContent.trim();
@@ -90,9 +125,7 @@ async function extractFromDOM(page) {
  * Post-process raw data from END. pages.
  */
 function postProcess(raw, store) {
-  // Brand: JSON-LD gives "Adidas" — fix common casing issues
   let brand = raw.brand || detectBrand(raw.name);
-  // END. sometimes capitalizes oddly
   if (brand.toLowerCase() === 'adidas') brand = 'adidas';
 
   const currency = raw.currency || store.currency || 'GBP';
@@ -100,20 +133,17 @@ function postProcess(raw, store) {
   const retailPriceNum = parsePrice(raw.retailPrice);
   const discount = calcDiscount(retailPriceNum, salePriceNum);
 
-  // Sizes come as "UK 4", "UK 4.5" etc from DOM
   const validSizes = (raw.sizes || []).filter(s => isValidSize(s));
   const normalizedSizes = normalizeSizes(validSizes, 'END. Clothing', raw.name);
 
   const tags = detectTags(raw.name, brand);
   const category = detectCategory(raw.name, tags);
 
-  // Image: strip query params for full resolution
   let image = raw.image || '';
   if (image.includes('endclothing.com')) {
     image = image.replace(/\?.*$/, '');
   }
 
-  // Colorway: extract from H1 if available
   const colorway = raw.colorway || '';
 
   return {
