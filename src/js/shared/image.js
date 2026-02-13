@@ -2,9 +2,10 @@
 /* Cloudinary image normalization + fallback handling */
 
 /**
- * Normalize Cloudinary URLs: trim whitespace/borders and fill frame uniformly.
- * Uses c_fill with g_auto so every product image fills the card at the same
- * size — no more misaligned heights from inconsistent store photography.
+ * Normalize Cloudinary URLs: trim whitespace/borders, then center-pad
+ * into a uniform 800×800 frame with matching background.
+ * Uses c_lpad (letterbox pad) so the full product is always visible
+ * and vertically/horizontally centered — no cropping, no misalignment.
  * @param {string} url - Raw image URL
  * @returns {string} Normalized URL or empty string
  */
@@ -13,12 +14,17 @@ export function normalizeImage(url) {
   // Legacy format (old scraper output)
   url = url.replace(
     'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-    'f_auto,q_auto/e_trim/w_800,h_800,c_fill,g_auto'
+    'f_auto,q_auto/e_trim/w_800,h_800,c_lpad,b_rgb:F5F5F7'
   );
-  // Current format (already has e_trim but still using c_pad)
+  // Current format with c_fill,g_auto (broken zoom)
+  url = url.replace(
+    'w_800,h_800,c_fill,g_auto',
+    'w_800,h_800,c_lpad,b_rgb:F5F5F7'
+  );
+  // Current format with old c_pad
   url = url.replace(
     'w_800,h_800,c_pad,b_rgb:F5F5F7',
-    'w_800,h_800,c_fill,g_auto'
+    'w_800,h_800,c_lpad,b_rgb:F5F5F7'
   );
   return url;
 }
