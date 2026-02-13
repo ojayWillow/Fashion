@@ -8,10 +8,11 @@
  * Adapter resolution order:
  *   1. Check domain → load store-specific adapter if exists
  *   2. Wait for Cloudflare bypass (if Patchright)
- *   3. Extract raw data via JSON-LD + DOM (shared)
- *   4. If adapter has extractFromDOM and JSON-LD is incomplete → DOM fallback
- *   5. Run adapter's postProcess() or generic normalization
- *   6. Return normalized product data
+ *   3. Wait for content readiness (JSON-LD or price elements)
+ *   4. Extract raw data via JSON-LD + DOM (shared)
+ *   5. If adapter has extractFromDOM and JSON-LD is incomplete → DOM fallback
+ *   6. Run adapter's postProcess() or generic normalization
+ *   7. Return normalized product data
  */
 
 const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, calcDiscount, normalizeSizes, isValidSize } = require('../lib/helpers');
@@ -68,9 +69,8 @@ process.on('SIGINT', () => { closeBrowsers().then(() => process.exit()); });
 // ===== PAGE HELPERS =====
 
 /**
- * Wait for Cloudflare Turnstile to resolve.
- * Verified: SNS, END., Foot Locker all show "Just a moment..." during challenge.
- * MR PORTER: no Cloudflare but needs Patchright for anti-bot.
+ * Wait for Cloudflare Turnstile / anti-bot to resolve.
+ * Checks title is not a challenge page.
  */
 async function waitForCloudflare(page, maxWait = 30000) {
   const start = Date.now();
@@ -78,12 +78,49 @@ async function waitForCloudflare(page, maxWait = 30000) {
     const title = await page.title();
     if (title !== 'Just a moment...' && !title.includes('Attention') && title !== 'Access Denied' && title.length > 5) {
       log(`Cloudflare bypassed (${Math.round((Date.now() - start) / 1000)}s)`);
-      await page.waitForTimeout(2000); // settle time for JS to hydrate
       return true;
     }
     await page.waitForTimeout(1000);
   }
   log('Cloudflare bypass timeout');
+  return false;
+}
+
+/**
+ * Wait for product content to be ready (JS hydration).
+ * Checks for JSON-LD scripts or price-related elements.
+ * This is critical when pages load fast in a shared browser session.
+ */
+async function waitForContent(page, maxWait = 15000) {
+  const start = Date.now();
+  while (Date.now() - start < maxWait) {
+    const ready = await page.evaluate(() => {
+      // Check 1: JSON-LD with product data
+      const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
+      for (const script of jsonLd) {
+        try {
+          const data = JSON.parse(script.textContent);
+          if (data['@type'] === 'Product' || data['@type'] === 'ProductGroup') return true;
+        } catch {}
+      }
+      // Check 2: Price elements in DOM
+      const priceEls = document.querySelectorAll('[class*="rice"], [class*="Price"]');
+      for (const el of priceEls) {
+        const text = el.textContent.trim();
+        if (text.match(/[\u20ac\u00a3$]\s*\d/)) return true;
+      }
+      return false;
+    });
+    if (ready) {
+      log(`Content ready (${Math.round((Date.now() - start) / 1000)}s after bypass)`);
+      // Extra settle time for remaining JS (size selectors, images, etc.)
+      await page.waitForTimeout(2000);
+      return true;
+    }
+    await page.waitForTimeout(500);
+  }
+  log('Content readiness timeout — proceeding anyway');
+  await page.waitForTimeout(2000);
   return false;
 }
 
@@ -108,6 +145,8 @@ async function openPage(url, store) {
     if (!passed) {
       log('WARNING: Cloudflare may not have been bypassed');
     }
+    // Wait for actual product content to render
+    await waitForContent(page);
   } else {
     await page.waitForTimeout(4000);
   }
@@ -154,9 +193,7 @@ async function extractJsonLd(page) {
 
           // Clean name: remove color suffix too
           // MR PORTER: "Logo T-Shirt - black - XS" → after size strip: "Logo T-Shirt - black"
-          // Remove trailing " - colorname" if present
           result.name = result.name.replace(/\s*-\s*[a-z]+\s*$/i, function(match) {
-            // Only strip if it looks like a color (lowercase, short word)
             const word = match.replace(/[\s-]/g, '').toLowerCase();
             const colors = ['black','white','red','blue','green','grey','gray','navy',
               'beige','brown','cream','pink','orange','yellow','purple','khaki',
@@ -182,12 +219,11 @@ async function extractJsonLd(page) {
           }
 
           // Sizes from variants — priority: v.size > name suffix > sku suffix
-          // MR PORTER has explicit v.size = "XS", SNS has name = "Product - 42"
           const inStock = variants.filter(v =>
             v.offers && v.offers.availability && v.offers.availability.includes('InStock')
           );
           result.sizes = inStock.map(v => {
-            // 1. Explicit size field (MR PORTER, best source)
+            // 1. Explicit size field (MR PORTER)
             if (v.size) return v.size;
             // 2. Size from variant name suffix: "Product Name - 42"
             if (v.name) {
@@ -343,6 +379,7 @@ async function extractWithAdapter(url, domain, store) {
           currency: raw.currency || (domData.currency || ''),
           sizes: raw.sizes.length > 0 ? raw.sizes : (domData.sizes || []),
           styleCode: raw.styleCode || (domData.styleCode || ''),
+          _savings: domData._savings || '',
         };
       }
     }
