@@ -120,6 +120,16 @@ function handleImageError(imgEl, brandName) {
     wrapper.appendChild(fallback);
 }
 
+// ===== CLOUDINARY IMAGE NORMALIZER =====
+function normalizeImage(url) {
+    if (!url || url === '/favicon.png') return '';
+    // Apply background removal, trim whitespace, then pad uniformly on white
+    return url.replace(
+        'f_auto,q_auto,w_800,h_800,c_pad,b_white',
+        'f_auto,q_auto/e_background_removal/e_trim/w_800,h_800,c_pad,b_white'
+    );
+}
+
 // ===== PRICE FORMATTING =====
 function formatPrice(priceObj) {
     if (!priceObj || !priceObj.amount || priceObj.amount === 0) return '';
@@ -304,9 +314,14 @@ function renderPicks(picks) {
             ? `<span class="pick-card-multi-store" title="Available at ${storeCount} stores">${storeCount} stores</span>`
             : '';
 
+        const imgSrc = normalizeImage(product.image);
+
         card.innerHTML = `
             <div class="pick-card-image">
-                <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">
+                ${imgSrc
+                    ? `<img src="${imgSrc}" alt="${product.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">`
+                    : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${product.brand ? product.brand.charAt(0).toUpperCase() : '?'}</div><div class="pick-img-fallback-text">No Image</div></div>`
+                }
                 ${discountStr ? `<span class="pick-card-discount">${discountStr}</span>` : ''}
                 <span class="pick-card-store">${flag} ${storeName}</span>
                 ${multiStore}
@@ -392,11 +407,16 @@ function showStoreDetail(store, picks) {
                            <div class="pick-card-sizes">${sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
                         : '';
 
+                    const imgSrc = normalizeImage(product.image);
+
                     return `
                         <div class="pick-card" style="animation-delay: ${i * 0.06}s">
                             <div class="pick-card-image">
-                                <img src="${product.image}" alt="${product.name}" loading="lazy"
-                                     onerror="handleImageError(this, '${escapedBrand}')">
+                                ${imgSrc
+                                    ? `<img src="${imgSrc}" alt="${product.name}" loading="lazy"
+                                           onerror="handleImageError(this, '${escapedBrand}')">`
+                                    : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${product.brand ? product.brand.charAt(0).toUpperCase() : '?'}</div><div class="pick-img-fallback-text">No Image</div></div>`
+                                }
                                 ${discountStr ? `<span class="pick-card-discount">${discountStr}</span>` : ''}
                             </div>
                             <div class="pick-card-body">
@@ -531,7 +551,10 @@ function renderStores() {
         const previewHTML = storePicks.length > 0
             ? `<div class="store-card-preview">
                    <div class="store-preview-images">
-                       ${storePicks.slice(0, 3).map(p => `<img src="${p.image}" alt="${p.name}" loading="lazy">`).join('')}
+                       ${storePicks.slice(0, 3).map(p => {
+                           const pImg = normalizeImage(p.image);
+                           return pImg ? `<img src="${pImg}" alt="${p.name}" loading="lazy">` : '';
+                       }).join('')}
                        ${storePicks.length > 3 ? `<span class="store-preview-more">+${storePicks.length - 3}</span>` : ''}
                    </div>
                    <span class="store-preview-label">View curated picks</span>
