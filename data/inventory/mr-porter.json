@@ -2,7 +2,7 @@
   "store": "MR PORTER",
   "storeFlag": "🇬🇧",
   "lastUpdated": "2026-02-13",
-  "totalProducts": 68,
+  "totalProducts": 64,
   "products": [
     {
       "id": "mr-porter-178",
@@ -18,16 +18,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/178-2002r-protection-pack-suede-and-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/2002r-protection-pack-suede-and-mesh-sneakers/46376663162896752",
       "description": "2002R Protection Pack Suede and Mesh Sneakers, available in cream or gray. 40% Leather 40% Textile paper 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 41",
-        "EU 43"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 40.5", "EU 41", "EU 43"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -46,17 +38,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/179-docksides-portland-leather-boat-shoes",
       "url": "https://www.mrporter.com/en-gb/mens/product/sebago/shoes/boat-shoes/docksides-portland-leather-boat-shoes/46376663162838935",
       "description": "Docksides Portland Leather Boat Shoes, available in 3 colours. 80% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "SEBAGO",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 44",
-        "EU 44.5",
-        "EU 45",
-        "EU 47"
-      ],
+      "tags": ["Sneakers", "SEBAGO", "Sale"],
+      "sizes": ["EU 44", "EU 44.5", "EU 45", "EU 47"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -75,13 +58,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/180-leather-slippers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/slides/leather-slippers/1647597310185857",
       "description": "Leather Slippers, available in black. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 41"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 41"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -100,14 +78,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/181-larry-pebble-grain-leather-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/low-top-sneakers/larry-pebble-grain-leather-and-suede-sneakers/1647597332760709",
       "description": "Larry Pebble-Grain Leather and Suede Sneakers, available in 3 colours. 80% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 45"
-      ],
+      "tags": ["Sneakers", "MR P.", "Sale"],
+      "sizes": ["EU 45"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -126,17 +98,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/182-jacques-two-tone-leather-penny-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/loafers/jacques-two-tone-leather-penny-loafers/1647597321922494",
       "description": "Jacques Two-Tone Leather Penny Loafers, available in black. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 42.5",
-        "EU 43",
-        "EU 44.5",
-        "EU 45.5",
-        "EU 47"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 42.5", "EU 43", "EU 44.5", "EU 45.5", "EU 47"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -155,11 +118,7 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/183-air-max-95-og-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-95-og-mesh-sneakers/46376663162907898",
       "description": "Air Max 95 OG Mesh Sneakers, available in orange or gray. 90% Textile fibres 10% Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
       "sizes": [],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
@@ -179,17 +138,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/184-nemo-suede-boat-shoes",
       "url": "https://www.mrporter.com/en-gb/mens/product/castaner/shoes/boat-shoes/nemo-suede-boat-shoes/46376663162869382",
       "description": "Nemo Suede Boat Shoes, available in 3 colours. 60% Leather 20% Textile fibres 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "CASTAÑER",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 41",
-        "EU 42",
-        "EU 44"
-      ],
+      "tags": ["Sneakers", "CASTAÑER", "Sale"],
+      "sizes": ["EU 40", "EU 41", "EU 42", "EU 44"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -208,18 +158,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/185-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-t",
       "url": "https://www.mrporter.com/en-gb/mens/product/rick-owens/shoes/high-top-sneakers/plus-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-top-sneakers/1647597296516851",
       "description": "+ Converse TURBODRK Chuck 70 Zebra-Print Faux Shearling High-Top Sneakers, available in black. 80% Textile fibres",
-      "tags": [
-        "Sneakers",
-        "RICK OWENS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5"
-      ],
+      "tags": ["Sneakers", "RICK OWENS", "Sale"],
+      "sizes": ["EU 40", "EU 40.5", "EU 41", "EU 42", "EU 42.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -238,22 +178,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/186-air-max-dn-rubber-trimmed-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-dn-rubber-trimmed-mesh-sneakers/1647597332442738",
       "description": "Air Max DN Rubber-Trimmed Mesh Sneakers, available in cream. Fabric/Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 40.5",
-        "EU 41",
-        "EU 42.5",
-        "EU 43",
-        "EU 44",
-        "EU 45",
-        "EU 46",
-        "EU 47.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 40", "EU 40.5", "EU 41", "EU 42.5", "EU 43", "EU 44", "EU 45", "EU 46", "EU 47.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -272,23 +198,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/187-clogposite-iridescent-tpu-and-shell-slip-on-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/slip-on-sneakers/clogposite-iridescent-tpu-and-shell-slip-on-sneakers/1647597357962624",
       "description": "Clogposite Iridescent TPU and Shell Slip-On Sneakers, available in blue. 60% Textile fibres 40% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38.5",
-        "EU 39",
-        "EU 40",
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5",
-        "EU 43",
-        "EU 44",
-        "EU 44.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 38.5", "EU 39", "EU 40", "EU 40.5", "EU 41", "EU 42", "EU 42.5", "EU 43", "EU 44", "EU 44.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -307,14 +218,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/188-air-max-1-prm-denim-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-prm-denim-and-suede-sneakers/1647597290809273",
       "description": "Air Max 1 PRM Denim and Suede Sneakers, available in blue. upper leather/textile, inner textile, sole rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -333,18 +238,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/189-auralee-1906r-rubber-trimmed-mesh-leather-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/plus-auralee-1906r-rubber-trimmed-mesh-leather-and-suede-sneakers/1647597324701204",
       "description": "+ Auralee 1906R Rubber-Trimmed Mesh, Leather and Suede Sneakers, available in white or blue. 50% Textile fibres 50% Leather",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 40.5",
-        "EU 41",
-        "EU 44",
-        "EU 44.5"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 40", "EU 40.5", "EU 41", "EU 44", "EU 44.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -363,14 +258,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/190-converse-drkstar-ox-drill-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/rick-owens/shoes/low-top-sneakers/plus-converse-drkstar-ox-drill-sneakers/24772899113182406",
       "description": "+ Converse DRKSTAR OX Drill Sneakers, available in white. 100% Cotton",
-      "tags": [
-        "Sneakers",
-        "RICK OWENS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5"
-      ],
+      "tags": ["Sneakers", "RICK OWENS", "Sale"],
+      "sizes": ["EU 37.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -389,14 +278,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/191-suede-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/suede-sandals/1647597354957620",
       "description": "Suede Sandals, available in blue or neutral. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 43",
-        "EU 47"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 43", "EU 47"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -415,16 +298,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/192-tom-padded-suede-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/tom-padded-suede-sandals/1647597332642183",
       "description": "Tom Padded Suede Sandals, available in brown. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 42",
-        "EU 43",
-        "EU 44.5"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 40.5", "EU 42", "EU 43", "EU 44.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -443,13 +318,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/193-weejuns-90-larson-suede-penny-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/gh-bass/shoes/loafers/weejuns-90-larson-suede-penny-loafers/1647597284554791",
       "description": "Weejuns 90 Larson Suede Penny Loafers, available in brown. 80% Leather 20% Various Materials",
-      "tags": [
-        "G.H. BASS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 43"
-      ],
+      "tags": ["G.H. BASS", "Sale"],
+      "sizes": ["EU 43"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -468,16 +338,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/194-air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-escape-leather-trimmed-suede-and-mesh-sneakers/1647597311480915",
       "description": "Air Max 1 Escape Leather-Trimmed Suede and Mesh Sneakers, available in gray. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -496,23 +358,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/195-1906r-rubber-trimmed-mesh-and-metallic-faux-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/1906r-rubber-trimmed-mesh-and-metallic-faux-leather-sneakers/1647597322372605",
       "description": "1906R Rubber-Trimmed Mesh and Metallic Faux Leather Sneakers, available in gray. 50% Textile fibres 50% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5",
-        "EU 44",
-        "EU 44.5",
-        "EU 45",
-        "EU 45.5",
-        "EU 46"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 40", "EU 40.5", "EU 41", "EU 42", "EU 42.5", "EU 44", "EU 44.5", "EU 45", "EU 45.5", "EU 46"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -531,22 +378,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/196-abzorb-2010-suede-and-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/abzorb-2010-suede-and-mesh-sneakers/46376663162877399",
       "description": "ABZORB 2010 Suede and Mesh Sneakers, available in 3 colours. 60% Textile fibres 20% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5",
-        "EU 43",
-        "EU 44",
-        "EU 44.5",
-        "EU 45",
-        "EU 45.5"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 40.5", "EU 41", "EU 42", "EU 42.5", "EU 43", "EU 44", "EU 44.5", "EU 45", "EU 45.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -565,16 +398,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/197-air-force-1-07-fresh-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-force-1-07-fresh-leather-sneakers/45666037504718255",
       "description": "Air Force 1 '07 Fresh Leather Sneakers, available in white. 40% Leather 40% Textile fibres 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -593,14 +418,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/198-gallivan2r-tpu-golf-shoes",
       "url": "https://www.mrporter.com/en-gb/mens/product/gfore/sport/golf-shoes/gallivan2r-tpu-golf-shoes/1647597341064584",
       "description": "Gallivan2R TPU Golf Shoes, available in white. 50% Textile fibres 50% Various Materials",
-      "tags": [
-        "Sneakers",
-        "G/FORE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40"
-      ],
+      "tags": ["Sneakers", "G/FORE", "Sale"],
+      "sizes": ["EU 40"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -619,16 +438,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/199-undercover-dunk-hi-1985-leather-high-top-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/high-top-sneakers/plus-undercover-dunk-hi-1985-leather-high-top-sneakers/30629810019970307",
       "description": "+ Undercover Dunk Hi 1985 Leather High-Top Sneakers, available in black. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -647,13 +458,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/200-leather-trimmed-suede-clogs",
       "url": "https://www.mrporter.com/en-gb/mens/product/frescobol-carioca/shoes/espadrilles/leather-trimmed-suede-clogs/1647597327873041",
       "description": "Leather-Trimmed Suede Clogs, available in navy or green. 60% Leather 20% Textile fibres 20% Various Materials",
-      "tags": [
-        "FRESCOBOL CARIOCA",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 43"
-      ],
+      "tags": ["FRESCOBOL CARIOCA", "Sale"],
+      "sizes": ["EU 43"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -672,13 +478,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/201-collapsible-heel-suede-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mulo/shoes/loafers/collapsible-heel-suede-loafers/1647597356474469",
       "description": "Collapsible-Heel Suede Loafers, available in 3 colours. 60% Leather 40% Various Materials",
-      "tags": [
-        "MULO",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 47"
-      ],
+      "tags": ["MULO", "Sale"],
+      "sizes": ["EU 47"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -697,16 +498,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/202-ansel-colour-block-suede-and-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/low-top-sneakers/ansel-colour-block-suede-and-leather-sneakers/1647597344041691",
       "description": "Ansel Colour-Block Suede and Leather Sneakers, available in 6 colours. 80% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 42",
-        "EU 47"
-      ],
+      "tags": ["Sneakers", "MR P.", "Sale"],
+      "sizes": ["EU 40.5", "EU 42", "EU 47"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -725,16 +518,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/203-1906-mesh-penny-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/loafers/1906-mesh-penny-loafers/46376663162896741",
       "description": "1906 Mesh Penny Loafers, available in blue or pink. 50% Textile fibres 50% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 42",
-        "EU 42.5"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 40.5", "EU 42", "EU 42.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -753,14 +538,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/204-acg-izy-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/slip-on-sneakers/acg-izy-suede-sneakers/1647597353264648",
       "description": "ACG Izy Suede Sneakers, available in brown. 40% Textile fibres 40% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 42"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 42"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -779,16 +558,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/205-off-white-air-force-1-mid-two-tone-leather-high-top-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/high-top-sneakers/plus-off-white-air-force-1-mid-two-tone-leather-high-top-sneakers/1647597311480911",
       "description": "+ Off-White Air Force 1 Mid Two-Tone Leather High-Top Sneakers, available in yellow. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -807,17 +578,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/206-atticus-colour-block-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/low-top-sneakers/atticus-colour-block-suede-sneakers/1647597344040949",
       "description": "Atticus Colour-Block Suede Sneakers, available in green or beige. 80% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 42",
-        "EU 42.5",
-        "EU 43"
-      ],
+      "tags": ["Sneakers", "MR P.", "Sale"],
+      "sizes": ["EU 40.5", "EU 42", "EU 42.5", "EU 43"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -836,22 +598,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/207-acg-phassad-mesh-and-rubber-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/acg-phassad-mesh-and-rubber-sneakers/46376663162896534",
       "description": "ACG Phassad Mesh and Rubber Sneakers, available in gray or black. 60% Textile fibres 40% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 43",
-        "EU 44",
-        "EU 45",
-        "EU 45.5",
-        "EU 46",
-        "EU 47.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 40.5", "EU 41", "EU 42", "EU 43", "EU 44", "EU 45", "EU 45.5", "EU 46", "EU 47.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -870,11 +618,7 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/208-air-force-1-leather-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-force-1-leather-and-suede-sneakers/46376663162896521",
       "description": "Air Force 1 Leather and Suede Sneakers, available in white or gray. 60% Textile fibres 30% Various Materials 10% Leather fibre",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
       "sizes": [],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
@@ -894,13 +638,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/209-suede-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mulo/shoes/loafers/suede-loafers/1647597307381891",
       "description": "Suede Loafers, available in sand. % Rubber % Various Materials",
-      "tags": [
-        "MULO",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40"
-      ],
+      "tags": ["MULO", "Sale"],
+      "sizes": ["EU 40"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -919,20 +658,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/210-fear-of-god-athletics-one-model-rubber-and-scuba-trimmed-str",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/high-top-sneakers/plus-fear-of-god-athletics-one-model-rubber-and-scuba-trimmed-stretch-knit-sneakers/1647597334936774",
       "description": "+ Fear of God Athletics One Model Rubber and Scuba-Trimmed Stretch-Knit Sneakers, available in gray. % Textile fibres % Rubber",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38",
-        "EU 38.5",
-        "EU 39",
-        "EU 40",
-        "EU 42",
-        "EU 45",
-        "EU 46"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
+      "sizes": ["EU 38", "EU 38.5", "EU 39", "EU 40", "EU 42", "EU 45", "EU 46"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -951,14 +678,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/211-air-force-1-low-retro-qs-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-force-1-low-retro-qs-leather-sneakers/1647597321720462",
       "description": "Air Force 1 Low Retro QS Leather Sneakers, available in white. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -977,16 +698,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/212-brain-dead-forest-hills-leather-trimmed-brushed-suede-sneake",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/plus-brain-dead-forest-hills-leather-trimmed-brushed-suede-sneakers/1647597350968115",
       "description": "+ Brain Dead Forest Hills Leather-Trimmed Brushed-Suede Sneakers, available in neutral. 40% Textile fibres 40% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38",
-        "EU 38.5",
-        "EU 39"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
+      "sizes": ["EU 38", "EU 38.5", "EU 39"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1005,14 +718,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/213-550-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/550-leather-sneakers/1647597322372595",
       "description": "550 Leather Sneakers, available in pink. 40% Leather 40% Textile fibres 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 43"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 43"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1031,13 +738,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/214-london-suede-clogs",
       "url": "https://www.mrporter.com/en-gb/mens/product/birkenstock/shoes/summer-shoes/london-suede-clogs/1647597324091580",
       "description": "London Suede Clogs, available in taupe. 80% Leather 20% Various Materials",
-      "tags": [
-        "BIRKENSTOCK",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 44"
-      ],
+      "tags": ["BIRKENSTOCK", "Sale"],
+      "sizes": ["EU 44"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1056,13 +758,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/215-suede-trimmed-shearling-lined-wool-slippers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mulo/shoes/slippers/suede-trimmed-shearling-lined-wool-slippers/1647597353552884",
       "description": "Suede-Trimmed Shearling-Lined Wool Slippers, available in navy. 60% Textile fibres 20% Various Materials 20% Leather",
-      "tags": [
-        "MULO",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 44.5"
-      ],
+      "tags": ["MULO", "Sale"],
+      "sizes": ["EU 44.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1081,13 +778,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/216-shearling-lined-suede-trimmed-cotton-corduroy-loafers",
       "url": "https://www.mrporter.com/en-gb/mens/product/mulo/shoes/loafers/shearling-lined-suede-trimmed-cotton-corduroy-loafers/1647597353552800",
       "description": "Shearling-Lined Suede-Trimmed Cotton-Corduroy Loafers, available in navy. 60% Textile fibres 20% Leather 20% Various Materials",
-      "tags": [
-        "MULO",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 39"
-      ],
+      "tags": ["MULO", "Sale"],
+      "sizes": ["EU 39"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1106,14 +798,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/217-superstar-82-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/superstar-82-leather-sneakers/1647597336664747",
       "description": "Superstar 82 Leather Sneakers, available in white. 50% Leather 50% Various Materials",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
+      "sizes": ["EU 38"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1132,13 +818,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/218-david-regenerated-suede-by-evolo-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/david-regenerated-suede-by-evolor-sandals/1647597300453685",
       "description": "David Regenerated Suede by evolo® Sandals, available in navy or brown. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 42"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 42"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1157,15 +838,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/219-tom-padded-suede-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/tom-padded-suede-sandals/1647597332642147",
       "description": "Tom Padded Suede Sandals, available in navy. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 42",
-        "EU 43",
-        "EU 44.5"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 42", "EU 43", "EU 44.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1184,14 +858,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/220-tom-padded-suede-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/tom-padded-suede-sandals/1647597332642166",
       "description": "Tom Padded Suede Sandals, available in gray or black. 80% Leather 20% Various Materials",
-      "tags": [
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 45.5"
-      ],
+      "tags": ["MR P.", "Sale"],
+      "sizes": ["EU 40.5", "EU 45.5"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1210,13 +878,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/221-ron-mwpab-mid-suede-and-shell-slippers",
       "url": "https://www.mrporter.com/en-gb/mens/product/suicoke/shoes/slippers/ron-mwpab-mid-suede-and-shell-slippers/1647597277620690",
       "description": "RON-MWPAB-MID Suede and Shell Slippers, available in black. 60% Leather 20% Textile fibres 20% Various Materials",
-      "tags": [
-        "SUICOKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40"
-      ],
+      "tags": ["SUICOKE", "Sale"],
+      "sizes": ["EU 40"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1235,17 +898,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/222-air-max-1-87-mesh-trimmed-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-87-mesh-trimmed-leather-sneakers/1647597318041307",
       "description": "Air Max 1 '87 Mesh-Trimmed Leather Sneakers, available in gray or brown. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5",
-        "EU 40"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5", "EU 40"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
       "status": "active"
@@ -1264,38 +918,10 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/223-air-max-1-87-mesh-trimmed-leather-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-87-mesh-trimmed-leather-and-suede-sneakers/1647597323530231",
       "description": "Air Max 1 '87 Mesh-Trimmed Leather and Suede Sneakers, available in brown or gray. % Leather % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 40"],
       "addedDate": "2026-02-12",
       "lastChecked": "2026-02-12",
-      "status": "active"
-    },
-    {
-      "id": "mr-porter-224",
-      "picksId": 224,
-      "name": "MR PORTER",
-      "brand": "",
-      "category": "sneakers",
-      "styleCode": "",
-      "colorway": "",
-      "retailPrice": "",
-      "salePrice": "",
-      "discount": "0%",
-      "image": "/favicon.png",
-      "url": "https://www.mrporter.com/en-gb/",
-      "description": "",
-      "tags": [
-        "Sale"
-      ],
-      "sizes": [],
-      "addedDate": "2026-02-13",
-      "lastChecked": "2026-02-13",
       "status": "active"
     },
     {
@@ -1312,14 +938,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/225-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-",
       "url": "https://www.mrporter.com/en-gb/mens/product/on/sport/running-shoes/plus-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-sneakers/1647597347333346",
       "description": "+ Bureau Borsche Cloudflow 4 IKON Rubber-Trimmed Mesh Running Sneakers, available in black. 50% Textile fibres 50% Various Materials",
-      "tags": [
-        "Sneakers",
-        "ON",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 44"
-      ],
+      "tags": ["Sneakers", "ON", "Sale"],
+      "sizes": ["EU 44"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1338,16 +958,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/226-air-max-dn-rubber-trimmed-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-dn-rubber-trimmed-mesh-sneakers/1647597336438635",
       "description": "Air Max DN Rubber-Trimmed Mesh Sneakers, available in black. % Textile fibres % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 40"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 40"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1366,14 +978,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/227-samba-og-leather-trimmed-snake-effect-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/samba-og-leather-trimmed-snake-effect-sneakers/46376663162855176",
       "description": "Samba OG Leather-Trimmed Snake-Effect Sneakers, available in 4 colours. 50% Textile fibres 40% Leather 10% Rubber",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 45.5"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
+      "sizes": ["EU 45.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1392,49 +998,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/228-dunk-low-brushed-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/dunk-low-brushed-suede-sneakers/1647597336456658",
       "description": "Dunk Low Brushed-Suede Sneakers, available in green. % Leather % Textile fibres % Other Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 39",
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5",
-        "EU 43",
-        "EU 44",
-        "EU 44.5",
-        "EU 45",
-        "EU 45.5",
-        "EU 46",
-        "EU 47",
-        "EU 47.5",
-        "EU 46.5"
-      ],
-      "addedDate": "2026-02-13",
-      "lastChecked": "2026-02-13",
-      "status": "active"
-    },
-    {
-      "id": "mr-porter-229",
-      "picksId": 229,
-      "name": "POLO RALPH LAUREN Logo-Embroidered Striped Cotton-Blend Seersucker Baseball Cap",
-      "brand": "",
-      "category": "sneakers",
-      "styleCode": "",
-      "colorway": "",
-      "retailPrice": "",
-      "salePrice": "",
-      "discount": "0%",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/229-polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
-      "url": "https://www.mrporter.com/en-gb/mens/product/polo-ralph-lauren/accessories/caps/logo-embroidered-striped-cotton-blend-seersucker-baseball-cap/1647597354867277",
-      "description": "",
-      "tags": [
-        "Sale"
-      ],
-      "sizes": [],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 39", "EU 40.5", "EU 41", "EU 42", "EU 42.5", "EU 43", "EU 44", "EU 44.5", "EU 45", "EU 45.5", "EU 46", "EU 47", "EU 47.5", "EU 46.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1453,16 +1018,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/230-cortez-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/cortez-leather-sneakers/1647597357962622",
       "description": "Cortez Leather Sneakers, available in white. 40% Textile fibres 40% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38.5",
-        "EU 40",
-        "EU 41"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 38.5", "EU 40", "EU 41"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1481,14 +1038,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/231-camp-collar-stretch-cotton-seersucker-shirt",
       "url": "https://www.mrporter.com/en-gb/mens/product/howlin-/clothing/plain-shirts/camp-collar-stretch-cotton-seersucker-shirt/1647597308401390",
       "description": "Camp-Collar Stretch-Cotton Seersucker Shirt, available in purple. 97% Cotton 3% Elastane",
-      "tags": [
-        "Clothing",
-        "HOWLIN'",
-        "Sale"
-      ],
-      "sizes": [
-        "S"
-      ],
+      "tags": ["Clothing", "HOWLIN'", "Sale"],
+      "sizes": ["S"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1507,15 +1058,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/232-air-footscape-woven-webbing-and-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-footscape-woven-webbing-and-suede-sneakers/1647597323530222",
       "description": "Air Footscape Woven Webbing and Suede Sneakers, available in gray. 40% Leather 40% Textile fibres 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40",
-        "EU 42.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 40", "EU 42.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1534,11 +1078,7 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/233-samba-og-suede-trimmed-calf-hair-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/samba-og-suede-trimmed-calf-hair-sneakers/1647597349668615",
       "description": "Samba OG Suede-Trimmed Calf Hair Sneakers, available in claret. 40% Leather 40% Various Materials 20% Textile fibres",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
       "sizes": [],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
@@ -1558,16 +1098,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/234-dunk-low-qs-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/dunk-low-qs-leather-sneakers/1647597343071839",
       "description": "Dunk Low QS Leather Sneakers, available in gray. 60% Textile fibres 20% Leather 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5",
-        "EU 38",
-        "EU 38.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5", "EU 38", "EU 38.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1586,14 +1118,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/235-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap",
       "url": "https://www.mrporter.com/en-gb/mens/product/apc/accessories/caps/plus-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap/46376663162871492",
       "description": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap, available in navy. 100% Cotton",
-      "tags": [
-        "A.P.C.",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 54",
-        "EU 60"
-      ],
+      "tags": ["A.P.C.", "Sale"],
+      "sizes": ["EU 54", "EU 60"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1612,32 +1138,7 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/236-3-5cm-suede-belt",
       "url": "https://www.mrporter.com/en-gb/mens/product/anderson-s/accessories/leather-belts/35cm-suede-belt/14097096497399096",
       "description": "3.5cm Suede Belt, available in brown. 100% Leather",
-      "tags": [
-        "ANDERSON'S",
-        "Sale"
-      ],
-      "sizes": [],
-      "addedDate": "2026-02-13",
-      "lastChecked": "2026-02-13",
-      "status": "active"
-    },
-    {
-      "id": "mr-porter-237",
-      "picksId": 237,
-      "name": "MR P. Full-Grain Leather Golf Ball and Tee Holder",
-      "brand": "",
-      "category": "sneakers",
-      "styleCode": "",
-      "colorway": "",
-      "retailPrice": "",
-      "salePrice": "",
-      "discount": "0%",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/237-mr-p-full-grain-leather-golf-ball-and-tee-holder",
-      "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/sport/golf-accessories/full-grain-leather-golf-ball-and-tee-holder/46376663162849527",
-      "description": "",
-      "tags": [
-        "Sale"
-      ],
+      "tags": ["ANDERSON'S", "Sale"],
       "sizes": [],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
@@ -1657,17 +1158,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/238-740-leather-trimmed-mesh-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/low-top-sneakers/740-leather-trimmed-mesh-sneakers/1647597337781287",
       "description": "740 Leather-Trimmed Mesh Sneakers, available in purple or black. 80% Various Materials 20% Textile fibres",
-      "tags": [
-        "Sneakers",
-        "NEW BALANCE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 43",
-        "EU 45.5",
-        "EU 46",
-        "EU 47.5"
-      ],
+      "tags": ["Sneakers", "NEW BALANCE", "Sale"],
+      "sizes": ["EU 43", "EU 45.5", "EU 46", "EU 47.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1686,24 +1178,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/239-dunk-low-brushed-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/dunk-low-brushed-suede-sneakers/1647597332489310",
       "description": "Dunk Low Brushed-Suede Sneakers, available in orange. 40% Leather 40% Textile fibres 20% Various Materials",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 40.5",
-        "EU 41",
-        "EU 42",
-        "EU 42.5",
-        "EU 43",
-        "EU 44.5",
-        "EU 45",
-        "EU 46",
-        "EU 47.5",
-        "EU 46.5",
-        "EU 47.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 40.5", "EU 41", "EU 42", "EU 42.5", "EU 43", "EU 44.5", "EU 45", "EU 46", "EU 47.5", "EU 46.5", "EU 47.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1722,18 +1198,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/240-handball-spezial-leather-trimmed-suede-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/handball-spezial-leather-trimmed-suede-sneakers/1647597321098724",
       "description": "Handball Spezial Leather-Trimmed Suede Sneakers, available in green. 50% Various Materials 40% Leather 10% Textile fibres",
-      "tags": [
-        "Sneakers",
-        "ADIDAS ORIGINALS",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 38",
-        "EU 38.5",
-        "EU 40",
-        "EU 40.5",
-        "EU 41"
-      ],
+      "tags": ["Sneakers", "ADIDAS ORIGINALS", "Sale"],
+      "sizes": ["EU 38", "EU 38.5", "EU 40", "EU 40.5", "EU 41"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1752,14 +1218,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/241-undercover-air-force-1-rubber-trimmed-leather-sneakers",
       "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/plus-undercover-air-force-1-rubber-trimmed-leather-sneakers/1647597290809363",
       "description": "+ Undercover Air Force 1 Rubber-Trimmed Leather Sneakers, available in black or white. % Leather % Textile fibres % Rubber",
-      "tags": [
-        "Sneakers",
-        "NIKE",
-        "Sale"
-      ],
-      "sizes": [
-        "EU 37.5"
-      ],
+      "tags": ["Sneakers", "NIKE", "Sale"],
+      "sizes": ["EU 37.5"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1778,39 +1238,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/242-textured-cotton-t-shirt",
       "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/clothing/plain-t-shirts/textured-cotton-t-shirt/1647597331955623",
       "description": "Textured Cotton T-Shirt, available in blue or beige. 100% Cotton",
-      "tags": [
-        "Clothing",
-        "MR P.",
-        "Sale"
-      ],
-      "sizes": [
-        "XS",
-        "M",
-        "L"
-      ],
-      "addedDate": "2026-02-13",
-      "lastChecked": "2026-02-13",
-      "status": "active"
-    },
-    {
-      "id": "mr-porter-243",
-      "picksId": 243,
-      "name": "Shoes",
-      "brand": "",
-      "category": "sneakers",
-      "styleCode": "",
-      "colorway": "",
-      "retailPrice": "",
-      "salePrice": "",
-      "discount": "0%",
-      "image": "",
-      "url": "https://www.mrporter.com/en-gb/mens/sale/shoes?orderBy=8&pageNumber=6",
-      "description": "",
-      "tags": [
-        "Sneakers",
-        "Sale"
-      ],
-      "sizes": [],
+      "tags": ["Clothing", "MR P.", "Sale"],
+      "sizes": ["XS", "M", "L"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1829,14 +1258,8 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/244-oversized-logo-appliqu-d-cotton-jersey-t-shirt",
       "url": "https://www.mrporter.com/en-gb/mens/product/fear-of-god-essentials/clothing/plain-t-shirts/oversized-logo-appliqued-cotton-jersey-t-shirt/1647597331446260",
       "description": "Oversized Logo-Appliquéd Cotton-Jersey T-Shirt, available in black. 100% Cotton",
-      "tags": [
-        "Clothing",
-        "FEAR OF GOD ESSENTIALS",
-        "Sale"
-      ],
-      "sizes": [
-        "XL"
-      ],
+      "tags": ["Clothing", "FEAR OF GOD ESSENTIALS", "Sale"],
+      "sizes": ["XL"],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
       "status": "active"
@@ -1855,10 +1278,7 @@
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/245-arizona-eva-sandals",
       "url": "https://www.mrporter.com/en-gb/mens/product/birkenstock/shoes/summer-shoes/arizona-eva-sandals/1647597300676193",
       "description": "Arizona EVA Sandals, available in black. 100% Various Materials",
-      "tags": [
-        "BIRKENSTOCK",
-        "Sale"
-      ],
+      "tags": ["BIRKENSTOCK", "Sale"],
       "sizes": [],
       "addedDate": "2026-02-13",
       "lastChecked": "2026-02-13",
