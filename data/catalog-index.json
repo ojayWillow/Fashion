@@ -1,12 +1,18 @@
 {
-  "lastBuilt": "2026-02-12T20:28:45.721Z",
-  "totalProducts": 103,
+  "lastBuilt": "2026-02-12T21:20:58.875Z",
+  "totalProducts": 168,
   "stores": [
     {
       "slug": "sns-sneakersnstuff",
       "name": "SNS (Sneakersnstuff)",
       "flag": "🇸🇪",
       "count": 74
+    },
+    {
+      "slug": "mr-porter",
+      "name": "MR PORTER",
+      "flag": "🇬🇧",
+      "count": 68
     },
     {
       "slug": "foot-locker",
@@ -19,19 +25,13 @@
       "name": "END. Clothing",
       "flag": "🇬🇧",
       "count": 10
-    },
-    {
-      "slug": "mr-porter",
-      "name": "MR PORTER",
-      "flag": "🇬🇧",
-      "count": 3
     }
   ],
   "categories": [
     {
       "slug": "sneakers",
       "name": "Sneakers",
-      "count": 94,
+      "count": 159,
       "icon": "👟"
     },
     {
@@ -79,12 +79,24 @@
       "count": 17
     },
     {
+      "name": "NIKE",
+      "count": 14
+    },
+    {
       "name": "Puma",
       "count": 12
     },
     {
+      "name": "MR P.",
+      "count": 10
+    },
+    {
       "name": "New Balance",
       "count": 7
+    },
+    {
+      "name": "NEW BALANCE",
+      "count": 6
     },
     {
       "name": "The North Face",
@@ -95,8 +107,20 @@
       "count": 6
     },
     {
+      "name": "MULO",
+      "count": 4
+    },
+    {
+      "name": "ADIDAS ORIGINALS",
+      "count": 3
+    },
+    {
       "name": "Converse",
       "count": 3
+    },
+    {
+      "name": "RICK OWENS",
+      "count": 2
     },
     {
       "name": "Saucony",
@@ -120,6 +144,34 @@
     },
     {
       "name": "Timberland",
+      "count": 1
+    },
+    {
+      "name": "SEBAGO",
+      "count": 1
+    },
+    {
+      "name": "CASTAÑER",
+      "count": 1
+    },
+    {
+      "name": "G.H. BASS",
+      "count": 1
+    },
+    {
+      "name": "G/FORE",
+      "count": 1
+    },
+    {
+      "name": "FRESCOBOL CARIOCA",
+      "count": 1
+    },
+    {
+      "name": "BIRKENSTOCK",
+      "count": 1
+    },
+    {
+      "name": "SUICOKE",
       "count": 1
     },
     {
