@@ -80,12 +80,32 @@ function storeSlug(storeName) {
   return map[storeName] || slugify(storeName);
 }
 
-function determineCategory(item) {
-  const name = (item.name || '').toLowerCase();
-  const tags = (item.tags || []).join(' ').toLowerCase();
-  if (tags.includes('clothing') || /jacket|hoodie|pant|short|tee|hood|top|jeans/i.test(name)) return 'Clothing';
-  if (/cap|hat/i.test(name)) return 'Accessories';
-  if (/sandal|slipper|loafer|clog|boot|mule|boat shoe/i.test(name)) return 'Footwear';
+/**
+ * Determine product category from ALL items in a merged group.
+ * Checks names, tags, and descriptions across every item.
+ * 
+ * Categories: Sneakers (default, includes all footwear), Clothing, Accessories
+ */
+function determineCategory(items) {
+  // Gather all signals from every item in the group
+  const allNames = items.map(i => (i.name || '').toLowerCase()).join(' ');
+  const allTags = items.flatMap(i => i.tags || []).map(t => t.toLowerCase()).join(' ');
+  const allDescriptions = items.map(i => (i.description || '').toLowerCase()).join(' ');
+  const combined = `${allNames} ${allTags} ${allDescriptions}`;
+
+  // Clothing patterns (check first — more specific than default)
+  const clothingPattern = /\b(jacket|hoodie|hoody|pants?|shorts?|tee|t-shirt|hood|top|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|jersey)\b/i;
+  if (clothingPattern.test(allNames) || allTags.includes('clothing')) {
+    return 'Clothing';
+  }
+
+  // Accessories patterns
+  const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote)\b/i;
+  if (accessoriesPattern.test(allNames) || allTags.includes('accessories')) {
+    return 'Accessories';
+  }
+
+  // Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
   return 'Sneakers';
 }
 
@@ -113,6 +133,34 @@ function metadataScore(item) {
   if ((item.name || '').length > 30) score += 1;            // longer (more descriptive) name
   if ((item.tags || []).length > 2) score += 1;             // richer tags
   return score;
+}
+
+/**
+ * Clean up tags: normalize and deduplicate.
+ * Removes store-specific category tags like "Shoes and Accessories"
+ * and maps them to our canonical categories.
+ */
+function cleanTags(items, category) {
+  const raw = items.flatMap(i => i.tags || []);
+  const cleaned = new Set();
+
+  // Tags to skip (store-specific categories that don't help users)
+  const skipPatterns = /^(shoes and accessories|shoes|footwear|menswear|womenswear|new arrivals|new in)$/i;
+
+  for (const tag of raw) {
+    const t = tag.trim();
+    if (!t) continue;
+    if (skipPatterns.test(t)) continue;
+    cleaned.add(t);
+  }
+
+  // Ensure the canonical category is in tags
+  cleaned.add(category);
+
+  // Ensure "Sale" tag if any listing has a discount
+  // (handled at product level, not here)
+
+  return [...cleaned];
 }
 
 // --- Main Migration ---
@@ -154,6 +202,7 @@ function migrate() {
 
   // Step 4: Transform and write each product
   const indexEntries = [];
+  const categoryStats = {};
 
   for (const [productId, items] of productMap) {
     // Pick the item with the richest metadata as base
@@ -174,6 +223,10 @@ function migrate() {
     const bestName = items
       .map(i => cleanName(i.name))
       .reduce((a, b) => b.length > a.length ? b : a);
+
+    // Determine category from ALL items in the group
+    const category = determineCategory(items);
+    categoryStats[category] = (categoryStats[category] || 0) + 1;
 
     // Build listings
     const listings = items.map(item => {
@@ -212,13 +265,16 @@ function migrate() {
 
     const image = upgradeImageUrl(base.image || '');
 
+    // Clean and normalize tags
+    const tags = cleanTags(items, category);
+
     const product = {
       productId,
       name: bestName,
       brand: base.brand || '',
       colorway: bestColorway || 'TBD',
-      category: determineCategory(base),
-      tags: [...new Set(items.flatMap(i => i.tags || []))],
+      category,
+      tags,
       image,
       originalImage: bestOriginalImage,
       imageStatus: image ? 'ok' : 'missing',
@@ -265,6 +321,7 @@ function migrate() {
   console.log(`  Index entries: ${indexEntries.length}`);
   console.log(`  Merged duplicates: ${validPicks.length - productMap.size}`);
   console.log(`  Removed Access Denied: ${picks.length - validPicks.length}`);
+  console.log(`  Categories: ${JSON.stringify(categoryStats)}`);
 }
 
 migrate();
