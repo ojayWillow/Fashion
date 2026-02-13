@@ -1,8 +1,11 @@
 /**
  * FASHION. — Catalog Page
  * ========================
- * Loads inventory data + picks, renders product grid with filters.
- * Reuses pick-card markup from sales page for consistency.
+ * Loads product data from the new product-centric data model
+ * (data/index.json + data/products/*.json) and renders the
+ * product grid with filters.
+ *
+ * Part of #5 — Data Architecture migration (Step 5)
  */
 
 (function () {
@@ -11,6 +14,7 @@
   // ===== STATE =====
   let allProducts = [];
   let filtered = [];
+  let storeMetadata = {}; // slug -> { name, flag, ... }
   const filters = { category: [], brand: [], store: [], size: [], search: '' };
   let sortMode = 'newest';
 
@@ -28,75 +32,98 @@
   const activeChips = document.getElementById('activeChips');
   const clearAllBtn = document.getElementById('clearAll');
 
+  // ===== HELPERS =====
+  function formatPrice(priceObj) {
+    if (!priceObj || !priceObj.amount) return '';
+    const symbols = { EUR: '€', GBP: '£', USD: '$' };
+    const sym = symbols[priceObj.currency] || priceObj.currency + ' ';
+    return `${sym}${priceObj.amount}`;
+  }
+
+  function bestListing(product) {
+    if (!product.listings || product.listings.length === 0) return null;
+    const available = product.listings.filter(l => l.available);
+    const pool = available.length > 0 ? available : product.listings;
+    return pool.reduce((best, l) =>
+      (l.salePrice && l.salePrice.amount > 0 && (!best.salePrice || l.salePrice.amount < best.salePrice.amount)) ? l : best
+    );
+  }
+
+  function allSizes(product) {
+    if (!product.listings) return [];
+    const s = new Set();
+    product.listings.forEach(l => (l.sizes || []).forEach(sz => s.add(sz)));
+    return [...s];
+  }
+
+  function allStoreNames(product) {
+    if (!product.listings) return [];
+    return product.listings.map(l => storeDisplayName(l.store));
+  }
+
+  function storeDisplayName(slug) {
+    if (storeMetadata[slug]) return storeMetadata[slug].name;
+    // Fallback: capitalize slug
+    return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function storeFlag(slug) {
+    if (storeMetadata[slug]) return storeMetadata[slug].flag || '🏷️';
+    return '🏷️';
+  }
+
   // ===== LOAD DATA =====
   async function loadData() {
     try {
-      const products = [];
-      const storeSet = new Set();
-
-      // 1. Load inventory files (primary source)
+      // Load store metadata for display names / flags
       try {
-        const indexResp = await fetch('data/catalog-index.json');
-        const index = await indexResp.json();
-
-        for (const store of index.stores) {
-          try {
-            const resp = await fetch(`data/inventory/${store.file}`);
-            const data = await resp.json();
-            if (data.products) {
-              for (const p of data.products) {
-                p._store = data.store;
-                p._storeFlag = data.storeFlag;
-                p._source = 'inventory';
-                products.push(p);
-                storeSet.add(data.store);
-              }
+        const storesResp = await fetch('data/stores.json');
+        const storesData = await storesResp.json();
+        if (storesData.categories) {
+          for (const cat of storesData.categories) {
+            for (const s of cat.stores) {
+              const domain = s.url ? new URL(s.url).hostname.replace('www.', '') : '';
+              const slug = s.name.toLowerCase()
+                .replace(/[^\w\s-]/g, '').replace(/[\s]+/g, '-').replace(/\.$/,'');
+              // Also map by known slugs
+              const knownSlugs = {
+                'END. Clothing': 'end-clothing',
+                'Foot Locker': 'foot-locker',
+                'SNS (Sneakersnstuff)': 'sns',
+                'MR PORTER': 'mr-porter'
+              };
+              const key = knownSlugs[s.name] || slug;
+              storeMetadata[key] = { name: s.name, flag: s.flag, domain };
             }
-          } catch (e) {
-            console.warn(`Could not load ${store.file}:`, e);
           }
         }
       } catch (e) {
-        console.warn('Could not load catalog-index.json:', e);
+        console.warn('Could not load stores.json:', e);
       }
 
-      // 2. Load picks.json (supplementary source)
-      try {
-        const picksResp = await fetch('data/picks.json');
-        const picksData = await picksResp.json();
+      // Load product index
+      const indexResp = await fetch('data/index.json');
+      const indexData = await indexResp.json();
 
-        if (picksData.picks) {
-          for (const p of picksData.picks) {
-            // Normalize field names to match catalog format
-            p._store = p._store || p.store || 'Unknown';
-            p._storeFlag = p._storeFlag || p.storeFlag || '🏷️';
-            p._source = 'picks';
-
-            // Infer category from tags if not set
-            if (!p.category) {
-              const tags = (p.tags || []).map(t => t.toLowerCase());
-              if (tags.includes('sneakers')) p.category = 'sneakers';
-              else if (tags.includes('hoodie') || tags.includes('jacket') || tags.includes('clothing')) p.category = 'clothing';
-              else if (tags.includes('shorts')) p.category = 'clothing';
-              else if (tags.includes('kids')) p.category = 'kids';
-              else p.category = 'sneakers'; // default for this dataset
-            }
-
-            // Avoid duplicates — skip if same styleCode already in inventory
-            const isDupe = products.some(existing =>
-              existing.styleCode && p.styleCode && existing.styleCode === p.styleCode
-            );
-            if (!isDupe) {
-              products.push(p);
-              storeSet.add(p._store);
-            }
-          }
+      // For the catalog grid we need full product data (with listings)
+      // Load each product file
+      const products = [];
+      for (const entry of indexData.products) {
+        try {
+          const resp = await fetch(`data/products/${entry.productId}.json`);
+          const product = await resp.json();
+          products.push(product);
+        } catch (e) {
+          console.warn(`Could not load product ${entry.productId}:`, e);
         }
-      } catch (e) {
-        console.warn('Could not load picks.json:', e);
       }
 
       allProducts = products;
+
+      // Count unique stores
+      const storeSet = new Set();
+      allProducts.forEach(p => (p.listings || []).forEach(l => storeSet.add(l.store)));
+
       heroBadge.textContent = `🛍️ ${allProducts.length} PRODUCTS — ${storeSet.size} STORES`;
 
       buildFilters();
@@ -116,7 +143,7 @@
 
     for (const p of allProducts) {
       // Category
-      const cat = p.category || 'other';
+      const cat = (p.category || 'Other').toLowerCase();
       categories[cat] = (categories[cat] || 0) + 1;
 
       // Brand
@@ -124,14 +151,14 @@
         brands[p.brand] = (brands[p.brand] || 0) + 1;
       }
 
-      // Store
-      const store = p._store || 'Unknown';
-      stores[store] = (stores[store] || 0) + 1;
-
-      // Sizes
-      if (p.sizes) {
-        for (const s of p.sizes) sizes.add(s);
+      // Stores (from listings)
+      for (const l of (p.listings || [])) {
+        const name = storeDisplayName(l.store);
+        stores[name] = (stores[name] || 0) + 1;
       }
+
+      // Sizes (from all listings)
+      allSizes(p).forEach(s => sizes.add(s));
     }
 
     renderCheckboxFilter('filterCategory', categories, 'category');
@@ -177,9 +204,8 @@
     const container = document.getElementById(containerId);
     container.innerHTML = '';
 
-    // Sort sizes: numeric first (ascending), then alpha
     const sorted = [...sizesSet].sort((a, b) => {
-      const na = parseFloat(a), nb = parseFloat(b);
+      const na = parseFloat(a.replace(/[^\d.]/g, '')), nb = parseFloat(b.replace(/[^\d.]/g, ''));
       if (!isNaN(na) && !isNaN(nb)) return na - nb;
       if (!isNaN(na)) return -1;
       if (!isNaN(nb)) return 1;
@@ -218,13 +244,13 @@
     filtered = allProducts.filter(p => {
       // Text search
       if (q) {
-        const haystack = `${p.name} ${p.brand} ${p.colorway} ${p._store} ${(p.tags || []).join(' ')}`.toLowerCase();
+        const haystack = `${p.name} ${p.brand} ${p.colorway} ${(p.tags || []).join(' ')} ${allStoreNames(p).join(' ')}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
 
       // Category
       if (filters.category.length > 0) {
-        if (!filters.category.includes(p.category || 'other')) return false;
+        if (!filters.category.includes((p.category || 'Other').toLowerCase())) return false;
       }
 
       // Brand
@@ -232,14 +258,16 @@
         if (!filters.brand.includes(p.brand)) return false;
       }
 
-      // Store
+      // Store — match if ANY listing is from a selected store
       if (filters.store.length > 0) {
-        if (!filters.store.includes(p._store)) return false;
+        const productStores = allStoreNames(p);
+        if (!filters.store.some(s => productStores.includes(s))) return false;
       }
 
-      // Size
+      // Size — match if ANY listing has the selected size
       if (filters.size.length > 0) {
-        if (!p.sizes || !filters.size.some(s => p.sizes.includes(s))) return false;
+        const productSizes = allSizes(p);
+        if (!filters.size.some(s => productSizes.includes(s))) return false;
       }
 
       return true;
@@ -255,29 +283,26 @@
     filtered.sort((a, b) => {
       switch (sortMode) {
         case 'newest':
-          return (b.addedDate || b.id || '').toString().localeCompare((a.addedDate || a.id || '').toString());
-        case 'price-asc':
-          return priceNum(a.salePrice) - priceNum(b.salePrice);
-        case 'price-desc':
-          return priceNum(b.salePrice) - priceNum(a.salePrice);
-        case 'discount':
-          return discountNum(b.discount) - discountNum(a.discount);
+          return (b.productId || '').localeCompare(a.productId || '');
+        case 'price-asc': {
+          const pa = bestListing(a), pb = bestListing(b);
+          return ((pa && pa.salePrice) ? pa.salePrice.amount : 99999) - ((pb && pb.salePrice) ? pb.salePrice.amount : 99999);
+        }
+        case 'price-desc': {
+          const pa = bestListing(a), pb = bestListing(b);
+          return ((pb && pb.salePrice) ? pb.salePrice.amount : 0) - ((pa && pa.salePrice) ? pa.salePrice.amount : 0);
+        }
+        case 'discount': {
+          const da = Math.max(...(a.listings || []).map(l => l.discount || 0));
+          const db = Math.max(...(b.listings || []).map(l => l.discount || 0));
+          return db - da;
+        }
         case 'name':
           return a.name.localeCompare(b.name);
         default:
           return 0;
       }
     });
-  }
-
-  function priceNum(str) {
-    if (!str) return 99999;
-    return parseFloat(str.replace(/[^\d.]/g, '')) || 99999;
-  }
-
-  function discountNum(str) {
-    if (!str) return 0;
-    return parseInt(str.replace(/[^\d]/g, '')) || 0;
   }
 
   // ===== RENDER =====
@@ -306,12 +331,27 @@
   }
 
   function buildCard(p, delay) {
-    const sizesHtml = (p.sizes || []).slice(0, 8).map(s =>
+    const listing = bestListing(p);
+    const sizes = allSizes(p);
+    const storeName = listing ? storeDisplayName(listing.store) : '';
+    const flag = listing ? storeFlag(listing.store) : '🏷️';
+    const url = listing ? listing.url : '';
+
+    const salePriceStr = listing ? formatPrice(listing.salePrice) : '';
+    const retailPriceStr = listing ? formatPrice(listing.retailPrice) : '';
+    const discountStr = listing && listing.discount > 0 ? `-${listing.discount}%` : '';
+
+    // Multi-store badge
+    const storeCount = (p.listings || []).length;
+    const multiStoreBadge = storeCount > 1
+      ? `<div class="pick-card-multi-store">${storeCount} stores</div>` : '';
+
+    const sizesHtml = sizes.slice(0, 8).map(s =>
       `<span class="pick-size">${s}</span>`
     ).join('');
 
-    const moreSizes = (p.sizes || []).length > 8
-      ? `<span class="pick-size">+${p.sizes.length - 8}</span>` : '';
+    const moreSizes = sizes.length > 8
+      ? `<span class="pick-size">+${sizes.length - 8}</span>` : '';
 
     const tagsHtml = (p.tags || []).map(t =>
       `<span class="pick-tag">${t}</span>`
@@ -322,19 +362,20 @@
       : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${esc(p.brand ? p.brand[0] : '?')}</div><div class="pick-img-fallback-text">No image</div></div>`;
 
     return `
-      <div class="pick-card" data-url="${esc(p.url)}" data-store="${esc(p._store || '')}" style="animation-delay:${delay}s">
+      <div class="pick-card" data-url="${esc(url)}" data-store="${esc(storeName)}" data-product-id="${esc(p.productId)}" style="animation-delay:${delay}s">
         <div class="pick-card-image">
-          ${p.discount && p.discount !== '0%' ? `<div class="pick-card-discount">${esc(p.discount)}</div>` : ''}
-          <div class="pick-card-store">${esc(p._storeFlag || '🏷️')} ${esc(p._store || 'Store')}</div>
+          ${discountStr ? `<div class="pick-card-discount">${esc(discountStr)}</div>` : ''}
+          <div class="pick-card-store">${esc(flag)} ${esc(storeName)}</div>
+          ${multiStoreBadge}
           ${imgHtml}
         </div>
         <div class="pick-card-body">
           ${p.brand ? `<div class="pick-card-brand">${esc(p.brand)}</div>` : ''}
           <div class="pick-card-name">${esc(p.name)}</div>
-          ${p.colorway && !p.colorway.includes('Kies een') ? `<div class="pick-card-colorway">${esc(p.colorway)}</div>` : ''}
+          ${p.colorway && p.colorway !== 'TBD' ? `<div class="pick-card-colorway">${esc(p.colorway)}</div>` : ''}
           <div class="pick-card-pricing">
-            ${p.salePrice ? `<span class="pick-price-sale">${esc(p.salePrice)}</span>` : ''}
-            ${p.retailPrice && p.retailPrice !== p.salePrice ? `<span class="pick-price-retail">${esc(p.retailPrice)}</span>` : ''}
+            ${salePriceStr ? `<span class="pick-price-sale">${esc(salePriceStr)}</span>` : ''}
+            ${retailPriceStr && retailPriceStr !== salePriceStr ? `<span class="pick-price-retail">${esc(retailPriceStr)}</span>` : ''}
           </div>
           ${sizesHtml ? `
             <div class="pick-card-sizes-label">Available sizes</div>
@@ -375,7 +416,6 @@
     const idx = arr.indexOf(val);
     if (idx > -1) arr.splice(idx, 1);
 
-    // Update sidebar UI
     if (key === 'size') {
       document.querySelectorAll('#filterSize .size-btn').forEach(btn => {
         if (btn.textContent === val) btn.classList.remove('active');
