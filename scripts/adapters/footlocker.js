@@ -2,26 +2,35 @@
  * FASHION. — Foot Locker Adapter
  * ================================
  * Store: footlocker.nl, footlocker.co.uk, footlocker.de, etc.
- * Method: Patchright (anti-bot bypass required)
- * JSON-LD: Product (sometimes missing or minimal)
+ * Method: Patchright (Cloudflare)
+ * JSON-LD: Product with multiple Offer objects (one per size)
  *
- * Foot Locker quirks:
- * - Heavy anti-bot protection → requires Patchright (not Playwright)
- * - JSON-LD is often incomplete or missing entirely
- * - Must fall back to DOM selectors for price, sizes, name
- * - Sizes displayed in EU format in the size grid
- * - Sale/retail prices in separate DOM elements
- * - Product images from i8.amplience.net CDN
- * - Style code in the URL or a data attribute
- * - Cookie consent modal always present
- * - Regional domains: .nl, .co.uk, .de, .fr, .com
+ * VERIFIED via recon (2026-02-13):
+ * - Anti-bot: Cloudflare (light) → Patchright bypasses in 2s
+ * - JSON-LD: Product type with offers[] array
+ *   - Each offer has SKU suffix as size: "314217718304-39.5"
+ *   - offers.price = sale price (or full price if not on sale)
+ *   - offers.availability = InStock/OutOfStock
+ *   - brand is a plain string, not an object
+ * - Retail price: NOT in JSON-LD → DOM only:
+ *     <span class="font-caption line-through">€ 129,99</span>
+ *     (Tailwind classes, not semantic names)
+ *     Located inside parent with class containing "ProductPrice"
+ * - Sale price in DOM:
+ *     <span class="font-medium text-sale_red">€ 60,00</span>
+ * - Discount badge: "Bespaar € 69" in ProductDetails-header-V2-metadata
+ * - Sizes: JSON-LD offers[].sku suffix (already EU format)
+ *   Also in DOM as <a class="size-box"> elements
+ * - Image: JSON-LD image (images.footlocker.com/is/image/EBFL2/...)
+ * - No H1 in DOM, no data-testid for prices
+ * - Model number in JSON-LD: ld.model (e.g. "194969")
  */
 
 const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, calcDiscount, normalizeSizes, isValidSize, detectCurrency } = require('../lib/helpers');
 
 /**
  * DOM-based extraction for Foot Locker.
- * Called when JSON-LD is insufficient.
+ * Primarily needed for retail price (not in JSON-LD).
  */
 async function extractFromDOM(page) {
   return await page.evaluate(() => {
@@ -31,85 +40,42 @@ async function extractFromDOM(page) {
       sizes: [], styleCode: '', colorway: '',
     };
 
-    // Product name
-    const nameEl = document.querySelector('[data-testid="product-name"]')
-      || document.querySelector('h1.ProductName')
-      || document.querySelector('h1[class*="ProductName"]')
-      || document.querySelector('h1');
-    if (nameEl) result.name = nameEl.textContent.trim();
-
-    // Brand
-    const brandEl = document.querySelector('[data-testid="product-brand"]')
-      || document.querySelector('.ProductBrand')
-      || document.querySelector('span[class*="ProductBrand"]');
-    if (brandEl) result.brand = brandEl.textContent.trim();
-
-    // Prices
-    const salePriceEl = document.querySelector('[data-testid="product-price"]')
-      || document.querySelector('.ProductPrice--sale')
-      || document.querySelector('[class*="ProductPrice"][class*="sale"]')
-      || document.querySelector('.ProductPrice');
-    if (salePriceEl) result.salePrice = salePriceEl.textContent.trim();
-
-    const retailPriceEl = document.querySelector('[data-testid="product-original-price"]')
-      || document.querySelector('.ProductPrice--original')
-      || document.querySelector('[class*="ProductPrice"][class*="original"]')
-      || document.querySelector('.ProductPrice--crossed')
-      || document.querySelector('s[class*="price"]')
-      || document.querySelector('del');
-    if (retailPriceEl) result.retailPrice = retailPriceEl.textContent.trim();
-
-    // Sizes — from size grid buttons
-    const sizeButtons = document.querySelectorAll(
-      '[data-testid="size-selector"] button:not([disabled]),' +
-      '.SizeSelector button:not([disabled]),' +
-      '[class*="SizeSelector"] button:not([disabled]),' +
-      '.ProductSize button:not([disabled])'
-    );
-    for (const btn of sizeButtons) {
-      const text = btn.textContent.trim();
-      if (text && text.length < 10) result.sizes.push(text);
-    }
-
-    // If no sizes from buttons, try list items
-    if (result.sizes.length === 0) {
-      const sizeItems = document.querySelectorAll(
-        '[class*="size"] li:not(.unavailable),' +
-        '[class*="Size"] li:not(.unavailable)'
-      );
-      for (const item of sizeItems) {
-        const text = item.textContent.trim();
-        if (text && text.length < 10) result.sizes.push(text);
+    // 1. Retail price — span with line-through (Tailwind class)
+    //    First one in the product details area is the main product retail price
+    //    (Others may be from recommended products below)
+    const allLineThrough = document.querySelectorAll('span.line-through');
+    for (const el of allLineThrough) {
+      const text = el.textContent.trim();
+      // Must contain a currency symbol and be in the product details area
+      if (text.includes('€') || text.includes('£') || text.includes('$')) {
+        // Check if it's in the main product area (not a product card)
+        const parent = el.closest('[class*="ProductDetails"], [class*="ProductPrice"]');
+        const inCard = el.closest('[class*="ProductCard"]');
+        if (!inCard) {
+          result.retailPrice = text;
+          break;
+        }
       }
     }
 
-    // Image
-    const imgEl = document.querySelector('[data-testid="product-image"] img')
-      || document.querySelector('.ProductImage img')
-      || document.querySelector('[class*="ProductGallery"] img')
-      || document.querySelector('.pdp-gallery img');
-    if (imgEl) result.image = imgEl.src || imgEl.getAttribute('data-src') || '';
-    if (!result.image) {
-      const ogImg = document.querySelector('meta[property="og:image"]');
-      if (ogImg) result.image = ogImg.getAttribute('content') || '';
+    // 2. Sale price from DOM (backup — JSON-LD usually has this)
+    const saleEl = document.querySelector('span.text-sale_red, [class*="text-sale"]');
+    if (saleEl) {
+      result.salePrice = saleEl.textContent.trim();
     }
 
-    // Style code from URL or breadcrumb
-    const url = window.location.href;
-    const codeMatch = url.match(/\/([A-Z0-9]{5,15})(?:\.html)?(?:\?|$)/i);
-    if (codeMatch) result.styleCode = codeMatch[1];
-
-    // Description
-    const descEl = document.querySelector('[data-testid="product-description"]')
-      || document.querySelector('.ProductDetails__description')
-      || document.querySelector('[class*="description"]');
-    if (descEl) result.description = descEl.textContent.trim().substring(0, 300);
-
-    // Colorway
-    const colorEl = document.querySelector('[data-testid="product-color"]')
-      || document.querySelector('.ProductColor')
-      || document.querySelector('[class*="ProductColor"]');
+    // 3. Colorway
+    const colorEl = document.querySelector('[class*="ProductColor"], [data-testid="product-color"]');
     if (colorEl) result.colorway = colorEl.textContent.trim();
+
+    // 4. Sizes from DOM (backup — JSON-LD offers[] is primary)
+    const sizeLinks = document.querySelectorAll('a.size-box');
+    for (const link of sizeLinks) {
+      const text = link.textContent.trim();
+      if (text && /^\d{2,3}(\.5)?$/.test(text)) {
+        result.sizes.push(text);
+      }
+    }
 
     return result;
   });
@@ -117,18 +83,22 @@ async function extractFromDOM(page) {
 
 /**
  * Post-process Foot Locker data.
- * Merges JSON-LD + DOM extraction for best coverage.
  */
 function postProcess(raw, store) {
   const brand = raw.brand || detectBrand(raw.name);
-  const domain = store.slug || '';
-  const currency = raw.currency || store.currency || detectCurrency(domain);
+  const currency = raw.currency || store.currency || 'EUR';
   const salePriceNum = parsePrice(raw.salePrice);
   const retailPriceNum = parsePrice(raw.retailPrice);
   const discount = calcDiscount(retailPriceNum, salePriceNum);
 
-  // Foot Locker sizes are already EU format
-  const validSizes = (raw.sizes || []).filter(s => isValidSize(s));
+  // Foot Locker sizes are already EU format from JSON-LD
+  // Prefix with "EU " if they're bare numbers >= 35
+  const prefixedSizes = (raw.sizes || []).map(s => {
+    const num = parseFloat(s);
+    if (!isNaN(num) && num >= 35) return 'EU ' + s;
+    return s;
+  });
+  const validSizes = prefixedSizes.filter(s => isValidSize(s));
   const normalizedSizes = normalizeSizes(validSizes, 'Foot Locker', raw.name);
 
   const tags = detectTags(raw.name, brand);

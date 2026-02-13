@@ -69,8 +69,7 @@ process.on('SIGINT', () => { closeBrowsers().then(() => process.exit()); });
 
 /**
  * Wait for Cloudflare Turnstile to resolve.
- * Checks page title — Cloudflare shows "Just a moment..." during challenge.
- * Verified: SNS, END. both use this pattern.
+ * Verified: SNS, END., Foot Locker all show "Just a moment..." during challenge.
  */
 async function waitForCloudflare(page, maxWait = 30000) {
   const start = Date.now();
@@ -103,7 +102,6 @@ async function openPage(url, store) {
     log(`Page load timeout, continuing...`);
   }
 
-  // If using Patchright, wait for Cloudflare to resolve
   if (usePatchright) {
     const passed = await waitForCloudflare(page);
     if (!passed) {
@@ -214,35 +212,54 @@ async function extractJsonLd(page) {
         // Product (END., Foot Locker, generic)
         if (ld['@type'] === 'Product') {
           if (!result.name && ld.name) result.name = ld.name;
-          if (ld.brand) result.brand = typeof ld.brand === 'string' ? ld.brand : (ld.brand.name || '');
+
+          // Brand: can be string (Foot Locker) or object (END.)
+          if (ld.brand) {
+            if (typeof ld.brand === 'string') {
+              result.brand = ld.brand;
+            } else if (ld.brand.name) {
+              result.brand = ld.brand.name;
+            }
+          }
+
           if (ld.sku) result.styleCode = ld.sku;
+          if (ld.model) result.model = ld.model;
+
           if (ld.image) {
             const img = Array.isArray(ld.image) ? ld.image[0] : ld.image;
             result.image = typeof img === 'string' ? img : (img.url || '');
           }
           if (ld.description) result.description = (ld.description || '').substring(0, 300);
 
+          // Offers: single or array
           if (ld.offers) {
             const offers = Array.isArray(ld.offers) ? ld.offers : [ld.offers];
+
+            // Price from first offer
             if (offers[0]) {
               if (offers[0].price) result.salePrice = String(offers[0].price);
               if (offers[0].priceCurrency) result.currency = offers[0].priceCurrency;
             }
-            // Try sizes from multiple offers
+
+            // Sizes from multiple offers (Foot Locker pattern)
+            // Each offer has sku like "314217718304-39.5" and availability
             if (offers.length > 1) {
-              const inStock = [];
+              const inStockSizes = [];
               for (const offer of offers) {
-                const sku = offer.sku || '';
-                const size = sku.split('-').pop();
-                if (offer.availability && offer.availability.includes('InStock') && size) {
-                  inStock.push(size);
+                if (offer.availability && offer.availability.includes('InStock') && offer.sku) {
+                  // Extract size from SKU suffix: "314217718304-39.5" → "39.5"
+                  const parts = offer.sku.split('-');
+                  const lastPart = parts[parts.length - 1];
+                  // Validate it looks like a size (number between 4 and 55)
+                  const num = parseFloat(lastPart);
+                  if (!isNaN(num) && num >= 4 && num <= 55) {
+                    inStockSizes.push(lastPart);
+                  }
                 }
               }
-              if (inStock.length > 0) result.sizes = inStock;
+              if (inStockSizes.length > 0) result.sizes = inStockSizes;
             }
           }
-          // Don't break — there might be a ProductGroup later
-          // But if we got a name, mark that we found Product type
           if (result.name) continue;
         }
       }
