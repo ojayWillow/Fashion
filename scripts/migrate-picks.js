@@ -84,14 +84,19 @@ function storeSlug(storeName) {
  * Determine product category from ALL items in a merged group.
  * Checks names, tags, and descriptions across every item.
  * 
+ * Strategy: Explicit clothing/accessories keywords ALWAYS win over
+ * sneaker-context. Sneaker-context is only used to override ambiguous
+ * words (like "shorts" in colorway names such as "Lucky Shorts").
+ * 
  * Priority order:
- *   1. If name contains "sneaker(s)" → Sneakers (explicit override)
- *   2. Sneaker-context override: if name matches known sneaker patterns
- *      (e.g. "Air Jordan ... Retro"), clothing words in colorway names
- *      are ignored
- *   3. Accessories check (cap, hat, belt, bag, etc.)
- *   4. Clothing check (jacket, hoodie, pants, etc.)
- *   5. Default → Sneakers
+ *   1. Name contains "sneaker(s)" → Sneakers (explicit product type)
+ *   2. Accessories keywords → Accessories
+ *   3. Explicit clothing keywords (jacket, hoodie, hood, puffer, etc.)
+ *      → Clothing (ALWAYS wins, even if name also has "Air Jordan")
+ *   4. Ambiguous clothing words ("shorts", "top") — only count as
+ *      Clothing if NOT inside a sneaker colorway context
+ *   5. Tag-based fallback for 'clothing'/'accessories'
+ *   6. Default → Sneakers
  * 
  * Categories: Sneakers (default, includes all footwear), Clothing, Accessories
  */
@@ -107,40 +112,49 @@ function determineCategory(items) {
     return 'Sneakers';
   }
 
-  // 2. Sneaker-context override: if the name clearly indicates a shoe model,
-  //    treat it as Sneakers regardless of clothing-like words in colorway names.
-  //    E.g. "Air Jordan 3 Retro "Lucky Shorts"" → Sneakers, not Clothing.
-  const sneakerContextPattern = /\b(air jordan|jordan \d|retro\b.*\b(og|qs|se|prm|low|mid|high)|dunk\b|air force|air max|yeezy|spizike)\b/i;
-  if (sneakerContextPattern.test(allNames)) {
-    return 'Sneakers';
-  }
-
-  // 3. Accessories patterns (checked BEFORE clothing so "Baseball Cap" beats "Cotton-Jersey")
+  // 2. Accessories patterns (checked BEFORE clothing so "Baseball Cap" beats "Cotton-Jersey")
   const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote|holder)\b/i;
   if (accessoriesPattern.test(allNames) || allTags.includes('accessories')) {
     return 'Accessories';
   }
 
-  // 4. Clothing patterns
-  //    - "top" requires negative lookbehind for "-" to avoid "high-top"
-  //    - "shorts" requires NOT being inside quotes (colorway names like "Lucky Shorts")
-  //    - "tee" requires NOT being followed by " holder" (golf tee holder)
-  const clothingPattern = /\b(jacket|puffer|hoodie|hoody|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
-  
-  // Check "top" separately to exclude "high-top"
-  const topPattern = /(?<![-])\btop\b/i;
-  
-  // Check "shorts" separately to exclude colorway-context shorts (inside quotes)
-  // Match ALL quote variants: straight quotes, smart quotes (U+201C/U+201D, U+2018/U+2019)
-  const anyQuote = /["'\u201C\u201D\u2018\u2019\u0022\u0027]/;
-  const shortsIsColorway = /["'\u201C\u201D\u2018\u2019]\s*\w*\bshorts?\b|\bshorts?\b\w*\s*["'\u201C\u201D\u2018\u2019]/i.test(allNames);
-  const shortsIsClothing = /\bshorts?\b/i.test(allNames) && !shortsIsColorway;
+  // 3. Explicit clothing keywords — these ALWAYS mean Clothing, no exceptions.
+  //    Even "Air Jordan x Travis Scott Waxed Jacket" → Clothing.
+  //    Even "adidas Satin Hood x Wales Bonner" → Clothing.
+  const explicitClothingPattern = /\b(jacket|puffer|hoodie|hoody|hood|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
 
-  if (clothingPattern.test(allNames) || topPattern.test(allNames) || shortsIsClothing || allTags.includes('clothing')) {
+  // Check "top" separately to exclude "high-top"
+  const topIsClothing = /(?<![-])\btop\b/i.test(allNames);
+
+  if (explicitClothingPattern.test(allNames) || topIsClothing) {
     return 'Clothing';
   }
 
-  // 5. Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
+  // 4. Ambiguous clothing words: "short(s)"
+  //    Only counts as Clothing if NOT a sneaker colorway name.
+  //    "Jordan Rare Air Fleece Short" → Clothing (no quotes, no sneaker model)
+  //    "Air Jordan 3 Retro \"Lucky Shorts\"" → Sneakers (colorway in quotes)
+  if (/\bshorts?\b/i.test(allNames)) {
+    // Check if "short(s)" appears inside any kind of quotes (colorway context)
+    // Match all quote variants: straight, smart/curly (U+201C/U+201D/U+2018/U+2019)
+    const quotesAroundShorts = /[\u201C\u201D\u2018\u2019"'][^"'\u201C\u201D\u2018\u2019]*\bshorts?\b[^"'\u201C\u201D\u2018\u2019]*[\u201C\u201D\u2018\u2019"']/i.test(allNames);
+
+    // Also check sneaker-context: if the name has sneaker model patterns AND
+    // "shorts" is likely a colorway name, not the product type
+    const sneakerContext = /\b(air jordan|jordan \d|retro|dunk|air force|air max|yeezy|spizike)\b/i.test(allNames);
+
+    if (!quotesAroundShorts && !sneakerContext) {
+      return 'Clothing';
+    }
+    // If shorts is in quotes OR in sneaker context, fall through to default (Sneakers)
+  }
+
+  // 5. Tag-based fallback: if tags explicitly say 'clothing', trust that
+  if (allTags.includes('clothing')) {
+    return 'Clothing';
+  }
+
+  // 6. Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
   return 'Sneakers';
 }
 
