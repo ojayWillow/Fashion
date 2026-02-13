@@ -18,6 +18,15 @@ const PICKS_PATH = path.join(__dirname, '..', 'data', 'picks.json');
 const PRODUCTS_DIR = path.join(__dirname, '..', 'data', 'products');
 const INDEX_PATH = path.join(__dirname, '..', 'data', 'index.json');
 
+// --- Category Overrides ---
+// Manual overrides for products where name-based detection fails.
+// Keyed by productId (styleCode or slug). Checked FIRST.
+const CATEGORY_OVERRIDES = {
+  'CT8532-101': 'Sneakers',   // Air Jordan 3 Retro "Lucky Shorts" — colorway name, not clothing
+  'JW1110':     'Clothing',   // adidas Satin Hood x Wales Bonner — it's a hood/top garment
+  'DZ5474-010': 'Clothing',   // Air Jordan x Travis Scott Waxed Jacket
+};
+
 // --- Helpers ---
 function slugify(text) {
   return text.toLowerCase().trim()
@@ -52,20 +61,15 @@ function extractStyleCode(name) {
 function cleanDescription(desc) {
   if (!desc) return '';
   let clean = desc.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-  // Filter out SNS placeholder descriptions
   if (clean.startsWith('Find your new favourite pair')) return '';
   return clean.length > 300 ? clean.slice(0, 297) + '...' : clean;
 }
 
 function cleanName(name) {
   let n = name.replace(/&#39;/g, "'").replace(/&amp;/g, '&');
-  // Remove style code suffix
   n = n.replace(/\s*-\s*[A-Za-z0-9][\w-]+$/, '').trim();
-  // Remove duplicate brand prefix
   n = n.replace(/^(Jordan|Nike|adidas|Puma|New Balance)\s+\1\s+/i, '$1 ');
-  // Remove sub-brand prefixes
   n = n.replace(/^(adidas|Nike)\s+(Originals|Sportswear|Basketball|Running)\s+/i, '$1 ');
-  // Remove Wmns prefix
   n = n.replace(/\bWmns\s+/g, '');
   return n;
 }
@@ -80,69 +84,65 @@ function storeSlug(storeName) {
   return map[storeName] || slugify(storeName);
 }
 
-// Sneaker-context: name clearly describes a shoe model, not clothing/accessories.
-// Used to prevent colorway names like "Lucky Shorts" from triggering Clothing.
-const SNEAKER_CONTEXT = /\b(air jordan|jordan \d|retro|dunk|air force|air max|yeezy|spizike)\b/i;
-
 /**
  * Determine product category from ALL items in a merged group.
  *
- * Strategy:
- *   - Explicit product-type words in the name are the strongest signal.
- *   - "sneaker(s)" in name → always Sneakers.
- *   - Explicit clothing words (jacket, hoodie, hood, puffer, jeans, etc.)
- *     → always Clothing, even if the brand is Jordan/Nike.
- *   - Ambiguous words ("shorts", "top") → Clothing ONLY when there is
- *     no sneaker-context (model names like Retro, Dunk, Air Max …).
- *   - Tags are a weak signal and are also gated by sneaker-context.
- *   - Default → Sneakers (covers all other footwear).
+ * Priority:
+ *   0. Manual override by productId (CATEGORY_OVERRIDES)
+ *   1. Name contains "sneaker(s)" → Sneakers
+ *   2. Accessories keywords → Accessories
+ *   3. Explicit clothing keywords (jacket, hoodie, hood, etc.) → Clothing
+ *   4. "top" (excluding "high-top") → Clothing
+ *   5. "short(s)" without sneaker context → Clothing
+ *   6. Tag fallback "clothing" without sneaker context → Clothing
+ *   7. Default → Sneakers
  *
  * Categories: Sneakers | Clothing | Accessories
  */
-function determineCategory(items) {
+function determineCategory(productId, items) {
+  // 0. Manual override — bulletproof for known edge cases
+  if (CATEGORY_OVERRIDES[productId]) {
+    return CATEGORY_OVERRIDES[productId];
+  }
+
   const allNames = items.map(i => (i.name || '').toLowerCase()).join(' ');
   const allTags  = items.flatMap(i => i.tags || []).map(t => t.toLowerCase()).join(' ');
 
-  const hasSneakerContext = SNEAKER_CONTEXT.test(allNames);
+  const sneakerContext = /\b(air jordan|jordan \d|retro|dunk|air force|air max|yeezy|spizike)\b/i.test(allNames);
 
-  // 1. Explicit sneaker in name → Sneakers
+  // 1. Explicit sneaker in name
   if (/\bsneakers?\b/i.test(allNames)) {
     return 'Sneakers';
   }
 
-  // 2. Accessories (before clothing so "Baseball Cap" wins over "Cotton-Jersey")
+  // 2. Accessories
   const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote|holder)\b/i;
   if (accessoriesPattern.test(allNames) || allTags.includes('accessories')) {
     return 'Accessories';
   }
 
-  // 3. Explicit clothing keywords → ALWAYS Clothing, no exceptions.
-  //    These words unambiguously describe a garment.
+  // 3. Explicit clothing keywords — always Clothing
   const explicitClothing = /\b(jacket|puffer|hoodie|hoody|hood|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
   if (explicitClothing.test(allNames)) {
     return 'Clothing';
   }
 
-  // 4. "top" — Clothing, but exclude "high-top" (sneaker term)
+  // 4. "top" excluding "high-top"
   if (/(?<![-])\btop\b/i.test(allNames)) {
     return 'Clothing';
   }
 
-  // 5. "short(s)" — ambiguous. Only Clothing when NOT in sneaker context.
-  //    "Jordan Rare Air Fleece Short"  → no sneaker-context → Clothing ✓
-  //    "Air Jordan 3 Retro Lucky Shorts" → has "retro" context → Sneakers ✓
-  if (/\bshorts?\b/i.test(allNames) && !hasSneakerContext) {
+  // 5. "short(s)" — only Clothing without sneaker context
+  if (/\bshorts?\b/i.test(allNames) && !sneakerContext) {
     return 'Clothing';
   }
 
-  // 6. Tag fallback — only when there is no sneaker-context in the name.
-  //    Prevents tags like ["Sneakers","Jordan","Sale","Clothing"] from
-  //    pulling a sneaker back into Clothing.
-  if (allTags.includes('clothing') && !hasSneakerContext) {
+  // 6. Tag fallback — only without sneaker context
+  if (allTags.includes('clothing') && !sneakerContext) {
     return 'Clothing';
   }
 
-  // 7. Default → Sneakers (sandals, boots, loafers, slides, etc.)
+  // 7. Default
   return 'Sneakers';
 }
 
@@ -154,10 +154,6 @@ function upgradeImageUrl(url) {
   return url;
 }
 
-/**
- * Score an item by metadata richness. Higher = more complete.
- * Used to pick the best "base" item when merging duplicates.
- */
 function metadataScore(item) {
   let score = 0;
   const desc = cleanDescription(item.description);
@@ -171,9 +167,6 @@ function metadataScore(item) {
   return score;
 }
 
-/**
- * Clean up tags: normalize and deduplicate.
- */
 function cleanTags(items, category) {
   const raw = items.flatMap(i => i.tags || []);
   const cleaned = new Set();
@@ -197,11 +190,9 @@ function migrate() {
   const picks = data.picks;
   console.log(`Found ${picks.length} items`);
 
-  // Step 1: Filter out Access Denied items
   const validPicks = picks.filter(p => p.name !== 'Access Denied');
   console.log(`After removing Access Denied: ${validPicks.length} items`);
 
-  // Step 2: Resolve product IDs and group duplicates
   const productMap = new Map();
 
   for (const pick of validPicks) {
@@ -221,12 +212,10 @@ function migrate() {
 
   console.log(`Grouped into ${productMap.size} unique products`);
 
-  // Step 3: Create products directory
   if (!fs.existsSync(PRODUCTS_DIR)) {
     fs.mkdirSync(PRODUCTS_DIR, { recursive: true });
   }
 
-  // Step 4: Transform and write each product
   const indexEntries = [];
   const categoryStats = {};
 
@@ -245,7 +234,7 @@ function migrate() {
       .map(i => cleanName(i.name))
       .reduce((a, b) => b.length > a.length ? b : a);
 
-    const category = determineCategory(items);
+    const category = determineCategory(productId, items);
     categoryStats[category] = (categoryStats[category] || 0) + 1;
 
     const listings = items.map(item => {
