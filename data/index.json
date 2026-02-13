@@ -680,6 +680,23 @@
       ]
     },
     {
+      "productId": "IH0296-400",
+      "name": "Air Jordan 11 Retro \"Rare Air\"",
+      "brand": "Jordan",
+      "category": "Sneakers",
+      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/8-air-jordan-11-retro-rare-air",
+      "bestPrice": {
+        "amount": 165,
+        "currency": "EUR"
+      },
+      "storeCount": 2,
+      "tags": [
+        "Sneakers",
+        "Jordan",
+        "Sale"
+      ]
+    },
+    {
       "productId": "CT8532-101",
       "name": "Air Jordan 3 Retro \"Lucky Shorts\"",
       "brand": "Jordan",
@@ -1309,23 +1326,6 @@
         "currency": "EUR"
       },
       "storeCount": 1,
-      "tags": [
-        "Sneakers",
-        "Jordan",
-        "Sale"
-      ]
-    },
-    {
-      "productId": "IH0296-400",
-      "name": "Jordan Air Jordan 11 Retro",
-      "brand": "Jordan",
-      "category": "Sneakers",
-      "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/130-jordan-air-jordan-11-retro-ih0296-400",
-      "bestPrice": {
-        "amount": 165,
-        "currency": "EUR"
-      },
-      "storeCount": 2,
       "tags": [
         "Sneakers",
         "Jordan",
@@ -2701,6 +2701,6 @@
       ]
     }
   ],
-  "generatedAt": "2026-02-13T05:48:31.745Z",
+  "generatedAt": "2026-02-13T06:09:19.396Z",
   "totalProducts": 164
 }
