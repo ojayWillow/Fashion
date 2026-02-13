@@ -1,4 +1,4 @@
-// MR PORTER recon #2 — Patchright (Access Denied with standard Playwright)
+// MR PORTER recon #3 — Patchright with working product URL
 const { chromium } = require('patchright');
 
 (async () => {
@@ -6,7 +6,7 @@ const { chromium } = require('patchright');
   const page = await browser.newPage();
 
   console.log('Opening MR PORTER with Patchright...');
-  await page.goto('https://www.mrporter.com/en-nl/mens/product/nike/shoes/low-top-sneakers/dunk-low-retro-leather-sneakers/46353151655503704', {
+  await page.goto('https://www.mrporter.com/en-gb/mens/product/loewe/clothing/printed-t-shirts/logo-appliqued-striped-cotton-jersey-t-shirt/46376663162864438', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   });
@@ -16,7 +16,7 @@ const { chromium } = require('patchright');
     await page.waitForTimeout(2000);
     const title = await page.title();
     console.log(`${i * 2}s — title: "${title}"`);
-    if (title !== 'Just a moment...' && !title.includes('Attention') && title !== 'Access Denied') {
+    if (title !== 'Just a moment...' && !title.includes('Attention') && title !== 'Access Denied' && title.length > 5) {
       console.log('Page loaded!');
       await page.waitForTimeout(3000);
       break;
@@ -66,7 +66,7 @@ const { chromium } = require('patchright');
       class: (el.className || '').substring(0, 80),
     }));
 
-    // 5. Size selectors — broad search
+    // 5. Size selectors
     const selects = document.querySelectorAll('select');
     result.selectElements = [...selects].slice(0, 5).map(sel => ({
       name: sel.name || null,
@@ -93,7 +93,8 @@ const { chromium } = require('patchright');
     const sizeBtns = [];
     for (const btn of allBtns) {
       const text = btn.textContent.trim();
-      if (/^(IT\s?|EU\s?|UK\s?|US\s?)?\d{1,2}(\.5)?$/.test(text)) {
+      if (/^(IT\s?|EU\s?|UK\s?|US\s?)?\d{1,2}(\.5)?$/.test(text) ||
+          /^(XXS|XS|S|M|L|XL|XXL)$/i.test(text)) {
         sizeBtns.push({
           tag: btn.tagName,
           text,
