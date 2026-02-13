@@ -72,7 +72,7 @@
       "productId": "43769801097771261P",
       "name": "+ Converse TURBODRK Chuck 70 Zebra-Print Faux Shearling High-Top Sneakers",
       "brand": "RICK OWENS",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/185-converse-turbodrk-chuck-70-zebra-print-faux-shearling-high-t",
       "bestPrice": {
         "amount": 80,
@@ -82,8 +82,7 @@
       "tags": [
         "Sneakers",
         "RICK OWENS",
-        "Sale",
-        "Clothing"
+        "Sale"
       ]
     },
     {
@@ -107,7 +106,7 @@
       "productId": "46376663162871491P",
       "name": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap",
       "brand": "A.P.C.",
-      "category": "Clothing",
+      "category": "Accessories",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/235-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap",
       "bestPrice": {
         "amount": 50,
@@ -117,14 +116,14 @@
       "tags": [
         "A.P.C.",
         "Sale",
-        "Clothing"
+        "Accessories"
       ]
     },
     {
       "productId": "1647597311480910P",
       "name": "+ Off-White Air Force 1 Mid Two-Tone Leather High-Top Sneakers",
       "brand": "NIKE",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/205-off-white-air-force-1-mid-two-tone-leather-high-top-sneakers",
       "bestPrice": {
         "amount": 70,
@@ -134,8 +133,7 @@
       "tags": [
         "Sneakers",
         "NIKE",
-        "Sale",
-        "Clothing"
+        "Sale"
       ]
     },
     {
@@ -159,7 +157,7 @@
       "productId": "30629810019970306P",
       "name": "+ Undercover Dunk Hi 1985 Leather High-Top Sneakers",
       "brand": "NIKE",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/199-undercover-dunk-hi-1985-leather-high-top-sneakers",
       "bestPrice": {
         "amount": 75,
@@ -169,8 +167,7 @@
       "tags": [
         "Sneakers",
         "NIKE",
-        "Sale",
-        "Clothing"
+        "Sale"
       ]
     },
     {
@@ -483,7 +480,7 @@
       "productId": "JW1110",
       "name": "adidas Satin Hood x Wales Bonner",
       "brand": "adidas",
-      "category": "Clothing",
+      "category": "Sneakers",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/134-adidas-originals-wmns-satin-hood-x-wales-bonner-jw1110",
       "bestPrice": {
         "amount": 196,
@@ -493,7 +490,7 @@
       "tags": [
         "adidas",
         "Sale",
-        "Clothing"
+        "Sneakers"
       ]
     },
     {
@@ -1594,7 +1591,7 @@
       "productId": "mr-p-full-grain-leather-golf-ball-and-tee-holder",
       "name": "MR P. Full-Grain Leather Golf Ball and Tee Holder",
       "brand": "",
-      "category": "Clothing",
+      "category": "Accessories",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/237-mr-p-full-grain-leather-golf-ball-and-tee-holder",
       "bestPrice": {
         "amount": 0,
@@ -1603,7 +1600,7 @@
       "storeCount": 1,
       "tags": [
         "Sale",
-        "Clothing"
+        "Accessories"
       ]
     },
     {
@@ -2051,7 +2048,7 @@
       "productId": "FN8196-370",
       "name": "NOCTA Sunset Puffer",
       "brand": "Nike",
-      "category": "Sneakers",
+      "category": "Clothing",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/117-nocta-sunset-puffer-fn8196-370",
       "bestPrice": {
         "amount": 300,
@@ -2061,7 +2058,7 @@
       "tags": [
         "Nike",
         "Sale",
-        "Sneakers"
+        "Clothing"
       ]
     },
     {
@@ -2187,7 +2184,7 @@
       "productId": "polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
       "name": "POLO RALPH LAUREN Logo-Embroidered Striped Cotton-Blend Seersucker Baseball Cap",
       "brand": "",
-      "category": "Clothing",
+      "category": "Accessories",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/229-polo-ralph-lauren-logo-embroidered-striped-cotton-blend-seer",
       "bestPrice": {
         "amount": 0,
@@ -2196,7 +2193,7 @@
       "storeCount": 1,
       "tags": [
         "Sale",
-        "Clothing"
+        "Accessories"
       ]
     },
     {
@@ -2794,6 +2791,6 @@
       ]
     }
   ],
-  "generatedAt": "2026-02-13T06:27:24.239Z",
+  "generatedAt": "2026-02-13T06:31:33.413Z",
   "totalProducts": 164
 }
