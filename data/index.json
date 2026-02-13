@@ -480,7 +480,7 @@
       "productId": "JW1110",
       "name": "adidas Satin Hood x Wales Bonner",
       "brand": "adidas",
-      "category": "Sneakers",
+      "category": "Clothing",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/134-adidas-originals-wmns-satin-hood-x-wales-bonner-jw1110",
       "bestPrice": {
         "amount": 196,
@@ -490,7 +490,7 @@
       "tags": [
         "adidas",
         "Sale",
-        "Sneakers"
+        "Clothing"
       ]
     },
     {
@@ -787,7 +787,7 @@
       "productId": "DZ5474-010",
       "name": "Air Jordan x Travis Scott Waxed Jacket",
       "brand": "Jordan x Travis Scott",
-      "category": "Sneakers",
+      "category": "Clothing",
       "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/6-air-jordan-x-travis-scott-waxed-jacket",
       "bestPrice": {
         "amount": 165,
@@ -799,7 +799,7 @@
         "Travis Scott",
         "Jordan",
         "Sale",
-        "Sneakers"
+        "Clothing"
       ]
     },
     {
@@ -2790,6 +2790,6 @@
       ]
     }
   ],
-  "generatedAt": "2026-02-13T06:35:33.922Z",
+  "generatedAt": "2026-02-13T06:46:50.646Z",
   "totalProducts": 164
 }
