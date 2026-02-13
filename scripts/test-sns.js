@@ -1,103 +1,131 @@
-// Foot Locker recon #3 — debug why line-through span isn't found
-const { chromium } = require('patchright');
+// MR PORTER recon — standard Playwright (no Cloudflare expected)
+const { chromium } = require('playwright');
 
 (async () => {
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  await page.goto('https://www.footlocker.nl/nl/product/lacoste-spinor-heren-schoenen/314217718304.html', {
+  console.log('Opening MR PORTER...');
+  await page.goto('https://www.mrporter.com/en-nl/mens/product/nike/shoes/low-top-sneakers/dunk-low-retro-leather-sneakers/46353151655503704', {
     waitUntil: 'domcontentloaded',
+    timeout: 30000,
   });
 
-  for (let i = 1; i <= 15; i++) {
-    await page.waitForTimeout(2000);
-    const title = await page.title();
-    if (title !== 'Just a moment...' && !title.includes('Attention')) {
-      console.log(`Cloudflare bypassed at ${i * 2}s`);
-      await page.waitForTimeout(3000);
-      break;
-    }
-  }
+  await page.waitForTimeout(5000); // let JS render
 
   const data = await page.evaluate(() => {
     const result = {};
 
-    // 1. Try the exact selectors from our adapter
-    const lineThrough = document.querySelectorAll('span.line-through');
-    result.spanLineThrough = lineThrough.length;
+    // 1. JSON-LD
+    const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
+    result.jsonLdCount = jsonLd.length;
+    result.jsonLdData = [...jsonLd].map(s => {
+      try { return JSON.parse(s.textContent); }
+      catch { return 'parse-error'; }
+    });
 
-    // 2. Try querySelector with contains
-    const allSpans = document.querySelectorAll('span');
-    const ltSpans = [];
-    for (const span of allSpans) {
-      const cls = span.className || '';
-      const text = span.textContent.trim();
-      if (cls.includes('line-through') || cls.includes('linethrough') || cls.includes('crossed')) {
-        ltSpans.push({ text: text.substring(0, 60), class: cls.substring(0, 120) });
+    // 2. Page info
+    result.title = document.title;
+    const h1 = document.querySelector('h1');
+    result.h1 = h1 ? h1.textContent.trim().substring(0, 100) : null;
+
+    // 3. Price elements
+    const allEls = document.querySelectorAll('*');
+    const priceEls = [];
+    for (const el of allEls) {
+      const cls = el.className || '';
+      if (typeof cls === 'string' && cls.toLowerCase().includes('price')) {
+        const text = el.textContent.trim();
+        if (text.length < 80 && text.length > 0) {
+          priceEls.push({
+            tag: el.tagName,
+            class: cls.substring(0, 100),
+            text: text.substring(0, 80),
+            html: el.innerHTML.substring(0, 200),
+          });
+        }
       }
     }
-    result.lineThruByClass = ltSpans;
+    result.priceElements = priceEls.slice(0, 15);
 
-    // 3. Check computed styles for line-through
-    const priceSpans = [];
-    for (const span of allSpans) {
-      const text = span.textContent.trim();
-      if (text.includes('\u20ac') && text.length < 20 && span.children.length === 0) {
-        const style = window.getComputedStyle(span);
-        priceSpans.push({
+    // 4. Size elements
+    const sizeByTestId = document.querySelectorAll('[data-testid*="ize"], [data-testid*="SIZE"]');
+    result.sizeTestIdElements = [...sizeByTestId].slice(0, 10).map(el => ({
+      tag: el.tagName,
+      testId: el.getAttribute('data-testid'),
+      text: el.textContent.trim().substring(0, 50),
+      class: (el.className || '').substring(0, 80),
+    }));
+
+    // Size selectors (select/option)
+    const selects = document.querySelectorAll('select');
+    result.selectElements = [...selects].slice(0, 5).map(sel => ({
+      name: sel.name || null,
+      id: sel.id || null,
+      class: (sel.className || '').substring(0, 80),
+      options: [...sel.options].slice(0, 15).map(o => ({
+        text: o.text.trim().substring(0, 30),
+        value: o.value,
+        disabled: o.disabled,
+      })),
+    }));
+
+    // Size buttons
+    const allBtns = document.querySelectorAll('button, a');
+    const sizeBtns = [];
+    for (const btn of allBtns) {
+      const text = btn.textContent.trim();
+      if (/^(IT\s?|EU\s?|UK\s?|US\s?)?\d{1,2}(\.5)?$/.test(text)) {
+        sizeBtns.push({
+          tag: btn.tagName,
           text,
-          class: (span.className || '').substring(0, 120),
-          textDecoration: style.textDecorationLine || style.textDecoration || 'none',
-          color: style.color,
-          parentClass: (span.parentElement?.className || '').substring(0, 120),
-          parentParentClass: (span.parentElement?.parentElement?.className || '').substring(0, 120),
+          class: (btn.className || '').substring(0, 80),
         });
       }
     }
-    result.allEuroSpans = priceSpans;
+    result.sizeButtons = sizeBtns.slice(0, 20);
 
-    // 4. Find the "Bespaar" element and its siblings/parent
-    const allEls = document.querySelectorAll('*');
-    for (const el of allEls) {
-      if (el.children.length === 0 && el.textContent.trim().includes('Bespaar')) {
-        result.bespaarEl = {
-          text: el.textContent.trim(),
-          tag: el.tagName,
-          class: (el.className || '').substring(0, 120),
-          parentHTML: el.parentElement?.innerHTML?.substring(0, 500) || '',
-          grandparentHTML: el.parentElement?.parentElement?.innerHTML?.substring(0, 1000) || '',
-        };
-        break;
-      }
-    }
+    // 5. Meta tags
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 150) : null;
 
-    // 5. Specifically look at the ProductPrice area
-    const ppEls = document.querySelectorAll('[class*="ProductPrice"]');
-    result.productPriceElements = [...ppEls].slice(0, 5).map(el => ({
+    // 6. Strikethrough
+    const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"]');
+    result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
       tag: el.tagName,
-      class: (el.className || '').substring(0, 120),
-      text: el.textContent.trim().substring(0, 80),
-      html: el.innerHTML.substring(0, 300),
+      text: el.textContent.trim().substring(0, 50),
+      class: (el.className || '').substring(0, 80),
     }));
 
     return result;
   });
 
-  console.log('\n=== span.line-through count ===');
-  console.log(data.spanLineThrough);
+  console.log('\n=== PAGE INFO ===');
+  console.log(`Title: ${data.title}`);
+  console.log(`H1: ${data.h1}`);
+  console.log(`OG Image: ${data.ogImage}`);
 
-  console.log('\n=== Spans with line-through in className ===');
-  console.log(JSON.stringify(data.lineThruByClass, null, 2));
+  console.log('\n=== JSON-LD ===');
+  console.log(`Count: ${data.jsonLdCount}`);
+  console.log(JSON.stringify(data.jsonLdData, null, 2).substring(0, 4000));
 
-  console.log('\n=== ALL € spans with computed styles ===');
-  console.log(JSON.stringify(data.allEuroSpans, null, 2));
+  console.log('\n=== PRICE ELEMENTS ===');
+  console.log(JSON.stringify(data.priceElements, null, 2));
 
-  console.log('\n=== Bespaar element & parent ===');
-  console.log(JSON.stringify(data.bespaarEl, null, 2));
+  console.log('\n=== STRIKETHROUGH ===');
+  console.log(JSON.stringify(data.strikethroughElements, null, 2));
 
-  console.log('\n=== ProductPrice elements ===');
-  console.log(JSON.stringify(data.productPriceElements, null, 2));
+  console.log('\n=== SIZE ELEMENTS (data-testid) ===');
+  console.log(JSON.stringify(data.sizeTestIdElements, null, 2));
+
+  console.log('\n=== SIZE BUTTONS ===');
+  console.log(JSON.stringify(data.sizeButtons, null, 2));
+
+  console.log('\n=== SELECT ELEMENTS ===');
+  console.log(JSON.stringify(data.selectElements, null, 2));
+
+  console.log('\nFinal URL:', page.url());
 
   await browser.close();
-  console.log('\nDone.');
+  console.log('Done.');
 })();
