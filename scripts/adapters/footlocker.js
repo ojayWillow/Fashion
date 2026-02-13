@@ -6,24 +6,13 @@
  * JSON-LD: Product with multiple Offer objects (one per size)
  *
  * VERIFIED via recon (2026-02-13):
- * - Anti-bot: Cloudflare (light) → Patchright bypasses in 2s
- * - JSON-LD: Product type with offers[] array
- *   - Each offer has SKU suffix as size: "314217718304-39.5"
- *   - offers.price = sale price (or full price if not on sale)
- *   - offers.availability = InStock/OutOfStock
- *   - brand is a plain string, not an object
- * - Retail price: NOT in JSON-LD → DOM only:
- *     <span class="font-caption line-through">€ 129,99</span>
- *     (Tailwind classes, not semantic names)
- *     Located inside parent with class containing "ProductPrice"
- * - Sale price in DOM:
- *     <span class="font-medium text-sale_red">€ 60,00</span>
- * - Discount badge: "Bespaar € 69" in ProductDetails-header-V2-metadata
- * - Sizes: JSON-LD offers[].sku suffix (already EU format)
- *   Also in DOM as <a class="size-box"> elements
- * - Image: JSON-LD image (images.footlocker.com/is/image/EBFL2/...)
- * - No H1 in DOM, no data-testid for prices
- * - Model number in JSON-LD: ld.model (e.g. "194969")
+ * - Retail price: <span class="font-caption line-through">€ 129,99</span>
+ *   NOT inside ProductDetails/ProductPrice — just exclude ProductCard
+ * - Fallback: "Bespaar € 69" badge → retailPrice = salePrice + savings
+ * - Sale price: <span class="font-medium text-sale_red">€ 60,00</span>
+ * - Sizes: JSON-LD offers[].sku suffix (already EU), filter InStock
+ * - Brand: JSON-LD brand (plain string)
+ * - Image: JSON-LD image (images.footlocker.com)
  */
 
 const { log, detectBrand, detectCategory, detectTags, parsePrice, buildPrice, calcDiscount, normalizeSizes, isValidSize, detectCurrency } = require('../lib/helpers');
@@ -40,16 +29,13 @@ async function extractFromDOM(page) {
       sizes: [], styleCode: '', colorway: '',
     };
 
-    // 1. Retail price — span with line-through (Tailwind class)
-    //    First one in the product details area is the main product retail price
-    //    (Others may be from recommended products below)
+    // 1. Retail price — first span with class "line-through" containing €/£/$
+    //    Exclude ProductCard elements (recommended products section)
     const allLineThrough = document.querySelectorAll('span.line-through');
     for (const el of allLineThrough) {
       const text = el.textContent.trim();
-      // Must contain a currency symbol and be in the product details area
-      if (text.includes('€') || text.includes('£') || text.includes('$')) {
-        // Check if it's in the main product area (not a product card)
-        const parent = el.closest('[class*="ProductDetails"], [class*="ProductPrice"]');
+      if (text.includes('\u20ac') || text.includes('\u00a3') || text.includes('$')) {
+        // Skip if inside a ProductCard (recommended items)
         const inCard = el.closest('[class*="ProductCard"]');
         if (!inCard) {
           result.retailPrice = text;
@@ -58,17 +44,31 @@ async function extractFromDOM(page) {
       }
     }
 
-    // 2. Sale price from DOM (backup — JSON-LD usually has this)
+    // 2. Fallback: parse "Bespaar € X" / "Save £X" badge
+    //    retailPrice = salePrice + savings
+    if (!result.retailPrice) {
+      const allSpans = document.querySelectorAll('span');
+      for (const span of allSpans) {
+        const text = span.textContent.trim();
+        const match = text.match(/(?:Bespaar|Save|Spare|\u00c9conomisez)\s*[\u20ac\u00a3$]\s*([\d.,]+)/i);
+        if (match) {
+          result._savings = match[1];
+          break;
+        }
+      }
+    }
+
+    // 3. Sale price from DOM (backup)
     const saleEl = document.querySelector('span.text-sale_red, [class*="text-sale"]');
     if (saleEl) {
       result.salePrice = saleEl.textContent.trim();
     }
 
-    // 3. Colorway
+    // 4. Colorway
     const colorEl = document.querySelector('[class*="ProductColor"], [data-testid="product-color"]');
     if (colorEl) result.colorway = colorEl.textContent.trim();
 
-    // 4. Sizes from DOM (backup — JSON-LD offers[] is primary)
+    // 5. Sizes from DOM (backup — JSON-LD offers[] is primary)
     const sizeLinks = document.querySelectorAll('a.size-box');
     for (const link of sizeLinks) {
       const text = link.textContent.trim();
@@ -88,7 +88,17 @@ function postProcess(raw, store) {
   const brand = raw.brand || detectBrand(raw.name);
   const currency = raw.currency || store.currency || 'EUR';
   const salePriceNum = parsePrice(raw.salePrice);
-  const retailPriceNum = parsePrice(raw.retailPrice);
+  let retailPriceNum = parsePrice(raw.retailPrice);
+
+  // Fallback: calculate retail from savings badge
+  if (!retailPriceNum && raw._savings && salePriceNum) {
+    const savings = parsePrice(raw._savings);
+    if (savings) {
+      retailPriceNum = salePriceNum + savings;
+      log(`Retail calculated from savings badge: ${retailPriceNum}`);
+    }
+  }
+
   const discount = calcDiscount(retailPriceNum, salePriceNum);
 
   // Foot Locker sizes are already EU format from JSON-LD
