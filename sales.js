@@ -1,0 +1,597 @@
+/* ===== FASHION. — Sales Dashboard Script ===== */
+/* Updated for product-centric data model (#5 Step 5) */
+
+// ===== Cursor =====
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursorDot.style.left = mouseX - 4 + 'px';
+    cursorDot.style.top = mouseY - 4 + 'px';
+});
+function animateRing() {
+    ringX += (mouseX - ringX) * 0.12; ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.left = ringX - 20 + 'px'; cursorRing.style.top = ringY - 20 + 'px';
+    requestAnimationFrame(animateRing);
+}
+animateRing();
+
+function addHoverCursor(el) {
+    el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
+}
+document.querySelectorAll('a, .btn, .dock-item, .dock-logo').forEach(addHoverCursor);
+
+// ===== Dock =====
+const dockItems = document.querySelectorAll('.dock-item');
+dockItems.forEach((item, index) => {
+    item.addEventListener('mouseenter', () => {
+        if (dockItems[index - 1]) dockItems[index - 1].classList.add('neighbor');
+        if (dockItems[index + 1]) dockItems[index + 1].classList.add('neighbor');
+    });
+    item.addEventListener('mouseleave', () => dockItems.forEach(i => i.classList.remove('neighbor')));
+});
+const dock = document.getElementById('floatingDock');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+    const s = window.scrollY;
+    if (s > lastScroll && s > 200) { dock.style.transform = 'translateX(-50%) translateY(-100px)'; dock.style.opacity = '0'; }
+    else { dock.style.transform = 'translateX(-50%) translateY(0)'; dock.style.opacity = '1'; }
+    lastScroll = s;
+});
+
+// ===== REDIRECT LOADING SCREEN =====
+function createRedirectScreen() {
+    if (document.getElementById('redirectScreen')) return;
+
+    const screen = document.createElement('div');
+    screen.id = 'redirectScreen';
+    screen.className = 'redirect-screen';
+    screen.innerHTML = `
+        <div class="redirect-screen-content">
+            <div class="redirect-logo">FASHION.</div>
+            <div class="redirect-spinner">
+                <div class="redirect-spinner-ring"></div>
+            </div>
+            <div class="redirect-status">
+                <p class="redirect-heading" id="redirectHeading">Redirecting...</p>
+                <p class="redirect-store" id="redirectStore"></p>
+                <p class="redirect-domain" id="redirectDomain"></p>
+            </div>
+            <div class="redirect-progress-bar">
+                <div class="redirect-progress-fill" id="redirectProgress"></div>
+            </div>
+            <p class="redirect-notice">You are being redirected to an external website</p>
+        </div>
+    `;
+    document.body.appendChild(screen);
+}
+
+function redirectTo(url, storeName) {
+    createRedirectScreen();
+
+    let domain;
+    try { domain = new URL(url).hostname; } catch { domain = url; }
+
+    document.getElementById('redirectHeading').textContent = 'Redirecting you to';
+    document.getElementById('redirectStore').textContent = storeName || domain;
+    document.getElementById('redirectDomain').textContent = domain;
+
+    const screen = document.getElementById('redirectScreen');
+    const progressBar = document.getElementById('redirectProgress');
+
+    screen.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    progressBar.style.width = '0%';
+    requestAnimationFrame(() => {
+        progressBar.style.transition = 'width 2.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        progressBar.style.width = '100%';
+    });
+
+    setTimeout(() => {
+        window.open(url, '_blank');
+
+        screen.classList.add('fade-out');
+        setTimeout(() => {
+            screen.classList.remove('active', 'fade-out');
+            document.body.style.overflow = '';
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+        }, 500);
+    }, 2500);
+}
+
+// ===== IMAGE FALLBACK HANDLER =====
+function handleImageError(imgEl, brandName) {
+    const wrapper = imgEl.parentElement;
+    imgEl.style.display = 'none';
+
+    if (wrapper.querySelector('.pick-img-fallback')) return;
+
+    const fallback = document.createElement('div');
+    fallback.className = 'pick-img-fallback';
+    fallback.innerHTML = `
+        <div class="pick-img-fallback-icon">${brandName ? brandName.charAt(0).toUpperCase() : '?'}</div>
+        <div class="pick-img-fallback-text">Image Unavailable</div>
+    `;
+    wrapper.appendChild(fallback);
+}
+
+// ===== CLOUDINARY IMAGE NORMALIZER =====
+function normalizeImage(url) {
+    if (!url || url === '/favicon.png') return '';
+    // Trim whitespace/borders, then pad uniformly with #F5F5F7 to match card bg
+    return url.replace(
+        'f_auto,q_auto,w_800,h_800,c_pad,b_white',
+        'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_rgb:F5F5F7'
+    );
+}
+
+// ===== PRICE FORMATTING =====
+function formatPrice(priceObj) {
+    if (!priceObj || !priceObj.amount || priceObj.amount === 0) return '';
+    const symbols = { EUR: '€', GBP: '£', USD: '$' };
+    const sym = symbols[priceObj.currency] || priceObj.currency + ' ';
+    return `${sym}${priceObj.amount}`;
+}
+
+// ===== STORE SLUG → DISPLAY NAME =====
+const STORE_NAMES = {
+    'end-clothing': 'END. Clothing',
+    'foot-locker': 'Foot Locker',
+    'sns': 'SNS (Sneakersnstuff)',
+    'mr-porter': 'MR PORTER'
+};
+
+const STORE_FLAGS = {
+    'end-clothing': '🇬🇧',
+    'foot-locker': '🇳🇱',
+    'sns': '🇸🇪',
+    'mr-porter': '🇬🇧'
+};
+
+function storeDisplayName(slug) {
+    return STORE_NAMES[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function storeFlag(slug) {
+    return STORE_FLAGS[slug] || '🏷️';
+}
+
+// ===== CURATED PICKS (now from index.json + product files) =====
+let allPicks = [];       // Full product objects
+let allPicksIndex = [];  // Index entries (for fast filtering)
+let activePickFilter = 'all';
+
+async function loadPicks() {
+    try {
+        // Load index for quick access
+        const indexResp = await fetch('data/index.json');
+        const indexData = await indexResp.json();
+        allPicksIndex = indexData.products;
+
+        // Load all product files for full data
+        const products = [];
+        for (const entry of indexData.products) {
+            try {
+                const resp = await fetch(`data/products/${entry.productId}.json`);
+                const product = await resp.json();
+                products.push(product);
+            } catch (e) {
+                console.warn(`Could not load product ${entry.productId}:`, e);
+            }
+        }
+
+        allPicks = products;
+        buildPickFilterPills();
+        renderPicks(allPicks);
+    } catch (e) {
+        console.error('Error loading picks:', e);
+    }
+}
+
+function buildPickFilterPills() {
+    const container = document.getElementById('picksFilterPills');
+    if (!container || allPicks.length === 0) return;
+
+    const brands = {};
+    const categories = { Sneakers: 0, Clothing: 0 };
+
+    allPicks.forEach(p => {
+        if (p.brand) brands[p.brand] = (brands[p.brand] || 0) + 1;
+        if (p.tags) {
+            if (p.tags.includes('Sneakers')) categories.Sneakers++;
+            if (p.tags.includes('Clothing')) categories.Clothing++;
+        }
+    });
+
+    const pills = [{ label: '✦ All', value: 'all', count: allPicks.length }];
+
+    if (categories.Sneakers > 0) pills.push({ label: '👟 Sneakers', value: 'tag:Sneakers', count: categories.Sneakers });
+    if (categories.Clothing > 0) pills.push({ label: '🧥 Clothing', value: 'tag:Clothing', count: categories.Clothing });
+
+    const topBrands = Object.entries(brands)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    topBrands.forEach(([brand, count]) => {
+        pills.push({ label: brand, value: `brand:${brand}`, count });
+    });
+
+    container.innerHTML = pills.map(pill => `
+        <button class="picks-pill${pill.value === 'all' ? ' active' : ''}" data-filter="${pill.value}">
+            ${pill.label} <span class="pill-count">${pill.count}</span>
+        </button>
+    `).join('');
+
+    container.querySelectorAll('.picks-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+            activePickFilter = btn.dataset.filter;
+            container.querySelectorAll('.picks-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterAndRenderPicks();
+        });
+        addHoverCursor(btn);
+    });
+}
+
+function filterAndRenderPicks() {
+    if (activePickFilter === 'all') {
+        renderPicks(allPicks);
+        return;
+    }
+
+    let filtered;
+    if (activePickFilter.startsWith('tag:')) {
+        const tag = activePickFilter.replace('tag:', '');
+        filtered = allPicks.filter(p => p.tags && p.tags.includes(tag));
+    } else if (activePickFilter.startsWith('brand:')) {
+        const brand = activePickFilter.replace('brand:', '');
+        filtered = allPicks.filter(p => p.brand === brand);
+    } else {
+        filtered = allPicks;
+    }
+
+    renderPicks(filtered);
+}
+
+function getPicksByStore(storeName) {
+    // Match by display name against listing store slugs
+    return allPicks.filter(p =>
+        (p.listings || []).some(l => storeDisplayName(l.store) === storeName)
+    );
+}
+
+function renderPicks(picks) {
+    const grid = document.getElementById('picksGrid');
+    if (!grid || !picks.length) {
+        if (grid) grid.innerHTML = '<p style="text-align:center;color:#9ca3af;padding:40px 0;">No picks match this filter</p>';
+        return;
+    }
+
+    grid.innerHTML = '';
+    picks.forEach((product, i) => {
+        const card = document.createElement('div');
+        card.className = 'pick-card';
+        card.style.animationDelay = `${i * 0.08}s`;
+
+        // Pick the best listing for display
+        const listing = product.listings && product.listings.length > 0
+            ? product.listings.reduce((best, l) =>
+                (l.salePrice && l.salePrice.amount > 0 &&
+                 (!best.salePrice || l.salePrice.amount < best.salePrice.amount)) ? l : best)
+            : null;
+
+        const salePriceStr = listing ? formatPrice(listing.salePrice) : '';
+        const retailPriceStr = listing ? formatPrice(listing.retailPrice) : '';
+        const discountStr = listing && listing.discount > 0 ? `-${listing.discount}%` : '';
+        const storeName = listing ? storeDisplayName(listing.store) : '';
+        const flag = listing ? storeFlag(listing.store) : '🏷️';
+        const url = listing ? listing.url : '';
+
+        // Aggregate sizes from all listings
+        const allSizes = new Set();
+        (product.listings || []).forEach(l => (l.sizes || []).forEach(s => allSizes.add(s)));
+        const sizes = [...allSizes];
+
+        const sizesHTML = sizes.length
+            ? `<div class="pick-card-sizes-label">Available Sizes</div>
+               <div class="pick-card-sizes">${sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
+            : '';
+
+        const tagsHTML = (product.tags || []).map(t => `<span class="pick-tag">${t}</span>`).join('');
+
+        const escapedBrand = (product.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const escapedStore = storeName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        const escapedUrl = url.replace(/'/g, "\\'");
+
+        // Multi-store indicator
+        const storeCount = (product.listings || []).length;
+        const multiStore = storeCount > 1
+            ? `<span class="pick-card-multi-store" title="Available at ${storeCount} stores">${storeCount} stores</span>`
+            : '';
+
+        const imgSrc = normalizeImage(product.image);
+
+        card.innerHTML = `
+            <div class="pick-card-image">
+                ${imgSrc
+                    ? `<img src="${imgSrc}" alt="${product.name}" loading="lazy" onerror="handleImageError(this, '${escapedBrand}')">`
+                    : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${product.brand ? product.brand.charAt(0).toUpperCase() : '?'}</div><div class="pick-img-fallback-text">No Image</div></div>`
+                }
+                ${discountStr ? `<span class="pick-card-discount">${discountStr}</span>` : ''}
+                <span class="pick-card-store">${flag} ${storeName}</span>
+                ${multiStore}
+            </div>
+            <div class="pick-card-body">
+                <div class="pick-card-brand">${product.brand || ''}</div>
+                <div class="pick-card-name">${product.name}</div>
+                ${product.colorway && product.colorway !== 'TBD' ? `<div class="pick-card-colorway">${product.colorway}</div>` : ''}
+                <div class="pick-card-pricing">
+                    ${salePriceStr ? `<span class="pick-price-sale">${salePriceStr}</span>` : ''}
+                    ${retailPriceStr && retailPriceStr !== salePriceStr ? `<span class="pick-price-retail">${retailPriceStr}</span>` : ''}
+                </div>
+                ${sizesHTML}
+                ${tagsHTML ? `<div class="pick-card-tags">${tagsHTML}</div>` : ''}
+                <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStore}')">
+                    View Deal →
+                </button>
+            </div>
+        `;
+        addHoverCursor(card);
+        grid.appendChild(card);
+    });
+}
+
+loadPicks();
+
+// ===== STORE DETAIL OVERLAY =====
+function showStoreDetail(store, picks) {
+    document.querySelector('.store-detail-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'store-detail-overlay';
+
+    const escapedStoreName = (store.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+    overlay.innerHTML = `
+        <div class="store-detail-panel">
+            <div class="store-detail-header">
+                <div class="store-detail-info">
+                    <div class="store-detail-logo">
+                        <img src="https://logo.clearbit.com/${store.domain}" alt="${store.name}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <span class="store-detail-logo-fallback" style="display:none;">${store.flag}</span>
+                    </div>
+                    <div>
+                        <h2 class="store-detail-name">${store.flag} ${store.name}</h2>
+                        <p class="store-detail-deal">${store.deal}</p>
+                        <p class="store-detail-count">${picks.length} curated pick${picks.length !== 1 ? 's' : ''}</p>
+                    </div>
+                </div>
+                <div class="store-detail-actions">
+                    <button class="store-detail-visit" onclick="redirectTo('${store.saleUrl}', '${escapedStoreName}')">
+                        Visit Store →
+                    </button>
+                    <button class="store-detail-close" aria-label="Close">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="store-detail-grid">
+                ${picks.map((product, i) => {
+                    // Find the listing for THIS store
+                    const listing = (product.listings || []).find(l =>
+                        storeDisplayName(l.store) === store.name
+                    ) || (product.listings || [])[0];
+
+                    const salePriceStr = listing ? formatPrice(listing.salePrice) : '';
+                    const retailPriceStr = listing ? formatPrice(listing.retailPrice) : '';
+                    const discountStr = listing && listing.discount > 0 ? `-${listing.discount}%` : '';
+                    const url = listing ? listing.url : '';
+                    const escapedBrand = (product.brand || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const escapedUrl = url.replace(/'/g, "\\'");
+
+                    const allSizes = new Set();
+                    if (listing) (listing.sizes || []).forEach(s => allSizes.add(s));
+                    const sizes = [...allSizes];
+                    const sizesHTML = sizes.length
+                        ? `<div class="pick-card-sizes-label">Sizes</div>
+                           <div class="pick-card-sizes">${sizes.map(s => `<span class="pick-size">${s}</span>`).join('')}</div>`
+                        : '';
+
+                    const imgSrc = normalizeImage(product.image);
+
+                    return `
+                        <div class="pick-card" style="animation-delay: ${i * 0.06}s">
+                            <div class="pick-card-image">
+                                ${imgSrc
+                                    ? `<img src="${imgSrc}" alt="${product.name}" loading="lazy"
+                                           onerror="handleImageError(this, '${escapedBrand}')">`
+                                    : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${product.brand ? product.brand.charAt(0).toUpperCase() : '?'}</div><div class="pick-img-fallback-text">No Image</div></div>`
+                                }
+                                ${discountStr ? `<span class="pick-card-discount">${discountStr}</span>` : ''}
+                            </div>
+                            <div class="pick-card-body">
+                                <div class="pick-card-brand">${product.brand || ''}</div>
+                                <div class="pick-card-name">${product.name}</div>
+                                ${product.colorway && product.colorway !== 'TBD' ? `<div class="pick-card-colorway">${product.colorway}</div>` : ''}
+                                <div class="pick-card-pricing">
+                                    ${salePriceStr ? `<span class="pick-price-sale">${salePriceStr}</span>` : ''}
+                                    ${retailPriceStr && retailPriceStr !== salePriceStr ? `<span class="pick-price-retail">${retailPriceStr}</span>` : ''}
+                                </div>
+                                ${sizesHTML}
+                                <div class="pick-card-tags">${(product.tags || []).map(t => `<span class="pick-tag">${t}</span>`).join('')}</div>
+                                <button class="pick-card-cta" onclick="redirectTo('${escapedUrl}', '${escapedStoreName}')">
+                                    View Deal →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay || e.target.closest('.store-detail-close')) {
+            closeStoreDetail(overlay);
+        }
+    });
+
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeStoreDetail(overlay);
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+
+    requestAnimationFrame(() => {
+        overlay.classList.add('active');
+    });
+
+    overlay.querySelectorAll('.pick-card, .store-detail-visit, .store-detail-close').forEach(addHoverCursor);
+}
+
+function closeStoreDetail(overlay) {
+    overlay.classList.add('closing');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+        overlay.remove();
+    }, 400);
+}
+
+// ===== SALES DASHBOARD =====
+let allStores = [], categories = [], activeFilter = 'all', searchQuery = '';
+
+async function init() {
+    try {
+        const response = await fetch('data/stores.json');
+        const data = await response.json();
+        categories = data.categories.map(c => ({ name: c.name, icon: c.icon }));
+        data.categories.forEach(cat => {
+            cat.stores.forEach(store => {
+                allStores.push({
+                    name: store.name, country: store.country, flag: store.flag,
+                    url: store.url, saleUrl: store.saleUrl, description: store.description,
+                    deal: store.currentDeal, category: cat.name, categoryIcon: cat.icon,
+                    domain: extractDomain(store.url)
+                });
+            });
+        });
+        buildFilterTabs();
+        renderStores();
+        setupSearch();
+    } catch (error) {
+        console.error('Error loading stores:', error);
+    }
+}
+
+function extractDomain(url) { try { return new URL(url).hostname.replace('www.',''); } catch { return ''; } }
+
+function buildFilterTabs() {
+    const container = document.getElementById('filterTabs');
+    categories.forEach(cat => {
+        const tab = document.createElement('button');
+        tab.className = 'filter-tab'; tab.dataset.filter = cat.name;
+        tab.textContent = `${cat.icon} ${cat.name}`;
+        tab.addEventListener('click', () => { activeFilter = cat.name; updateActiveTab(); renderStores(); });
+        addHoverCursor(tab); container.appendChild(tab);
+    });
+    const allTab = container.querySelector('[data-filter="all"]');
+    allTab.addEventListener('click', () => { activeFilter = 'all'; updateActiveTab(); renderStores(); });
+    addHoverCursor(allTab);
+}
+
+function updateActiveTab() {
+    document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.filter === activeFilter));
+}
+
+function setupSearch() {
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim(); renderStores();
+    });
+}
+
+function renderStores() {
+    const grid = document.getElementById('salesGrid');
+    const noResults = document.getElementById('noResults');
+    const countEl = document.getElementById('searchCount');
+    let filtered = allStores;
+    if (activeFilter !== 'all') filtered = filtered.filter(s => s.category === activeFilter);
+    if (searchQuery) filtered = filtered.filter(s =>
+        s.name.toLowerCase().includes(searchQuery) || s.country.toLowerCase().includes(searchQuery) ||
+        s.deal.toLowerCase().includes(searchQuery) || s.description.toLowerCase().includes(searchQuery) ||
+        s.category.toLowerCase().includes(searchQuery)
+    );
+    countEl.textContent = `${filtered.length} store${filtered.length !== 1 ? 's' : ''}`;
+    if (filtered.length === 0) { grid.style.display = 'none'; noResults.style.display = 'block'; return; }
+    else { grid.style.display = 'grid'; noResults.style.display = 'none'; }
+    grid.innerHTML = '';
+    filtered.forEach((store, i) => {
+        const card = document.createElement('div');
+        card.className = 'store-card'; card.style.animationDelay = `${i * 0.04}s`;
+
+        const storePicks = getPicksByStore(store.name);
+        const picksBadge = storePicks.length > 0
+            ? `<span class="store-card-picks-badge">${storePicks.length} pick${storePicks.length !== 1 ? 's' : ''}</span>`
+            : '';
+
+        const previewHTML = storePicks.length > 0
+            ? `<div class="store-card-preview">
+                   <div class="store-preview-images">
+                       ${storePicks.slice(0, 3).map(p => {
+                           const pImg = normalizeImage(p.image);
+                           return pImg ? `<img src="${pImg}" alt="${p.name}" loading="lazy">` : '';
+                       }).join('')}
+                       ${storePicks.length > 3 ? `<span class="store-preview-more">+${storePicks.length - 3}</span>` : ''}
+                   </div>
+                   <span class="store-preview-label">View curated picks</span>
+               </div>`
+            : '';
+
+        card.innerHTML = `
+            <div class="store-card-header">
+                <div class="store-card-logo">
+                    <img src="https://logo.clearbit.com/${store.domain}" alt="${store.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="logo-fallback" style="display:none;">${store.flag}</span>
+                </div>
+                <div class="store-card-title"><h3>${store.name}</h3><span class="store-location">${store.flag} ${store.country}</span></div>
+                <div class="store-card-badges">
+                    ${picksBadge}
+                    <span class="store-card-category">${store.categoryIcon} ${store.category}</span>
+                </div>
+            </div>
+            <div class="store-card-deal"><div class="deal-label">🔥 Current Deal</div><div class="deal-text">${store.deal}</div></div>
+            <p class="store-card-desc">${store.description}</p>
+            ${previewHTML}
+            <div class="store-card-footer">
+                <span class="store-card-cta">${storePicks.length > 0 ? 'View Picks →' : 'Shop Sale →'}</span>
+                <span class="store-card-flag">${store.flag}</span>
+            </div>
+        `;
+
+        card.addEventListener('click', () => {
+            if (storePicks.length > 0) {
+                showStoreDetail(store, storePicks);
+            } else {
+                redirectTo(store.saleUrl, store.name);
+            }
+        });
+
+        addHoverCursor(card); grid.appendChild(card);
+    });
+}
+
+init();
