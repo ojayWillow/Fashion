@@ -2,30 +2,45 @@
 /* Cloudinary image normalization + fallback handling */
 
 /**
- * Normalize Cloudinary URLs: trim whitespace/borders, then center-pad
- * into a uniform 800×800 frame with matching background.
- * Uses c_lpad (letterbox pad) so the full product is always visible
- * and vertically/horizontally centered — no cropping, no misalignment.
+ * Normalize Cloudinary URLs to a single consistent transform:
+ *   f_auto,q_auto/e_trim:10/w_800,h_800,c_lpad,b_rgb:F5F5F7
+ *
+ * e_trim:10  — trims near-white backgrounds with 10% tolerance
+ * c_lpad     — letterbox-centers the product in the 800×800 frame
+ * b_rgb:F5F5F7 — fills empty space with site background gray
+ *
  * @param {string} url - Raw image URL
  * @returns {string} Normalized URL or empty string
  */
 export function normalizeImage(url) {
   if (!url || url === '/favicon.png') return '';
-  // Legacy format (old scraper output)
+
+  const TARGET = 'f_auto,q_auto/e_trim:10/w_800,h_800,c_lpad,b_rgb:F5F5F7';
+
+  // Format 1: SNS / Foot Locker / old scraper (c_pad,b_white)
   url = url.replace(
     'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-    'f_auto,q_auto/e_trim/w_800,h_800,c_lpad,b_rgb:F5F5F7'
+    TARGET
   );
-  // Current format with c_fill,g_auto (broken zoom)
+
+  // Format 2: Mr Porter with e_trim (c_pad,b_rgb:F5F5F7)
   url = url.replace(
-    'w_800,h_800,c_fill,g_auto',
-    'w_800,h_800,c_lpad,b_rgb:F5F5F7'
+    /f_auto,q_auto\/e_trim\/w_800,h_800,c_pad,b_rgb:F5F5F7/,
+    TARGET
   );
-  // Current format with old c_pad
+
+  // Format 3: previous broken fix (c_fill,g_auto)
   url = url.replace(
-    'w_800,h_800,c_pad,b_rgb:F5F5F7',
-    'w_800,h_800,c_lpad,b_rgb:F5F5F7'
+    /f_auto,q_auto\/e_trim\/w_800,h_800,c_fill,g_auto/,
+    TARGET
   );
+
+  // Format 4: previous c_lpad without trim tolerance
+  url = url.replace(
+    /f_auto,q_auto\/e_trim\/w_800,h_800,c_lpad,b_rgb:F5F5F7/,
+    TARGET
+  );
+
   return url;
 }
 
