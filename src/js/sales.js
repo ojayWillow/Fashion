@@ -22,6 +22,10 @@ let allPicks = [];
 let allPicksIndex = [];
 let activePickFilter = 'all';
 
+// Promise that resolves when all picks are loaded — awaited by init()
+let _picksReadyResolve;
+const picksReady = new Promise(resolve => { _picksReadyResolve = resolve; });
+
 async function loadPicks() {
   try {
     const indexResp = await fetch('data/index.json');
@@ -44,6 +48,9 @@ async function loadPicks() {
     renderPicks(allPicks);
   } catch (e) {
     console.error('Error loading picks:', e);
+  } finally {
+    // Signal that picks are ready (even on error, so init() doesn't hang)
+    _picksReadyResolve();
   }
 }
 
@@ -178,6 +185,7 @@ function renderPicks(picks) {
   });
 }
 
+// Start loading picks immediately (runs in parallel with early parts of init)
 loadPicks();
 
 // ===== STORE VOTING (localStorage) =====
@@ -431,6 +439,10 @@ async function init() {
     });
 
     allStores = await Promise.all(metaPromises);
+
+    // Wait for picks to finish loading before rendering store cards,
+    // so getPicksByStore() has the full allPicks array available.
+    await picksReady;
 
     buildFilterTabs();
     renderStores();
