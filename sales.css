@@ -106,24 +106,23 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(168, 85, 247, 0.06);
 }
 
-/* === Product Image — white bg matches store product images === */
+/* === Product Image — fills entire frame corner-to-corner === */
 .pick-card-image {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    background: #ffffff;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .pick-card-image img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
