@@ -1,0 +1,34 @@
+{
+  "productId": "46376663162939663P",
+  "name": "Air Max 95 OG Mesh Sneakers",
+  "brand": "NIKE",
+  "colorway": "Orange",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/183-air-max-95-og-mesh-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Air Max 95 OG Mesh Sneakers, available in orange or gray. 90% Textile fibres 10% Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-95-og-mesh-sneakers/46376663162907898",
+      "retailPrice": {
+        "amount": 175,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 88,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": false
+    }
+  ]
+}

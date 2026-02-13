@@ -1,0 +1,35 @@
+{
+  "productId": "1647597353552815P",
+  "name": "Suede-Trimmed Shearling-Lined Wool Slippers",
+  "brand": "MULO",
+  "colorway": "Navy",
+  "category": "Footwear",
+  "tags": [
+    "MULO",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/215-suede-trimmed-shearling-lined-wool-slippers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Suede-Trimmed Shearling-Lined Wool Slippers, available in navy. 60% Textile fibres 20% Various Materials 20% Leather",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/mulo/shoes/slippers/suede-trimmed-shearling-lined-wool-slippers/1647597353552884",
+      "retailPrice": {
+        "amount": 155,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 62,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 44.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "productId": "FZ5808-012",
+  "name": "Nike Air Max 1 Essential",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/152-nike-sportswear-air-max-1-essential-fz5808-012",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "When it comes to essentials for your sneaker collection, the legendary Nike Air Max 1 stands tall at the top of the list. This edition keeps things classic, blending breathable mesh, plush suede, and",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-air-max-1-essential-fz5808-012",
+      "retailPrice": {
+        "amount": 150,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 45.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

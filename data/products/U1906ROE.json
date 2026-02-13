@@ -1,0 +1,44 @@
+{
+  "productId": "U1906ROE",
+  "name": "New Balance 1906R \"Black\"",
+  "brand": "New Balance",
+  "colorway": "Black / Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "New Balance",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/11-new-balance-1906r-black",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/11-new-balance-1906r-black",
+  "imageStatus": "ok",
+  "description": "New Balance 1906R in triple black. ABZORB midsole cushioning with N-ergy technology, mesh and synthetic upper. Foot Locker exclusive.",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314217525204.html",
+      "retailPrice": {
+        "amount": 169,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "discount": 26,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41.5",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

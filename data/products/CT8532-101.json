@@ -1,0 +1,36 @@
+{
+  "productId": "CT8532-101",
+  "name": "Air Jordan 3 Retro \"Lucky Shorts\"",
+  "brand": "Jordan",
+  "colorway": "Blue / Dust / Purple",
+  "category": "Clothing",
+  "tags": [
+    "Sneakers",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/5-air-jordan-3-retro-lucky-shorts",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/a7cd6b28-7b1e-4c03-b517-bf6ac1eb6c9e/AIR+JORDAN+3+RETRO.png",
+  "imageStatus": "ok",
+  "description": "The Lucky Shorts AJ3 pays tribute to Michael Jordan's legendary UNC shorts. Summit White tumbled leather with Legend Blue accents.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-3-retro-sneaker-ct8532-101.html",
+      "retailPrice": {
+        "amount": 210,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "discount": 48,
+      "sizes": [
+        "EU 39"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

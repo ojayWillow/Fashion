@@ -1,0 +1,43 @@
+{
+  "productId": "HQ7540-101",
+  "name": "Nike Shox Z",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/137-nike-sportswear-wmns-shox-z-hq7540-101",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "A sharp reinterpretation of a Y2K-era silhouette, the Wmns Shox Z arrives in crisp white tones layered with soft neutral accents for a clean, futuristic look. The sculpted upper highlights the model’s",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-wmns-shox-z-hq7540-101",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 98,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 36",
+        "EU 36.5",
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

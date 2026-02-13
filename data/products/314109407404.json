@@ -1,0 +1,44 @@
+{
+  "productId": "314109407404",
+  "name": "Puma Lafrance Rnnr",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/22-puma-lafrance-rnnr",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/22-puma-lafrance-rnnr",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314109407404.html",
+      "retailPrice": {
+        "amount": 119.99,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 70,
+        "currency": "EUR"
+      },
+      "discount": 42,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 46",
+        "EU 47"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

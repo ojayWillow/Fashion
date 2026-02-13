@@ -1,0 +1,37 @@
+{
+  "productId": "BGQ425D156030",
+  "name": "Butter Goods Racer Denim Jeans",
+  "brand": "Butter Goods",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "Butter Goods",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/142-butter-goods-racer-denim-jeans-bgq425d156030",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "The Racer Denim Jeans by Butter Goods offer a durable denim construction with a racing-inspired details, combining style and functionality. Butter Goods Racer Denim Jeans 100% cotton denim Relaxed fit",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/butter-goods-racer-denim-jeans-bgq425d156030",
+      "retailPrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 94,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "W28",
+        "W30",
+        "W32"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

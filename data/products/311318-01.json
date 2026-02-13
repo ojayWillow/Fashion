@@ -1,0 +1,35 @@
+{
+  "productId": "311318-01",
+  "name": "Puma MB.04 Lo Alien Skins",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/173-puma-mb-04-lo-alien-skins-311318-01",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "LaMelo Ball is not of this Earth – but fortunately, he comes in peace. The latest edition of the PUMA MB.04 takes inspiration from Melo’s otherworldly style of play, wrapping the silhouette in an eye-",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/puma-mb-04-lo-alien-skins-311318-01",
+      "retailPrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 63,
+        "currency": "EUR"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

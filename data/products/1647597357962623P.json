@@ -1,0 +1,45 @@
+{
+  "productId": "1647597357962623P",
+  "name": "Clogposite Iridescent TPU and Shell Slip-On Sneakers",
+  "brand": "NIKE",
+  "colorway": "Blue",
+  "category": "Footwear",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/187-clogposite-iridescent-tpu-and-shell-slip-on-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Clogposite Iridescent TPU and Shell Slip-On Sneakers, available in blue. 60% Textile fibres 40% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/slip-on-sneakers/clogposite-iridescent-tpu-and-shell-slip-on-sneakers/1647597357962624",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

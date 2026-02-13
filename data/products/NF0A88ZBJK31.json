@@ -1,0 +1,39 @@
+{
+  "productId": "NF0A88ZBJK31",
+  "name": "The North Face Extreme Pile Full Zip Jacket 2",
+  "brand": "The North Face",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "Clothing",
+    "The North Face",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/151-the-north-face-wmns-extreme-pile-full-zip-jacket-2-nf0a88zbj",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "We all love to stay warm and cozy throughout the colder seasons, so why not look stylish too with this women's Extreme Pile Full Zip Jacket 2 by The North Face? In a relaxed fit and heavyweight high-p",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/the-north-face-wmns-extreme-pile-full-zip-jacket-2-nf0a88zbjk31",
+      "retailPrice": {
+        "amount": 160,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

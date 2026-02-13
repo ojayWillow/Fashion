@@ -1,0 +1,37 @@
+{
+  "productId": "IB3003-554",
+  "name": "Jordan Rare Air Pullover Fleece Hoodie",
+  "brand": "Jordan",
+  "colorway": "Purple Earth",
+  "category": "Clothing",
+  "tags": [
+    "Hoodie",
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/2-jordan-rare-air-pullover-fleece-hoodie",
+  "originalImage": "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/JORDAN+RARE+AIR+FLC+PO+HDY.png",
+  "imageStatus": "ok",
+  "description": "French terry hoodie with an all-over wash, crackled chest print and distressing. Undeniably Air Jordan.",
+  "listings": [
+    {
+      "store": "end-clothing",
+      "url": "https://www.endclothing.com/gb/air-jordan-rair-air-pullover-fleece-hoodie-ib3003-554.html",
+      "retailPrice": {
+        "amount": 135,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 95,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "S",
+        "M"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

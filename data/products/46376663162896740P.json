@@ -1,0 +1,38 @@
+{
+  "productId": "46376663162896740P",
+  "name": "1906 Mesh Penny Loafers",
+  "brand": "NEW BALANCE",
+  "colorway": "Blue",
+  "category": "Footwear",
+  "tags": [
+    "Sneakers",
+    "NEW BALANCE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/203-1906-mesh-penny-loafers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "1906 Mesh Penny Loafers, available in blue or pink. 50% Textile fibres 50% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/new-balance/shoes/loafers/1906-mesh-penny-loafers/46376663162896741",
+      "retailPrice": {
+        "amount": 120,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 72,
+        "currency": "GBP"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 40.5",
+        "EU 42",
+        "EU 42.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

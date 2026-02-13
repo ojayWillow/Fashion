@@ -1,0 +1,39 @@
+{
+  "productId": "DX4215-100",
+  "name": "Nike Ava Rover",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/157-nike-sportswear-ava-rover-dx4215-100",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Blending modern streetwear, performance design, and iconic Swoosh heritage, the brand-new Nike Ava Rover brings the future of everyday comfort to the present. Crafted with a haptic-textured upper with",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-ava-rover-dx4215-100",
+      "retailPrice": {
+        "amount": 140,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 105,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 42",
+        "EU 42.5",
+        "EU 44.5",
+        "EU 45",
+        "EU 47"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

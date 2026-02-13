@@ -1,0 +1,37 @@
+{
+  "productId": "JR9246",
+  "name": "adidas Samba x BAPE",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "adidas",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/150-adidas-originals-samba-x-bape-jr9246",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "The Samba x BAPE combines the classic Samba staple with BAPE’s signature STA™ logo. Smooth leather uppers, a gum sole, and mismatched paneling let the Three Stripes and BAPE details share the spotligh",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-samba-x-bape-jr9246",
+      "retailPrice": {
+        "amount": 160,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 112,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 36",
+        "EU 36.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

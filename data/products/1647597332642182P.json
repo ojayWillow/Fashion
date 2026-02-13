@@ -1,0 +1,38 @@
+{
+  "productId": "1647597332642182P",
+  "name": "Tom Padded Suede Sandals",
+  "brand": "MR P.",
+  "colorway": "Brown",
+  "category": "Footwear",
+  "tags": [
+    "MR P.",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/192-tom-padded-suede-sandals",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Tom Padded Suede Sandals, available in brown. 80% Leather 20% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/mr-p/shoes/summer-shoes/tom-padded-suede-sandals/1647597332642183",
+      "retailPrice": {
+        "amount": 195,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 78,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 40.5",
+        "EU 42",
+        "EU 43",
+        "EU 44.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

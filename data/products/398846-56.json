@@ -1,0 +1,42 @@
+{
+  "productId": "398846-56",
+  "name": "Puma Speedcat OG",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/105-puma-speedcat-og-398846-56",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Known as a legend in footwear history and highly coveted amongst collectors, the PUMA Speedcat is back in its true OG form, offering the perfect balance of motorsports, fashion, and footwear innovatio",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/puma-speedcat-og-398846-56",
+      "retailPrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 55,
+        "currency": "EUR"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 36.5",
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 42.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "productId": "401665-01",
+  "name": "Puma Inhale Color Shifting",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/107-puma-inhale-color-shifting-401665-01",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Originally launched in 2000 as a running shoe with bold, exaggerated contours and a thick sole, the PUMA Inhale continues to grow and evolve with this brand-new cutting-edge Color Shifting iteration.",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/puma-inhale-color-shifting-401665-01",
+      "retailPrice": {
+        "amount": 130,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 65,
+        "currency": "EUR"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 44.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "productId": "JV7479",
+  "name": "adidas Teamgeist Adicolor Woven Track Pant",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "adidas",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/104-adidas-originals-wmns-teamgeist-adicolor-woven-track-pant-jv",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-wmns-teamgeist-adicolor-woven-track-pant-jv7479",
+      "retailPrice": {
+        "amount": 85,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 60,
+        "currency": "EUR"
+      },
+      "discount": 29,
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

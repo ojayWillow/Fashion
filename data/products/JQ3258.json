@@ -1,0 +1,42 @@
+{
+  "productId": "JQ3258",
+  "name": "adidas Superstar Vintage",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "adidas",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/133-adidas-originals-superstar-vintage-jq3258",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "The Superstar vintage lineage is all about letting material do the heavy lifting, and this edition takes that idea seriously. Deep warm brown leather runs across the upper with a crocodile-embossed te",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-superstar-vintage-jq3258",
+      "retailPrice": {
+        "amount": 150,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 113,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 40.5",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

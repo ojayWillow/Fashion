@@ -1,0 +1,42 @@
+{
+  "productId": "314217829804",
+  "name": "Nike Air Max TL 2.5",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/13-nike-air-max-tl-2-5",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/13-nike-air-max-tl-2-5",
+  "imageStatus": "ok",
+  "description": "Ride the Air De Nike Air Max TL 2.5 is terug met opvallende energie en een tijdloze flow. Het bovenwerk is gemaakt van ademend textiel met lagen van zacht synthetisch materiaal voo",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314217829804.html",
+      "retailPrice": {
+        "amount": 179.99,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "discount": 31,
+      "sizes": [
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

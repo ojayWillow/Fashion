@@ -1,0 +1,36 @@
+{
+  "productId": "46376663162871491P",
+  "name": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap",
+  "brand": "A.P.C.",
+  "colorway": "Navy",
+  "category": "Accessories",
+  "tags": [
+    "A.P.C.",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/235-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "+ Marc Jacobs Logo-Embroidered Cotton-Jersey Baseball Cap, available in navy. 100% Cotton",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/apc/accessories/caps/plus-marc-jacobs-logo-embroidered-cotton-jersey-baseball-cap/46376663162871492",
+      "retailPrice": {
+        "amount": 100,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "EU 54",
+        "EU 60"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

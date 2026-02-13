@@ -1,0 +1,49 @@
+{
+  "productId": "HQ1973-001",
+  "name": "Nike Air Max 95 OG QS",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/145-nike-sportswear-air-max-95-og-qs-hq1973-001",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "2025 keeps bringing fresh iterations of the Air Max 95 as Nike continues to celebrate the silhouette’s 30th anniversary. Staying true to its human-anatomy-inspired roots, rippling layers of synthetic",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-air-max-95-og-qs-hq1973-001",
+      "retailPrice": {
+        "amount": 200,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 140,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "EU 38.5",
+        "EU 39",
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46",
+        "EU 47.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

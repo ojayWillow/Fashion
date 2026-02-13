@@ -1,0 +1,36 @@
+{
+  "productId": "JX6598",
+  "name": "adidas Teamgeist Adicolor Track Top",
+  "brand": "adidas",
+  "colorway": "TBD",
+  "category": "Clothing",
+  "tags": [
+    "adidas",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/113-adidas-originals-teamgeist-adicolor-track-top-jx6598",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/adidas-teamgeist-adicolor-track-top-jx6598",
+      "retailPrice": {
+        "amount": 80,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 56,
+        "currency": "EUR"
+      },
+      "discount": 30,
+      "sizes": [
+        "XS",
+        "S"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

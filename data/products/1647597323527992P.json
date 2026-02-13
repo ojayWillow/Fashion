@@ -1,0 +1,57 @@
+{
+  "productId": "1647597323527992P",
+  "name": "Air Max 1 '87 Mesh-Trimmed Leather and Suede Sneakers",
+  "brand": "NIKE",
+  "colorway": "Brown",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "NIKE",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/223-air-max-1-87-mesh-trimmed-leather-and-suede-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Air Max 1 '87 Mesh-Trimmed Leather and Suede Sneakers, available in brown or gray. % Leather % Rubber",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-87-mesh-trimmed-leather-sneakers/1647597318041307",
+      "retailPrice": {
+        "amount": 145,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 58,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 37.5",
+        "EU 38",
+        "EU 38.5",
+        "EU 40"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    },
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/nike/shoes/low-top-sneakers/air-max-1-87-mesh-trimmed-leather-and-suede-sneakers/1647597323530231",
+      "retailPrice": {
+        "amount": 145,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 58,
+        "currency": "GBP"
+      },
+      "discount": 60,
+      "sizes": [
+        "EU 40"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

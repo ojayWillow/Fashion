@@ -1,0 +1,35 @@
+{
+  "productId": "314217728204",
+  "name": "Salomon XT-6",
+  "brand": "Salomon",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Salomon",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/24-salomon-xt-6",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/24-salomon-xt-6",
+  "imageStatus": "ok",
+  "description": "Run Wild, Run Free Klaar om je grenzen te verleggen? Stap in de buitengewone Salomon XT-6. Deze krachtpatsers, ontworpen voor ware avonturiers en geliefd door at",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314217728204.html",
+      "retailPrice": {
+        "amount": 179.99,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 125,
+        "currency": "EUR"
+      },
+      "discount": 31,
+      "sizes": [
+        "EU 44"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

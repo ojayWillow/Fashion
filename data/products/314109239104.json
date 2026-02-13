@@ -1,0 +1,35 @@
+{
+  "productId": "314109239104",
+  "name": "Puma Lafrance Icey",
+  "brand": "Puma",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Puma",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/14-puma-lafrance-icey",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/14-puma-lafrance-icey",
+  "imageStatus": "ok",
+  "description": "",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314109239104.html",
+      "retailPrice": {
+        "amount": 90,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 80,
+        "currency": "EUR"
+      },
+      "discount": 11,
+      "sizes": [
+        "EU 40.5"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

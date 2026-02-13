@@ -1,0 +1,43 @@
+{
+  "productId": "314109461104",
+  "name": "Jordan Spizike Low",
+  "brand": "Jordan",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Jordan",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/12-jordan-spizike-low",
+  "originalImage": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto/picks/12-jordan-spizike-low",
+  "imageStatus": "ok",
+  "description": "Combineer cultuur en stijl Loop met zelfvertrouwen waar je ook heen gaat met de Jordan Spizike Low. Deze schoenen zijn een eerbetoon aan de familie van Spike Lee",
+  "listings": [
+    {
+      "store": "foot-locker",
+      "url": "https://www.footlocker.nl/nl/product/~/314109461104.html",
+      "retailPrice": {
+        "amount": 169.99,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 110,
+        "currency": "EUR"
+      },
+      "discount": 35,
+      "sizes": [
+        "EU 40",
+        "EU 40.5",
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 45",
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

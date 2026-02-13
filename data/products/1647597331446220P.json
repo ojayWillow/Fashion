@@ -1,0 +1,36 @@
+{
+  "productId": "1647597331446220P",
+  "name": "Oversized Logo-Appliquéd Cotton-Jersey T",
+  "brand": "FEAR OF GOD ESSENTIALS",
+  "colorway": "Black",
+  "category": "Clothing",
+  "tags": [
+    "Clothing",
+    "FEAR OF GOD ESSENTIALS",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/244-oversized-logo-appliqu-d-cotton-jersey-t-shirt",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Oversized Logo-Appliquéd Cotton-Jersey T-Shirt, available in black. 100% Cotton",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/fear-of-god-essentials/clothing/plain-t-shirts/oversized-logo-appliqued-cotton-jersey-t-shirt/1647597331446260",
+      "retailPrice": {
+        "amount": 60,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 30,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [
+        "XL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

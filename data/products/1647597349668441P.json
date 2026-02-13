@@ -1,0 +1,34 @@
+{
+  "productId": "1647597349668441P",
+  "name": "Samba OG Suede-Trimmed Calf Hair Sneakers",
+  "brand": "ADIDAS ORIGINALS",
+  "colorway": "Claret",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "ADIDAS ORIGINALS",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/233-samba-og-suede-trimmed-calf-hair-sneakers",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Samba OG Suede-Trimmed Calf Hair Sneakers, available in claret. 40% Leather 40% Various Materials 20% Textile fibres",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/adidas-originals/shoes/low-top-sneakers/samba-og-suede-trimmed-calf-hair-sneakers/1647597349668615",
+      "retailPrice": {
+        "amount": 100,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 50,
+        "currency": "GBP"
+      },
+      "discount": 50,
+      "sizes": [],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": false
+    }
+  ]
+}

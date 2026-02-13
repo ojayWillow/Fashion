@@ -1,0 +1,43 @@
+{
+  "productId": "S30994-97",
+  "name": "Saucony Endorphin Elite 2",
+  "brand": "Saucony",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Saucony",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/129-saucony-endorphin-elite-2-s30994-97",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Engineered for speed, the Saucony Endorphin Elite 2 offers a lightweight, performance-driven ride with maximum responsiveness. Featuring a breathable engineered mesh upper, PWRRUN PB cushioning, and a",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/saucony-endorphin-elite-2-s30994-97",
+      "retailPrice": {
+        "amount": 300,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 225,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "EU 41",
+        "EU 42",
+        "EU 42.5",
+        "EU 43",
+        "EU 44",
+        "EU 44.5",
+        "EU 45",
+        "EU 45.5",
+        "EU 46"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

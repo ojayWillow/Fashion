@@ -1,0 +1,36 @@
+{
+  "productId": "FN8196-370",
+  "name": "NOCTA Sunset Puffer",
+  "brand": "Nike",
+  "colorway": "TBD",
+  "category": "Sneakers",
+  "tags": [
+    "Nike",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/117-nocta-sunset-puffer-fn8196-370",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "Designed for cold-weather comfort, the NOCTA Sunset Puffer Jacket features premium down insulation and a relaxed fit through the body for effortless everyday wear. Clean lines and a bold seasonal colo",
+  "listings": [
+    {
+      "store": "sns",
+      "url": "https://www.sneakersnstuff.com/en-eu/products/nike-sunset-puffer-fn8196-370",
+      "retailPrice": {
+        "amount": 400,
+        "currency": "EUR"
+      },
+      "salePrice": {
+        "amount": 300,
+        "currency": "EUR"
+      },
+      "discount": 25,
+      "sizes": [
+        "M",
+        "XXL"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}

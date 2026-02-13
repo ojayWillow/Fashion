@@ -1,0 +1,36 @@
+{
+  "productId": "1647597347332810P",
+  "name": "+ Bureau Borsche Cloudflow 4 IKON Rubber-Trimmed Mesh Running Sneakers",
+  "brand": "ON",
+  "colorway": "Black",
+  "category": "Sneakers",
+  "tags": [
+    "Sneakers",
+    "ON",
+    "Sale"
+  ],
+  "image": "https://res.cloudinary.com/dykocdlgk/image/upload/f_auto,q_auto,w_800,h_800,c_pad,b_white/picks/225-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-",
+  "originalImage": "",
+  "imageStatus": "ok",
+  "description": "+ Bureau Borsche Cloudflow 4 IKON Rubber-Trimmed Mesh Running Sneakers, available in black. 50% Textile fibres 50% Various Materials",
+  "listings": [
+    {
+      "store": "mr-porter",
+      "url": "https://www.mrporter.com/en-gb/mens/product/on/sport/running-shoes/plus-bureau-borsche-cloudflow-4-ikon-rubber-trimmed-mesh-running-sneakers/1647597347333346",
+      "retailPrice": {
+        "amount": 160,
+        "currency": "GBP"
+      },
+      "salePrice": {
+        "amount": 96,
+        "currency": "GBP"
+      },
+      "discount": 40,
+      "sizes": [
+        "EU 44"
+      ],
+      "lastScraped": "2026-02-12T00:00:00Z",
+      "available": true
+    }
+  ]
+}
