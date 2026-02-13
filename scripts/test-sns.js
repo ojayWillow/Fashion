@@ -1,12 +1,12 @@
-// END. recon #2 — find the size selector elements
+// Foot Locker NL recon — Patchright (already working partially)
 const { chromium } = require('patchright');
 
 (async () => {
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
-  console.log('Opening END. with Patchright...');
-  await page.goto('https://www.endclothing.com/gb/adidas-tahiti-marine-sneaker-jr4773.html', {
+  console.log('Opening Foot Locker NL with Patchright...');
+  await page.goto('https://www.footlocker.nl/nl/product/lacoste-spinor-heren-schoenen/314217718304.html', {
     waitUntil: 'domcontentloaded',
   });
 
@@ -21,113 +21,147 @@ const { chromium } = require('patchright');
     }
   }
 
-  // Look for any element with "size" in its attributes or data-test-id
-  const sizeData = await page.evaluate(() => {
+  const data = await page.evaluate(() => {
     const result = {};
 
-    // 1. Find ALL elements with data-test-id containing size
-    const testIdEls = document.querySelectorAll('[data-test-id*="ize"], [data-test-id*="SIZE"]');
-    result.dataTestIdElements = [...testIdEls].slice(0, 20).map(el => ({
+    // 1. JSON-LD
+    const jsonLd = document.querySelectorAll('script[type="application/ld+json"]');
+    result.jsonLdCount = jsonLd.length;
+    result.jsonLdData = [...jsonLd].map(s => {
+      try { return JSON.parse(s.textContent); }
+      catch { return 'parse-error'; }
+    });
+
+    // 2. Page info
+    result.title = document.title;
+    const h1 = document.querySelector('h1');
+    result.h1 = h1 ? h1.textContent.trim().substring(0, 100) : null;
+
+    // 3. Price elements
+    const allEls = document.querySelectorAll('*');
+    const priceEls = [];
+    for (const el of allEls) {
+      const cls = el.className || '';
+      const testId = el.getAttribute('data-testid') || '';
+      if (typeof cls === 'string' && (
+        cls.toLowerCase().includes('price') ||
+        testId.toLowerCase().includes('price')
+      )) {
+        const text = el.textContent.trim();
+        if (text.length < 80 && text.length > 0) {
+          priceEls.push({
+            tag: el.tagName,
+            class: cls.substring(0, 100),
+            testId: testId || null,
+            text: text.substring(0, 80),
+            html: el.innerHTML.substring(0, 200),
+          });
+        }
+      }
+    }
+    result.priceElements = priceEls.slice(0, 15);
+
+    // 4. Strikethrough / crossed out prices
+    const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"], [class*="crossed"], [class*="Crossed"], [class*="was"], [class*="Was"], [class*="original"], [class*="Original"]');
+    result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
       tag: el.tagName,
-      testId: el.getAttribute('data-test-id'),
+      text: el.textContent.trim().substring(0, 50),
+      class: (el.className || '').substring(0, 80),
+      parent: el.parentElement?.className?.substring(0, 80) || null,
+    }));
+
+    // 5. Size elements — broad search
+    const sizeByTestId = document.querySelectorAll('[data-testid*="ize"], [data-testid*="SIZE"]');
+    result.sizeTestIdElements = [...sizeByTestId].slice(0, 20).map(el => ({
+      tag: el.tagName,
+      testId: el.getAttribute('data-testid'),
       text: el.textContent.trim().substring(0, 50),
       class: (el.className || '').substring(0, 80),
       childCount: el.children.length,
     }));
 
-    // 2. Find ALL buttons inside the product details area
-    const pdpButtons = document.querySelectorAll('button');
+    // Size buttons (numeric)
+    const allButtons = document.querySelectorAll('button, a');
     const sizeButtons = [];
-    for (const btn of pdpButtons) {
+    for (const btn of allButtons) {
       const text = btn.textContent.trim();
-      // Look for buttons that look like sizes (numbers, UK sizes, etc)
-      if (/^(UK\s?)?\d{1,2}(\.5)?$/.test(text) || /^EU\s?\d{2}/.test(text)) {
+      if (/^(EU\s?)?\d{2}(\.5)?$/.test(text) || /^(UK\s?)?\d{1,2}(\.5)?$/.test(text)) {
         sizeButtons.push({
+          tag: btn.tagName,
           text,
           class: (btn.className || '').substring(0, 80),
-          disabled: btn.disabled,
-          ariaLabel: btn.getAttribute('aria-label') || null,
-          dataTestId: btn.getAttribute('data-test-id') || null,
+          testId: btn.getAttribute('data-testid') || null,
+          disabled: btn.disabled || btn.classList.contains('disabled') || false,
         });
       }
     }
     result.sizeButtons = sizeButtons.slice(0, 20);
 
-    // 3. Find any <select> elements
-    const selects = document.querySelectorAll('select');
-    result.selectElements = [...selects].slice(0, 5).map(sel => ({
-      name: sel.name || null,
-      id: sel.id || null,
-      class: (sel.className || '').substring(0, 80),
-      options: [...sel.options].slice(0, 15).map(o => ({
-        text: o.text.trim().substring(0, 30),
-        value: o.value,
-        disabled: o.disabled,
-      })),
-    }));
-
-    // 4. Find any element with aria-label containing "size"
-    const ariaEls = document.querySelectorAll('[aria-label*="ize"], [aria-label*="SIZE"]');
-    result.ariaElements = [...ariaEls].slice(0, 10).map(el => ({
-      tag: el.tagName,
-      ariaLabel: el.getAttribute('aria-label'),
-      text: el.textContent.trim().substring(0, 80),
-      class: (el.className || '').substring(0, 80),
-      childCount: el.children.length,
-    }));
-
-    // 5. Look for a size container via common patterns
+    // Size containers
     const containers = document.querySelectorAll(
       '[class*="SizeSelector"], [class*="sizeSelector"], [class*="size-selector"], ' +
       '[class*="SizeGrid"], [class*="sizeGrid"], [class*="size-grid"], ' +
-      '[class*="SizeList"], [class*="sizeList"], [class*="size-list"], ' +
-      '[class*="SizePicker"], [class*="sizePicker"]'
+      '[class*="SizeList"], [class*="sizeList"], [class*="size-list"]'
     );
-    result.sizeContainers = [...containers].slice(0, 5).map(el => ({
+    result.sizeContainers = [...containers].slice(0, 3).map(el => ({
       tag: el.tagName,
       class: (el.className || '').substring(0, 120),
       childCount: el.children.length,
-      firstChildTag: el.firstElementChild?.tagName || null,
       innerHTML: el.innerHTML.substring(0, 500),
     }));
 
-    // 6. Broad search: any element whose text is just a shoe size number
-    const allSpans = document.querySelectorAll('span, div, a, li, p');
-    const possibleSizes = [];
-    for (const el of allSpans) {
-      const text = el.textContent.trim();
-      if (/^\d{1,2}(\.5)?$/.test(text) && el.children.length === 0) {
-        possibleSizes.push({
-          tag: el.tagName,
-          text,
-          class: (el.className || '').substring(0, 80),
-          parentClass: (el.parentElement?.className || '').substring(0, 80),
-          parentTag: el.parentElement?.tagName || null,
-        });
-      }
+    // 6. Any XHR/fetch data in window (Foot Locker often stores product data in JS)
+    result.windowKeys = Object.keys(window).filter(k =>
+      k.toLowerCase().includes('product') ||
+      k.toLowerCase().includes('pdp') ||
+      k.toLowerCase().includes('data') ||
+      k.toLowerCase().includes('state') ||
+      k.toLowerCase().includes('__')
+    ).slice(0, 20);
+
+    // Check for __NEXT_DATA__ or similar
+    if (window.__NEXT_DATA__) {
+      result.nextData = JSON.stringify(window.__NEXT_DATA__).substring(0, 500);
     }
-    result.possibleSizeTexts = possibleSizes.slice(0, 20);
+    if (window.__INITIAL_STATE__) {
+      result.initialState = JSON.stringify(window.__INITIAL_STATE__).substring(0, 500);
+    }
+
+    // 7. Meta tags
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 150) : null;
 
     return result;
   });
 
-  console.log('\n=== DATA-TEST-ID with "size" ===');
-  console.log(JSON.stringify(sizeData.dataTestIdElements, null, 2));
+  console.log('\n=== PAGE INFO ===');
+  console.log(`Title: ${data.title}`);
+  console.log(`H1: ${data.h1}`);
+  console.log(`OG Image: ${data.ogImage}`);
+
+  console.log('\n=== JSON-LD ===');
+  console.log(`Count: ${data.jsonLdCount}`);
+  console.log(JSON.stringify(data.jsonLdData, null, 2).substring(0, 3000));
+
+  console.log('\n=== PRICE ELEMENTS ===');
+  console.log(JSON.stringify(data.priceElements, null, 2));
+
+  console.log('\n=== STRIKETHROUGH ===');
+  console.log(JSON.stringify(data.strikethroughElements, null, 2));
+
+  console.log('\n=== SIZE ELEMENTS (data-testid) ===');
+  console.log(JSON.stringify(data.sizeTestIdElements, null, 2));
 
   console.log('\n=== SIZE BUTTONS (numeric) ===');
-  console.log(JSON.stringify(sizeData.sizeButtons, null, 2));
+  console.log(JSON.stringify(data.sizeButtons, null, 2));
 
-  console.log('\n=== SELECT ELEMENTS ===');
-  console.log(JSON.stringify(sizeData.selectElements, null, 2));
+  console.log('\n=== SIZE CONTAINERS ===');
+  console.log(JSON.stringify(data.sizeContainers, null, 2));
 
-  console.log('\n=== ARIA "size" ELEMENTS ===');
-  console.log(JSON.stringify(sizeData.ariaElements, null, 2));
-
-  console.log('\n=== SIZE CONTAINERS (class match) ===');
-  console.log(JSON.stringify(sizeData.sizeContainers, null, 2));
-
-  console.log('\n=== POSSIBLE SIZE TEXTS (bare numbers) ===');
-  console.log(JSON.stringify(sizeData.possibleSizeTexts, null, 2));
+  console.log('\n=== WINDOW KEYS ===');
+  console.log(JSON.stringify(data.windowKeys, null, 2));
+  if (data.nextData) console.log('\n__NEXT_DATA__:', data.nextData);
+  if (data.initialState) console.log('\n__INITIAL_STATE__:', data.initialState);
 
   await browser.close();
   console.log('\nDone.');
