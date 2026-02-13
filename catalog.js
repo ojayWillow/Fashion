@@ -37,7 +37,7 @@
     if (!url || url === '/favicon.png') return '';
     return url.replace(
       'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-      'f_auto,q_auto/e_background_removal/e_trim/w_800,h_800,c_pad,b_white'
+      'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_white'
     );
   }
 
@@ -72,7 +72,6 @@
 
   function storeDisplayName(slug) {
     if (storeMetadata[slug]) return storeMetadata[slug].name;
-    // Fallback: capitalize slug
     return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
@@ -94,7 +93,6 @@
               const domain = s.url ? new URL(s.url).hostname.replace('www.', '') : '';
               const slug = s.name.toLowerCase()
                 .replace(/[^\w\s-]/g, '').replace(/[\s]+/g, '-').replace(/\.$/,'');
-              // Also map by known slugs
               const knownSlugs = {
                 'END. Clothing': 'end-clothing',
                 'Foot Locker': 'foot-locker',
@@ -114,8 +112,6 @@
       const indexResp = await fetch('data/index.json');
       const indexData = await indexResp.json();
 
-      // For the catalog grid we need full product data (with listings)
-      // Load each product file
       const products = [];
       for (const entry of indexData.products) {
         try {
@@ -129,7 +125,6 @@
 
       allProducts = products;
 
-      // Count unique stores
       const storeSet = new Set();
       allProducts.forEach(p => (p.listings || []).forEach(l => storeSet.add(l.store)));
 
@@ -151,22 +146,18 @@
     const sizes = new Set();
 
     for (const p of allProducts) {
-      // Category
       const cat = (p.category || 'Other').toLowerCase();
       categories[cat] = (categories[cat] || 0) + 1;
 
-      // Brand
       if (p.brand) {
         brands[p.brand] = (brands[p.brand] || 0) + 1;
       }
 
-      // Stores (from listings)
       for (const l of (p.listings || [])) {
         const name = storeDisplayName(l.store);
         stores[name] = (stores[name] || 0) + 1;
       }
 
-      // Sizes (from all listings)
       allSizes(p).forEach(s => sizes.add(s));
     }
 
@@ -175,7 +166,6 @@
     renderCheckboxFilter('filterStore', stores, 'store');
     renderSizeFilter('filterSize', sizes);
 
-    // Collapsible toggles
     document.querySelectorAll('.filter-group-title').forEach(title => {
       title.addEventListener('click', () => {
         title.classList.toggle('collapsed');
@@ -251,29 +241,24 @@
     const q = filters.search.toLowerCase();
 
     filtered = allProducts.filter(p => {
-      // Text search
       if (q) {
         const haystack = `${p.name} ${p.brand} ${p.colorway} ${(p.tags || []).join(' ')} ${allStoreNames(p).join(' ')}`.toLowerCase();
         if (!haystack.includes(q)) return false;
       }
 
-      // Category
       if (filters.category.length > 0) {
         if (!filters.category.includes((p.category || 'Other').toLowerCase())) return false;
       }
 
-      // Brand
       if (filters.brand.length > 0) {
         if (!filters.brand.includes(p.brand)) return false;
       }
 
-      // Store — match if ANY listing is from a selected store
       if (filters.store.length > 0) {
         const productStores = allStoreNames(p);
         if (!filters.store.some(s => productStores.includes(s))) return false;
       }
 
-      // Size — match if ANY listing has the selected size
       if (filters.size.length > 0) {
         const productSizes = allSizes(p);
         if (!filters.size.some(s => productSizes.includes(s))) return false;
@@ -328,7 +313,6 @@
       return buildCard(p, delay);
     }).join('');
 
-    // Card click handlers
     grid.querySelectorAll('.pick-card').forEach(card => {
       card.addEventListener('click', (e) => {
         if (e.target.closest('.pick-size')) return;
@@ -350,7 +334,6 @@
     const retailPriceStr = listing ? formatPrice(listing.retailPrice) : '';
     const discountStr = listing && listing.discount > 0 ? `-${listing.discount}%` : '';
 
-    // Multi-store badge
     const storeCount = (p.listings || []).length;
     const multiStoreBadge = storeCount > 1
       ? `<div class="pick-card-multi-store">${storeCount} stores</div>` : '';

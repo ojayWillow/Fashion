@@ -123,10 +123,10 @@ function handleImageError(imgEl, brandName) {
 // ===== CLOUDINARY IMAGE NORMALIZER =====
 function normalizeImage(url) {
     if (!url || url === '/favicon.png') return '';
-    // Apply background removal, trim whitespace, then pad uniformly on white
+    // Trim whitespace/borders, then pad uniformly on white
     return url.replace(
         'f_auto,q_auto,w_800,h_800,c_pad,b_white',
-        'f_auto,q_auto/e_background_removal/e_trim/w_800,h_800,c_pad,b_white'
+        'f_auto,q_auto/e_trim/w_800,h_800,c_pad,b_white'
     );
 }
 
