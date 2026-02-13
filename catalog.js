@@ -32,6 +32,15 @@
   const activeChips = document.getElementById('activeChips');
   const clearAllBtn = document.getElementById('clearAll');
 
+  // ===== CLOUDINARY IMAGE NORMALIZER =====
+  function normalizeImage(url) {
+    if (!url || url === '/favicon.png') return '';
+    return url.replace(
+      'f_auto,q_auto,w_800,h_800,c_pad,b_white',
+      'f_auto,q_auto/e_background_removal/e_trim/w_800,h_800,c_pad,b_white'
+    );
+  }
+
   // ===== HELPERS =====
   function formatPrice(priceObj) {
     if (!priceObj || !priceObj.amount) return '';
@@ -357,8 +366,9 @@
       `<span class="pick-tag">${t}</span>`
     ).join('');
 
-    const imgHtml = p.image
-      ? `<img src="${p.image}" alt="${esc(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pick-img-fallback><div class=pick-img-fallback-icon>${esc(p.brand ? p.brand[0] : '?')}</div><div class=pick-img-fallback-text>Image unavailable</div></div>'">`
+    const imgUrl = normalizeImage(p.image);
+    const imgHtml = imgUrl
+      ? `<img src="${imgUrl}" alt="${esc(p.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=pick-img-fallback><div class=pick-img-fallback-icon>${esc(p.brand ? p.brand[0] : '?')}</div><div class=pick-img-fallback-text>Image unavailable</div></div>'">`
       : `<div class="pick-img-fallback"><div class="pick-img-fallback-icon">${esc(p.brand ? p.brand[0] : '?')}</div><div class="pick-img-fallback-text">No image</div></div>`;
 
     return `
