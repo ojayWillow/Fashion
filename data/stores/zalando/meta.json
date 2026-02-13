@@ -1,0 +1,14 @@
+{
+  "slug": "zalando",
+  "name": "Zalando",
+  "url": "https://www.zalando.com",
+  "saleUrl": "https://www.zalando.com/campaigns/winter-sale/",
+  "flag": "🇩🇪",
+  "country": "Germany",
+  "category": "Major Marketplaces",
+  "categoryIcon": "🔵",
+  "description": "Europe's largest online fashion platform.",
+  "currentDeal": "Winter Sale — up to 50% off across 2,000+ brands",
+  "lat": 52.52,
+  "lng": 13.405
+}

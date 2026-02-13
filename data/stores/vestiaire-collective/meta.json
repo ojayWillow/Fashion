@@ -1,0 +1,14 @@
+{
+  "slug": "vestiaire-collective",
+  "name": "Vestiaire Collective",
+  "url": "https://www.vestiairecollective.com",
+  "saleUrl": "https://www.vestiairecollective.com/sale/",
+  "flag": "🇫🇷",
+  "country": "France",
+  "category": "Resale & Vintage",
+  "categoryIcon": "♻️",
+  "description": "Luxury resale with authentication.",
+  "currentDeal": "Authenticated luxury resale",
+  "lat": 48.8566,
+  "lng": 2.3522
+}

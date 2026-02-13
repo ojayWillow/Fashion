@@ -1,0 +1,14 @@
+{
+  "slug": "veja",
+  "name": "Veja",
+  "url": "https://www.veja-store.com",
+  "saleUrl": "https://www.veja-store.com/en_gb/sale",
+  "flag": "🇫🇷",
+  "country": "France",
+  "category": "Sustainable Fashion",
+  "categoryIcon": "🌿",
+  "description": "Iconic sustainable sneaker brand.",
+  "currentDeal": "Sustainable sneakers on sale",
+  "lat": 48.8566,
+  "lng": 2.3522
+}

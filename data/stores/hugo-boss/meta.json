@@ -1,0 +1,14 @@
+{
+  "slug": "hugo-boss",
+  "name": "Hugo Boss",
+  "url": "https://www.hugoboss.com",
+  "saleUrl": "https://www.hugoboss.com/sale/",
+  "flag": "🇩🇪",
+  "country": "Germany",
+  "category": "Premium & Designer",
+  "categoryIcon": "💎",
+  "description": "BOSS and HUGO lines.",
+  "currentDeal": "Sale — up to 50% off",
+  "lat": 48.6921,
+  "lng": 9.0108
+}

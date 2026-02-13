@@ -6,7 +6,6 @@
     <meta name="description" content="FASHION. Catalog — Browse all products by category, brand, store, and size. Sneakers, hoodies, jackets and more.">
     <title>FASHION. — Catalog</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="sales.css">
     <link rel="stylesheet" href="catalog.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -117,18 +116,7 @@
         </div>
     </section>
 
-    <!-- Redirect Screen (same as sales) -->
-    <div class="redirect-screen" id="redirectScreen">
-        <div class="redirect-screen-content">
-            <div class="redirect-logo">FASHION.</div>
-            <div class="redirect-spinner"><div class="redirect-spinner-ring"></div></div>
-            <p class="redirect-heading">Taking you to</p>
-            <p class="redirect-store" id="redirectStore"></p>
-            <p class="redirect-domain" id="redirectDomain"></p>
-            <div class="redirect-progress-bar"><div class="redirect-progress-fill" id="redirectProgress"></div></div>
-            <p class="redirect-notice">You're leaving FASHION. — we don't control external sites.</p>
-        </div>
-    </div>
+    <!-- Redirect screen is created dynamically by shared/redirect.js -->
 
     <footer class="footer">
         <div class="container">
@@ -138,6 +126,6 @@
         </div>
     </footer>
 
-    <script src="catalog.js"></script>
+    <script type="module" src="src/js/catalog.js"></script>
 </body>
 </html>

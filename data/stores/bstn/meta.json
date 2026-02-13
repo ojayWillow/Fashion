@@ -1,0 +1,14 @@
+{
+  "slug": "bstn",
+  "name": "BSTN",
+  "url": "https://www.bstn.com",
+  "saleUrl": "https://www.bstn.com/sale",
+  "flag": "🇩🇪",
+  "country": "Germany",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Munich-based sneaker raffles.",
+  "currentDeal": "Sneaker raffles + sale",
+  "lat": 48.1351,
+  "lng": 11.582
+}

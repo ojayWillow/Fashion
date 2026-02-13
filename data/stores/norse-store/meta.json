@@ -1,0 +1,14 @@
+{
+  "slug": "norse-store",
+  "name": "Norse Store",
+  "url": "https://www.norsestore.com",
+  "saleUrl": "https://www.norsestore.com/sale",
+  "flag": "🇩🇰",
+  "country": "Denmark",
+  "category": "Sneaker & Streetwear",
+  "categoryIcon": "👟",
+  "description": "Scandinavian minimalism meets streetwear.",
+  "currentDeal": "Scandi streetwear sale",
+  "lat": 55.6761,
+  "lng": 12.5683
+}
