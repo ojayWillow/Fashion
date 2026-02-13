@@ -80,87 +80,74 @@ function storeSlug(storeName) {
   return map[storeName] || slugify(storeName);
 }
 
+// Sneaker-context: name clearly describes a shoe model, not clothing/accessories.
+// Used to prevent colorway names like "Lucky Shorts" from triggering Clothing.
+const SNEAKER_CONTEXT = /\b(air jordan|jordan \d|retro|dunk|air force|air max|yeezy|spizike)\b/i;
+
 /**
  * Determine product category from ALL items in a merged group.
- * Checks names, tags, and descriptions across every item.
- * 
- * Strategy: Explicit clothing/accessories keywords ALWAYS win over
- * sneaker-context. Sneaker-context is only used to override ambiguous
- * words (like "shorts" in colorway names such as "Lucky Shorts").
- * 
- * Priority order:
- *   1. Name contains "sneaker(s)" → Sneakers (explicit product type)
- *   2. Accessories keywords → Accessories
- *   3. Explicit clothing keywords (jacket, hoodie, hood, puffer, etc.)
- *      → Clothing (ALWAYS wins, even if name also has "Air Jordan")
- *   4. Ambiguous clothing words ("shorts", "top") — only count as
- *      Clothing if NOT inside a sneaker colorway context
- *   5. Tag-based fallback for 'clothing'/'accessories'
- *   6. Default → Sneakers
- * 
- * Categories: Sneakers (default, includes all footwear), Clothing, Accessories
+ *
+ * Strategy:
+ *   - Explicit product-type words in the name are the strongest signal.
+ *   - "sneaker(s)" in name → always Sneakers.
+ *   - Explicit clothing words (jacket, hoodie, hood, puffer, jeans, etc.)
+ *     → always Clothing, even if the brand is Jordan/Nike.
+ *   - Ambiguous words ("shorts", "top") → Clothing ONLY when there is
+ *     no sneaker-context (model names like Retro, Dunk, Air Max …).
+ *   - Tags are a weak signal and are also gated by sneaker-context.
+ *   - Default → Sneakers (covers all other footwear).
+ *
+ * Categories: Sneakers | Clothing | Accessories
  */
 function determineCategory(items) {
-  // Gather all signals from every item in the group
   const allNames = items.map(i => (i.name || '').toLowerCase()).join(' ');
-  const allTags = items.flatMap(i => i.tags || []).map(t => t.toLowerCase()).join(' ');
-  const allDescriptions = items.map(i => (i.description || '').toLowerCase()).join(' ');
+  const allTags  = items.flatMap(i => i.tags || []).map(t => t.toLowerCase()).join(' ');
 
-  // 1. Explicit sneaker override: if the product name says "sneaker(s)", it's a sneaker
-  //    This catches "High-Top Sneakers", "Leather Sneakers", etc.
+  const hasSneakerContext = SNEAKER_CONTEXT.test(allNames);
+
+  // 1. Explicit sneaker in name → Sneakers
   if (/\bsneakers?\b/i.test(allNames)) {
     return 'Sneakers';
   }
 
-  // 2. Accessories patterns (checked BEFORE clothing so "Baseball Cap" beats "Cotton-Jersey")
+  // 2. Accessories (before clothing so "Baseball Cap" wins over "Cotton-Jersey")
   const accessoriesPattern = /\b(cap|hat|beanie|bag|backpack|wallet|scarf|belt|watch|sunglasses|keychain|socks|gloves|headband|wristband|lanyard|pouch|tote|holder)\b/i;
   if (accessoriesPattern.test(allNames) || allTags.includes('accessories')) {
     return 'Accessories';
   }
 
-  // 3. Explicit clothing keywords — these ALWAYS mean Clothing, no exceptions.
-  //    Even "Air Jordan x Travis Scott Waxed Jacket" → Clothing.
-  //    Even "adidas Satin Hood x Wales Bonner" → Clothing.
-  const explicitClothingPattern = /\b(jacket|puffer|hoodie|hoody|hood|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
-
-  // Check "top" separately to exclude "high-top"
-  const topIsClothing = /(?<![-])\btop\b/i.test(allNames);
-
-  if (explicitClothingPattern.test(allNames) || topIsClothing) {
+  // 3. Explicit clothing keywords → ALWAYS Clothing, no exceptions.
+  //    These words unambiguously describe a garment.
+  const explicitClothing = /\b(jacket|puffer|hoodie|hoody|hood|pants?|tee(?!\s+holder)|t-shirt|jeans|shirt|polo|vest|fleece|jogger|tracksuit|sweater|sweatshirt|coat|dress|crew\s*neck|pullover|cardigan|anorak|parka|windbreaker|overshirt)\b/i;
+  if (explicitClothing.test(allNames)) {
     return 'Clothing';
   }
 
-  // 4. Ambiguous clothing words: "short(s)"
-  //    Only counts as Clothing if NOT a sneaker colorway name.
-  //    "Jordan Rare Air Fleece Short" → Clothing (no quotes, no sneaker model)
-  //    "Air Jordan 3 Retro \"Lucky Shorts\"" → Sneakers (colorway in quotes)
-  if (/\bshorts?\b/i.test(allNames)) {
-    // Check if "short(s)" appears inside any kind of quotes (colorway context)
-    // Match all quote variants: straight, smart/curly (U+201C/U+201D/U+2018/U+2019)
-    const quotesAroundShorts = /[\u201C\u201D\u2018\u2019"'][^"'\u201C\u201D\u2018\u2019]*\bshorts?\b[^"'\u201C\u201D\u2018\u2019]*[\u201C\u201D\u2018\u2019"']/i.test(allNames);
-
-    // Also check sneaker-context: if the name has sneaker model patterns AND
-    // "shorts" is likely a colorway name, not the product type
-    const sneakerContext = /\b(air jordan|jordan \d|retro|dunk|air force|air max|yeezy|spizike)\b/i.test(allNames);
-
-    if (!quotesAroundShorts && !sneakerContext) {
-      return 'Clothing';
-    }
-    // If shorts is in quotes OR in sneaker context, fall through to default (Sneakers)
-  }
-
-  // 5. Tag-based fallback: if tags explicitly say 'clothing', trust that
-  if (allTags.includes('clothing')) {
+  // 4. "top" — Clothing, but exclude "high-top" (sneaker term)
+  if (/(?<![-])\btop\b/i.test(allNames)) {
     return 'Clothing';
   }
 
-  // 6. Everything else is Sneakers (includes sandals, boots, loafers, slides, etc.)
+  // 5. "short(s)" — ambiguous. Only Clothing when NOT in sneaker context.
+  //    "Jordan Rare Air Fleece Short"  → no sneaker-context → Clothing ✓
+  //    "Air Jordan 3 Retro Lucky Shorts" → has "retro" context → Sneakers ✓
+  if (/\bshorts?\b/i.test(allNames) && !hasSneakerContext) {
+    return 'Clothing';
+  }
+
+  // 6. Tag fallback — only when there is no sneaker-context in the name.
+  //    Prevents tags like ["Sneakers","Jordan","Sale","Clothing"] from
+  //    pulling a sneaker back into Clothing.
+  if (allTags.includes('clothing') && !hasSneakerContext) {
+    return 'Clothing';
+  }
+
+  // 7. Default → Sneakers (sandals, boots, loafers, slides, etc.)
   return 'Sneakers';
 }
 
 function upgradeImageUrl(url) {
   if (!url) return '';
-  // Add standardized transforms if not present
   if (url.includes('res.cloudinary.com') && !url.includes('c_pad')) {
     return url.replace('/f_auto,q_auto/', '/f_auto,q_auto,w_800,h_800,c_pad,b_white/');
   }
@@ -174,26 +161,22 @@ function upgradeImageUrl(url) {
 function metadataScore(item) {
   let score = 0;
   const desc = cleanDescription(item.description);
-  if (desc.length > 0) score += 3;                          // has a real description
-  if (desc.length > 100) score += 2;                        // description is substantial
+  if (desc.length > 0) score += 3;
+  if (desc.length > 100) score += 2;
   const cw = item.colorway || '';
-  if (cw && cw !== 'TBD' && cw !== 'Kies een model*') score += 3; // has colorway
-  if (item._originalImage) score += 2;                      // has original image
-  if ((item.name || '').length > 30) score += 1;            // longer (more descriptive) name
-  if ((item.tags || []).length > 2) score += 1;             // richer tags
+  if (cw && cw !== 'TBD' && cw !== 'Kies een model*') score += 3;
+  if (item._originalImage) score += 2;
+  if ((item.name || '').length > 30) score += 1;
+  if ((item.tags || []).length > 2) score += 1;
   return score;
 }
 
 /**
  * Clean up tags: normalize and deduplicate.
- * Removes store-specific category tags like "Shoes and Accessories"
- * and maps them to our canonical categories.
  */
 function cleanTags(items, category) {
   const raw = items.flatMap(i => i.tags || []);
   const cleaned = new Set();
-
-  // Tags to skip (store-specific categories that don't help users)
   const skipPatterns = /^(shoes and accessories|shoes|footwear|menswear|womenswear|new arrivals|new in)$/i;
 
   for (const tag of raw) {
@@ -203,9 +186,7 @@ function cleanTags(items, category) {
     cleaned.add(t);
   }
 
-  // Ensure the canonical category is in tags
   cleaned.add(category);
-
   return [...cleaned];
 }
 
@@ -221,10 +202,9 @@ function migrate() {
   console.log(`After removing Access Denied: ${validPicks.length} items`);
 
   // Step 2: Resolve product IDs and group duplicates
-  const productMap = new Map(); // productId -> [items]
+  const productMap = new Map();
 
   for (const pick of validPicks) {
-    // Determine product ID
     let productId = pick.styleCode || '';
     if (!productId) {
       productId = extractStyleCode(pick.name) || '';
@@ -251,11 +231,8 @@ function migrate() {
   const categoryStats = {};
 
   for (const [productId, items] of productMap) {
-    // Pick the item with the richest metadata as base
     const base = items.reduce((a, b) => metadataScore(a) >= metadataScore(b) ? a : b);
 
-    // For fields that might be empty on the base, prefer the first
-    // non-empty value from any item in the group
     const bestColorway = items
       .map(i => i.colorway || '')
       .find(c => c && c !== 'TBD' && c !== 'Kies een model*') || '';
@@ -264,22 +241,17 @@ function migrate() {
       .map(i => i._originalImage || '')
       .find(img => img) || '';
 
-    // Pick the longest cleaned name across items (more likely to include
-    // colorway nicknames, collabs, etc.)
     const bestName = items
       .map(i => cleanName(i.name))
       .reduce((a, b) => b.length > a.length ? b : a);
 
-    // Determine category from ALL items in the group
     const category = determineCategory(items);
     categoryStats[category] = (categoryStats[category] || 0) + 1;
 
-    // Build listings
     const listings = items.map(item => {
       let retail = parsePrice(item.retailPrice);
       let sale = parsePrice(item.salePrice);
 
-      // Fix pricing anomalies: if retail < sale, swap them
       if (retail && sale && retail.amount < sale.amount) {
         [retail, sale] = [sale, retail];
       }
@@ -300,7 +272,6 @@ function migrate() {
       };
     });
 
-    // Deduplicate listings by store+url
     const seenListings = new Set();
     const uniqueListings = listings.filter(l => {
       const key = `${l.store}|${l.url}`;
@@ -310,8 +281,6 @@ function migrate() {
     });
 
     const image = upgradeImageUrl(base.image || '');
-
-    // Clean and normalize tags
     const tags = cleanTags(items, category);
 
     const product = {
@@ -328,12 +297,10 @@ function migrate() {
       listings: uniqueListings
     };
 
-    // Write product file
     const filename = `${productId}.json`;
     const filepath = path.join(PRODUCTS_DIR, filename);
     fs.writeFileSync(filepath, JSON.stringify(product, null, 2));
 
-    // Build index entry
     const allSalePrices = uniqueListings
       .map(l => l.salePrice)
       .filter(p => p && p.amount > 0);
@@ -354,7 +321,6 @@ function migrate() {
     });
   }
 
-  // Step 5: Write index.json
   const index = {
     products: indexEntries.sort((a, b) => a.name.localeCompare(b.name)),
     generatedAt: new Date().toISOString(),
