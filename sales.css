@@ -106,12 +106,12 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(168, 85, 247, 0.06);
 }
 
-/* === Product Image — #f5f5f7 bg matches Cloudinary b_rgb:f5f5f7 === */
+/* === Product Image — white bg matches store product images === */
 .pick-card-image {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    background: #f5f5f7;
+    background: #ffffff;
     overflow: hidden;
     display: flex;
     align-items: center;
