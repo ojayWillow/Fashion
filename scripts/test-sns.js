@@ -1,17 +1,27 @@
-// MR PORTER recon — standard Playwright (no Cloudflare expected)
-const { chromium } = require('playwright');
+// MR PORTER recon #2 — Patchright (Access Denied with standard Playwright)
+const { chromium } = require('patchright');
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
-  console.log('Opening MR PORTER...');
+  console.log('Opening MR PORTER with Patchright...');
   await page.goto('https://www.mrporter.com/en-nl/mens/product/nike/shoes/low-top-sneakers/dunk-low-retro-leather-sneakers/46353151655503704', {
     waitUntil: 'domcontentloaded',
     timeout: 30000,
   });
 
-  await page.waitForTimeout(5000); // let JS render
+  // Check for Cloudflare / anti-bot
+  for (let i = 1; i <= 15; i++) {
+    await page.waitForTimeout(2000);
+    const title = await page.title();
+    console.log(`${i * 2}s — title: "${title}"`);
+    if (title !== 'Just a moment...' && !title.includes('Attention') && title !== 'Access Denied') {
+      console.log('Page loaded!');
+      await page.waitForTimeout(3000);
+      break;
+    }
+  }
 
   const data = await page.evaluate(() => {
     const result = {};
@@ -48,16 +58,15 @@ const { chromium } = require('playwright');
     }
     result.priceElements = priceEls.slice(0, 15);
 
-    // 4. Size elements
-    const sizeByTestId = document.querySelectorAll('[data-testid*="ize"], [data-testid*="SIZE"]');
-    result.sizeTestIdElements = [...sizeByTestId].slice(0, 10).map(el => ({
+    // 4. Strikethrough
+    const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"]');
+    result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
       tag: el.tagName,
-      testId: el.getAttribute('data-testid'),
       text: el.textContent.trim().substring(0, 50),
       class: (el.className || '').substring(0, 80),
     }));
 
-    // Size selectors (select/option)
+    // 5. Size selectors — broad search
     const selects = document.querySelectorAll('select');
     result.selectElements = [...selects].slice(0, 5).map(sel => ({
       name: sel.name || null,
@@ -68,6 +77,15 @@ const { chromium } = require('playwright');
         value: o.value,
         disabled: o.disabled,
       })),
+    }));
+
+    // Size by data-testid
+    const sizeByTestId = document.querySelectorAll('[data-testid*="ize"], [data-testid*="SIZE"]');
+    result.sizeTestIdElements = [...sizeByTestId].slice(0, 15).map(el => ({
+      tag: el.tagName,
+      testId: el.getAttribute('data-testid'),
+      text: el.textContent.trim().substring(0, 50),
+      class: (el.className || '').substring(0, 80),
     }));
 
     // Size buttons
@@ -85,17 +103,9 @@ const { chromium } = require('playwright');
     }
     result.sizeButtons = sizeBtns.slice(0, 20);
 
-    // 5. Meta tags
+    // 6. Meta tags
     const ogImage = document.querySelector('meta[property="og:image"]');
-    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 150) : null;
-
-    // 6. Strikethrough
-    const strikeEls = document.querySelectorAll('s, del, strike, [style*="line-through"]');
-    result.strikethroughElements = [...strikeEls].slice(0, 5).map(el => ({
-      tag: el.tagName,
-      text: el.textContent.trim().substring(0, 50),
-      class: (el.className || '').substring(0, 80),
-    }));
+    result.ogImage = ogImage ? ogImage.getAttribute('content')?.substring(0, 200) : null;
 
     return result;
   });
